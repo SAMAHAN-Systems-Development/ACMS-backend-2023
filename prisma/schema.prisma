@@ -54,3 +54,12 @@ model Event {
 
   student Student?
 }
+
+model testModel {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName String
+}

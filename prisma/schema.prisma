@@ -46,6 +46,7 @@ model Event {
 
   title String
   price String
+  requires_payment Boolean @default(true)
   max_participants Int
   description String
   date DateTime

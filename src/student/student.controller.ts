@@ -30,6 +30,11 @@ export class StudentController {
     return this.studentService.findOne(+id);
   }
 
+    @Get('submit-registration')
+  submitRegistration(): string {
+    return 'Registration form submitted!';
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentService.update(+id, updateStudentDto);

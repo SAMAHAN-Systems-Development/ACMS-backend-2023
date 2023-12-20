@@ -12,6 +12,7 @@ export class StudentService {
       data: createStudentDto,
     });
 
+    console.log(createStudentDto);
     return testStudent;
   }
 

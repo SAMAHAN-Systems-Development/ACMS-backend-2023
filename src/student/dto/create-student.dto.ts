@@ -1,4 +1,7 @@
 export class CreateStudentDto {
-  firstName: string;
   lastName: string;
+  firstName: string;
+  email: string;
+  schoolYearAndCourse: string;
+  paymentPhotoURL: string;
 }

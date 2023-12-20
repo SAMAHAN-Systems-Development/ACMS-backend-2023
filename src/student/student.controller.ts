@@ -30,9 +30,15 @@ export class StudentController {
     return this.studentService.findOne(+id);
   }
 
-    @Get('submit-registration')
-  submitRegistration(): string {
-    return 'Registration form submitted!';
+  @Post('submit-registration')
+  submitRegistration(@Body() createStudentDto: CreateStudentDto) {
+    return {
+      lastName: createStudentDto.lastName,
+      firstName: createStudentDto.firstName,
+      email: createStudentDto.email,
+      schoolYearAndCourse: createStudentDto.schoolYearAndCourse,
+      paymentPhotoURL: createStudentDto.paymentPhotoURL,
+    };
   }
 
   @Put(':id')

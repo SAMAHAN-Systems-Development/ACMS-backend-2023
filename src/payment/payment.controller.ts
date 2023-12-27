@@ -1,4 +1,10 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Payment } from '@prisma/client';
 
@@ -7,9 +13,9 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Get('accepted')
-  async findAllAccepted(): Promise<Payment[]> {
+  async findAllAccepted(@Query('page') page: number): Promise<Payment[]> {
     try {
-      return this.paymentService.findAllAccepted();
+      return this.paymentService.findAllAccepted(page);
     } catch (error) {
       throw new HttpException(
         {

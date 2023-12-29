@@ -6,11 +6,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAllAccepted(page = 1): Promise<Payment[]> {
+  async findAllAccepted(page = 1, items = 10): Promise<Payment[]> {
     return this.prisma.payment.findMany({
       where: { status: 'accepted' },
-      take: 10,
-      skip: 10 * (page - 1),
+      take: items,
+      skip: items * (page - 1),
     });
   }
 }

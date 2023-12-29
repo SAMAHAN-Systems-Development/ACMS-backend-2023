@@ -20,7 +20,7 @@ export class PaymentController {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: 'This is a custom message',
+          error: 'Something went wrong',
         },
         HttpStatus.FORBIDDEN,
         {

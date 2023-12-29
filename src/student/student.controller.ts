@@ -10,6 +10,7 @@ import {
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { ReadStudentDto } from './dto/read-student.dto';
 
 @Controller('student')
 export class StudentController {
@@ -38,5 +39,10 @@ export class StudentController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentService.remove(+id);
+  }
+
+  @Get(':uuid')
+  async getStudentByUuid(@Param('uuid') uuid: string): Promise<ReadStudentDto> {
+    return this.studentService.getStudentByUuid(uuid);
   }
 }

@@ -37,8 +37,8 @@ export class StudentController {
       lastName: createStudentDto.lastName,
       firstName: createStudentDto.firstName,
       email: createStudentDto.email,
-      schoolYearAndCourse: createStudentDto.schoolYearAndCourse,
-      paymentPhotoURL: createStudentDto.paymentPhotoURL,
+      year_and_course: createStudentDto.year_and_course,
+      paymentId: createStudentDto.paymentId,
     };
   }
 

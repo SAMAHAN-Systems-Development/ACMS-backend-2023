@@ -8,13 +8,14 @@ export class StudentService {
   constructor(private prisma: PrismaService) {}
 
   create(createStudentDto: CreateStudentDto) {
-    const testStudent = this.prisma.Student.create({
+    const testStudent = this.prisma.student.create({
+      data: createStudentDto,
     });
     return testStudent;
   }
 
   async findAll() {
-    const users = await this.prisma.testModel.findMany();
+    const users = await this.prisma.student.findMany();
     console.log('running');
     return users;
   }

@@ -16,7 +16,7 @@ export class StudentService {
 
   async findAll() {
     const users = await this.prisma.student.findMany();
-    console.log('running');
+    console.log(users);
     return users;
   }
 

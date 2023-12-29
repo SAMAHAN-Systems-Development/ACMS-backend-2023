@@ -33,7 +33,8 @@
     "@prisma/client": "^5.7.0",
     "prisma": "^5.7.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

@@ -25,7 +25,7 @@ model Student {
   paymentId Int @unique
 
   event Event @relation(fields: [eventId], references: [id])
-  eventId Int @unique
+  eventId Int
 }
 
 model Payment {
@@ -53,14 +53,5 @@ model Event {
   is_active Boolean @default(true)
   form_name String
 
-  student Student?
-}
-
-model testModel {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  firstName String
-  lastName String
+  students Student[]
 }

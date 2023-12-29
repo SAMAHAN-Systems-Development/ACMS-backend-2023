@@ -22,6 +22,7 @@ export class StudentController {
 
   @Get()
   findAll() {
+    console.log('hello');
     return this.studentService.findAll();
   }
 

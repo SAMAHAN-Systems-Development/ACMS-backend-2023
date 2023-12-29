@@ -1,7 +1,9 @@
 export class CreateStudentDto {
+  uuid: string;
+  event: string;
   lastName: string;
   firstName: string;
   email: string;
-  schoolYearAndCourse: string;
-  paymentPhotoURL: string;
+  year_and_course: string;
+  payment: string;
 }

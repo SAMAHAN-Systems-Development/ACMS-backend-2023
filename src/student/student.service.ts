@@ -37,6 +37,28 @@ export class StudentService {
         lastName: true,
         email: true,
         year_and_course: true,
+        event: {
+          select: {
+            createdAt: true,
+            updatedAt: true,
+            title: true,
+            price: true,
+            requires_payment: true,
+            max_participants: true,
+            description: true,
+            date: true,
+            is_active: true,
+            form_name: true,
+          },
+        },
+        payment: {
+          select: {
+            createdAt: true,
+            updatedAt: true,
+            photo_src: true,
+            status: true,
+          },
+        },
       },
     });
 

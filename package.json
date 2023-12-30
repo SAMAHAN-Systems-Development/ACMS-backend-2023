@@ -12,6 +12,7 @@
     "prisma:studio": "npx prisma studio",
     "prisma:setup": "npm run prisma:migrate:dev && npm run prisma:dev:deploy && npm run prisma:generate",
     "build": "nest build",
+    "supabase:build": "npm i && npx nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

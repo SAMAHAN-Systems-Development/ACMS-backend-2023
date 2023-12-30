@@ -38,6 +38,7 @@ export class PaymentController {
   ): Promise<Payment[]> {
     try {
       return this.paymentService.findAllDeclinedPayments(page);
+
     } catch (error) {
       throw new HttpException(
         {

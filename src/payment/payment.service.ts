@@ -13,6 +13,7 @@ export class PaymentService {
       skip: items * (page - 1),
     });
   }
+
   async findAllDeclinedPayments(page = 1, items = 10): Promise<Payment[]> {
     return this.prisma.payment.findMany({
       where: { status: 'declined' },
@@ -20,4 +21,5 @@ export class PaymentService {
       skip: items * (page - 1),
     });
   }
+
 }

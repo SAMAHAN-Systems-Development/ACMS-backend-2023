@@ -27,7 +27,7 @@ export class EventController {
   @Patch('/inactivate/:id')
   async inactivateEvent(@Param('id') eventId: number) {
     try {
-      return this.eventService.inactivateEvent(eventId);
+      return await this.eventService.inactivateEvent(eventId);
     } catch (error) {
       throw new HttpException(
         'Unable to inactivate event.',

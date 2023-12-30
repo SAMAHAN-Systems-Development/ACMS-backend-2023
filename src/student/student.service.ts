@@ -20,10 +20,6 @@ export class StudentService {
     return `This action returns all student`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} student`;
-  }
-
   update(id: number, updateStudentDto: UpdateStudentDto) {
     return `This action updates a #${id} student`;
   }
@@ -33,7 +29,7 @@ export class StudentService {
   }
 
   async getStudentByUuid(uuid: string): Promise<ReadStudentDto> {
-    const student = await this.prisma.testModel.findUnique({
+    const student = await this.prisma.student.findUnique({
       where: { uuid },
       select: {
         uuid: true,

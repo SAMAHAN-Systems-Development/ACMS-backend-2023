@@ -13,9 +13,32 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Get('accepted')
-  async findAllAccepted(@Query('page') page: number): Promise<Payment[]> {
+  async GetAllAcceptedPayments(
+    @Query('page') page: number,
+  ): Promise<Payment[]> {
     try {
-      return this.paymentService.findAllAccepted(page);
+      return this.paymentService.findAllAcceptedPayments(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Get('declined')
+  async GetAllDeclinedPayments(
+    @Query('page') page: number,
+  ): Promise<Payment[]> {
+    try {
+      return this.paymentService.findAllDeclinedPayments(page);
+
     } catch (error) {
       throw new HttpException(
         {

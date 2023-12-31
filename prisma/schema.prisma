@@ -6,62 +6,62 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model Student {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  uuid String @unique
-  firstName String
-  lastName String
-  email String
+  uuid            String @unique
+  firstName       String
+  lastName        String
+  email           String
   year_and_course String
 
-  payment Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int @unique
+  payment   Payment @relation(fields: [paymentId], references: [id])
+  paymentId Int     @unique
 
-  event Event @relation(fields: [eventId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id])
   eventId Int
 }
 
 model Payment {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   photo_src String
-  status String
+  status    String
 
   student Student?
 }
 
 model Event {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String
-  price String
-  requires_payment Boolean @default(true)
+  title            String
+  price            String
+  requires_payment Boolean  @default(true)
   max_participants Int
-  description String
-  date DateTime
-  is_active Boolean @default(true)
-  form_name String
+  description      String
+  date             DateTime
+  is_active        Boolean  @default(true)
+  form_name        String
 
   students Student[]
 }
 
 model testModel {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   firstName String
-  lastName String
+  lastName  String
 }

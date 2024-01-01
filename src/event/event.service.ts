@@ -8,7 +8,7 @@ export class EventService {
   async activateEvent(eventId: number) {
     const event = this.prismaService.event.update({
       data: { is_active: true },
-      where: { id: Number(eventId) }, // bruh
+      where: { id: eventId }, // TODO: Use DTO to implicit type cast
       select: {
         title: true,
         is_active: true,
@@ -20,7 +20,7 @@ export class EventService {
   async inactivateEvent(eventId: number) {
     const event = this.prismaService.event.update({
       data: { is_active: false },
-      where: { id: Number(eventId) }, // bruh
+      where: { id: eventId }, // TODO: Use DTO to implicit type cast
       select: {
         title: true,
         is_active: true,

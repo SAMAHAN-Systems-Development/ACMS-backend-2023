@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
 } from '@nestjs/common';
 import { EventService } from './event.service';
@@ -12,7 +13,7 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Patch('/activate/:id')
-  async activateEvent(@Param('id') eventId: number) {
+  async activateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.activateEvent(eventId);
     } catch (error) {
@@ -25,10 +26,11 @@ export class EventController {
   }
 
   @Patch('/inactivate/:id')
-  async inactivateEvent(@Param('id') eventId: number) {
+  async inactivateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.inactivateEvent(eventId);
     } catch (error) {
+      console.error(error);
       throw new HttpException(
         'Unable to inactivate event.',
         HttpStatus.BAD_REQUEST,

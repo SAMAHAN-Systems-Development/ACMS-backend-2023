@@ -10,19 +10,21 @@ import {
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { Payment } from '@prisma/client';
 
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  @Post()
+  /*@Post()
   create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentService.create(createStudentDto);
-  }
+  }*/
 
   @Get()
   findAll() {
-    console.log('hello');
+    console.log('find all executed');
     return this.studentService.findAll();
   }
 
@@ -32,14 +34,9 @@ export class StudentController {
   }
 
   @Post('submit-registration')
-  submitRegistration(@Body() createStudentDto: CreateStudentDto) {
-    return {
-      lastName: createStudentDto.lastName,
-      firstName: createStudentDto.firstName,
-      email: createStudentDto.email,
-      year_and_course: createStudentDto.year_and_course,
-      paymentId: createStudentDto.paymentId,
-    };
+  create(@Body() createStudentDto: CreateStudentDto) {
+    createStudentDto.uuid = uuidv4();
+    return this.studentService.createStudent(createStudentDto);
   }
 
   @Put(':id')

@@ -22,8 +22,8 @@ model Student {
   email           String
   year_and_course String
 
-  payment   Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int     @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  paymentId Int?     @unique
 
   event   Event @relation(fields: [eventId], references: [id])
   eventId Int   @unique

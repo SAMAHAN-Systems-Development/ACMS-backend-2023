@@ -1,5 +1,4 @@
 export class CreateStudentDto {
-  id?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   uuid: string;
@@ -7,6 +6,6 @@ export class CreateStudentDto {
   lastName: string;
   email: string;
   year_and_course: string;
-  paymentId: number;
-  eventId: number;
+  paymentId?: number | null;
+  eventId: number | null;
 }

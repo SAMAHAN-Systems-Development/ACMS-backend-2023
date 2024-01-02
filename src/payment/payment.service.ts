@@ -15,7 +15,7 @@ export class PaymentService {
       where: {
         payment: {
           status: 'accepted',
-        }
+        },
       },
       take: items,
       skip: items * (page - 1),
@@ -31,11 +31,26 @@ export class PaymentService {
       where: {
         payment: {
           status: 'declined',
-        }
+        },
       },
       take: items,
       skip: items * (page - 1),
     });
   }
 
+  async findAllPendingPayments(page = 1, items = 10): Promise<Student[]> {
+    return this.prisma.student.findMany({
+      include: {
+        payment: {},
+        event: {},
+      },
+      where: {
+        payment: {
+          status: 'pending',
+        },
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
+  }
 }

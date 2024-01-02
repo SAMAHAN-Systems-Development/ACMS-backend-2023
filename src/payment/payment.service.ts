@@ -22,4 +22,20 @@ export class PaymentService {
     });
   }
 
+  async findAllDeclinedPayments(page = 1, items = 10): Promise<Student[]> {
+    return this.prisma.student.findMany({
+      include: {
+        payment: {},
+        event: {},
+      },
+      where: {
+        payment: {
+          status: 'declined',
+        }
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
+  }
+
 }

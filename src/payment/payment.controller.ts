@@ -31,4 +31,24 @@ export class PaymentController {
       );
     }
   }
+
+  @Get('declined')
+  async GetAllDeclinedPayments(
+    @Query('page') page: number,
+  ): Promise<Student[]> {
+    try {
+      return this.paymentService.findAllDeclinedPayments(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 }

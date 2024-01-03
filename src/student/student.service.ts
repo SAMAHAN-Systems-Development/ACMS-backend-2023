@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { createClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class StudentService {
@@ -50,6 +51,20 @@ export class StudentService {
       data: createStudentDto,
     });
     return newStudent;
+  }
+
+  // test function to check connectivity of supabase to api
+  async getBuckets() {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data, error } = await supabase.storage.listBuckets();
+    return data;
+  }
+
+  async uploadImage(file: Express.Multer.File) {
+    console.log(file);
+      console.log('hello');
   }
 
   async findAll() {

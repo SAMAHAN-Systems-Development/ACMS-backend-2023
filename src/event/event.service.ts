@@ -6,7 +6,7 @@ export class EventService {
   constructor(private prismaService: PrismaService) {}
 
   async activateEvent(eventId: number) {
-    const event = this.prismaService.event.update({
+    const event = await this.prismaService.event.update({
       data: { is_active: true },
       where: { id: eventId },
       select: {
@@ -18,7 +18,7 @@ export class EventService {
   }
 
   async inactivateEvent(eventId: number) {
-    const event = this.prismaService.event.update({
+    const event = await this.prismaService.event.update({
       data: { is_active: false },
       where: { id: eventId },
       select: {

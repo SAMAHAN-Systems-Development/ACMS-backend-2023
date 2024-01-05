@@ -6,6 +6,13 @@ import { Event } from '@prisma/client';
 export class EventService {
   constructor(private prismaService: PrismaService) {}
 
+  async viewEvent(eventId: number) {
+    return await this.prismaService.event.findFirst({
+      where: { id: eventId },
+      include: { students: true },
+    });
+  }
+
   async activateEvent(eventId: number) {
     const event = await this.prismaService.event.update({
       data: { is_active: true },

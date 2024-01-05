@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Param,
@@ -14,6 +15,17 @@ import { Event } from '@prisma/client';
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
+
+  @Get(':id')
+  async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
+    try {
+      return await this.eventService.viewEvent(eventId);
+    } catch (error) {
+      throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
+        cause: error,
+      });
+    }
+  }
 
   @Patch('/activate/:id')
   async activateEvent(@Param('id', ParseIntPipe) eventId: number) {

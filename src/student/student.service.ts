@@ -5,7 +5,8 @@ import { ReadStudentDto } from './dto/read-student.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createClient } from '@supabase/supabase-js';
 import { decode } from 'base64-arraybuffer';
-import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+
 @Injectable()
 export class StudentService {
   constructor(private prisma: PrismaService) {}
@@ -44,7 +45,13 @@ export class StudentService {
     return newEvent;
   }
 
-  async createStudent(createStudentDto: CreateStudentDto) {
+  async createStudent(
+    createStudentDto: CreateStudentDto,
+    file: Express.Multer.File,
+  ) {
+    const uuid = uuidv4();
+    this.uploadImageToDB(file, uuid);
+    createStudentDto.uuid = uuid;
     const payment = await this.createPayment();
     const event = await this.createEvent();
     createStudentDto.paymentId = payment.id;
@@ -59,17 +66,19 @@ export class StudentService {
     return Buffer.from(file.buffer).toString('base64');
   }
 
-  async uploadImage(file: Express.Multer.File, uuid: string) {
+  async uploadImageToDB(file: Express.Multer.File, uuid: string) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabase = createClient(supabaseUrl, supabaseKey);
     const base64 = this.toBase64(file);
 
     const { data, error } = await supabase.storage
-      .from('payment_url')
-      .upload(`image_${Date.now()}.png`, decode(base64), {
+      .from('payment')
+      .upload(`${uuid}_receipt.png`, decode(base64), {
         contentType: 'image/jpg',
       });
+    console.log(data);
+    console.log(error);
   }
 
   async findAll() {

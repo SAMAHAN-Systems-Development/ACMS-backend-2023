@@ -13,42 +13,28 @@ import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { ReadStudentDto } from './dto/read-student.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  /*@Post()
-  create(@Body() createStudentDto: CreateStudentDto) {
-    return this.studentService.create(createStudentDto);
-  }*/
-
   @Get()
   findAll() {
     console.log('find all executed');
     return this.studentService.findAll();
   }
-
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  // added Multer type for better type safety when
-  // uploading file
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const image_uuid = uuidv4();
-    return this.studentService.uploadImage(file, image_uuid);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.studentService.findOne(+id);
-  }
-
+  // endpoint for when user clicks
+  // submit button
+  // fileIntercepter accepts any files sent
+  // through POST body
   @Post('submit-registration')
-  create(@Body() createStudentDto: CreateStudentDto) {
-    createStudentDto.uuid = uuidv4();
-    return this.studentService.createStudent(createStudentDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createStudentDto: CreateStudentDto,
+  ) {
+    return this.studentService.createStudent(createStudentDto, file);
   }
 
   @Put(':id')

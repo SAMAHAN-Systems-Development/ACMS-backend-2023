@@ -13,11 +13,11 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Get('accepted')
-  async GetAllAcceptedPayments(
+  async getAllAcceptedPayments(
     @Query('page') page: number,
   ): Promise<Student[]> {
     try {
-      return this.paymentService.findAllAcceptedPayments(page);
+      return this.paymentService.getAllAcceptedPayments(page);
     } catch (error) {
       throw new HttpException(
         {
@@ -33,11 +33,11 @@ export class PaymentController {
   }
 
   @Get('declined')
-  async GetAllDeclinedPayments(
+  async getAllDeclinedPayments(
     @Query('page') page: number,
   ): Promise<Student[]> {
     try {
-      return this.paymentService.findAllDeclinedPayments(page);
+      return this.paymentService.getAllDeclinedPayments(page);
     } catch (error) {
       throw new HttpException(
         {
@@ -53,9 +53,9 @@ export class PaymentController {
   }
 
   @Get('pending')
-  async GetAllPendingPayments(@Query('page') page: number): Promise<Student[]> {
+  async getAllPendingPayments(@Query('page') page: number): Promise<Student[]> {
     try {
-      return this.paymentService.findAllPendingPayments(page);
+      return this.paymentService.getAllPendingPayments(page);
     } catch (error) {
       throw new HttpException(
         {

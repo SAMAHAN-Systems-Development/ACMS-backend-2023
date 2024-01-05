@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAllAcceptedPayments(page = 1, items = 10): Promise<Student[]> {
+  async getAllAcceptedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
         payment: {},
@@ -22,7 +22,7 @@ export class PaymentService {
     });
   }
 
-  async findAllDeclinedPayments(page = 1, items = 10): Promise<Student[]> {
+  async getAllDeclinedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
         payment: {},
@@ -38,7 +38,7 @@ export class PaymentService {
     });
   }
 
-  async findAllPendingPayments(page = 1, items = 10): Promise<Student[]> {
+  async getAllPendingPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
         payment: {},

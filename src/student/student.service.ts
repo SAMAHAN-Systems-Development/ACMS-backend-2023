@@ -29,43 +29,13 @@ export class StudentService {
   }
 
   async getStudentByUuid(uuid: string): Promise<ReadStudentDto> {
-    const student = await this.prisma.student.findUnique({
-      where: { uuid },
-      select: {
-        uuid: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        year_and_course: true,
-        event: {
-          select: {
-            createdAt: true,
-            updatedAt: true,
-            title: true,
-            price: true,
-            requires_payment: true,
-            max_participants: true,
-            description: true,
-            date: true,
-            is_active: true,
-            form_name: true,
-          },
-        },
-        payment: {
-          select: {
-            createdAt: true,
-            updatedAt: true,
-            photo_src: true,
-            status: true,
-          },
-        },
-      },
-    });
-
-    if (!student) {
-      throw new NotFoundException('Student not found');
+    try {
+      return await this.prisma.student.findUnique({
+        where: { uuid },
+        include: { event: true, payment: true },
+      });
+    } catch (error) {
+      throw new NotFoundException('Student Not Found');
     }
-
-    return student;
   }
 }

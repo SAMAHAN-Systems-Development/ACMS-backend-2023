@@ -29,18 +29,14 @@ export class StudentController {
     console.log('find all executed');
     return this.studentService.findAll();
   }
-  @Get('getBuckets')
-  getBuckets() {
-    console.log('test endpoint');
-    return this.studentService.getBuckets();
-  }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   // added Multer type for better type safety when
   // uploading file
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.studentService.uploadImage(file);
+    const image_uuid = uuidv4();
+    return this.studentService.uploadImage(file, image_uuid);
   }
 
   @Get(':id')

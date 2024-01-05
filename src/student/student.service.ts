@@ -19,11 +19,14 @@ export class StudentService {
     });
   }
 
-  async createPayment() {
+  async createPayment(payment_path: string, isRegisterByStudent: boolean) {
     const newPayment = await this.prisma.payment.create({
       data: {
-        photo_src: '',
-        status: '',
+        photo_src: payment_path,
+        // if submission is by student, put in pending status
+        // until cashier accepts payment
+        // else submission is by cashier, accepted status
+        status: isRegisterByStudent ? 'pending' : 'accepted',
       },
     });
     return newPayment;
@@ -50,9 +53,10 @@ export class StudentService {
     file: Express.Multer.File,
   ) {
     const uuid = uuidv4();
-    this.uploadImageToDB(file, uuid);
+    const payment_path = this.uploadImageToDB(file, uuid);
     createStudentDto.uuid = uuid;
-    const payment = await this.createPayment();
+    const isStudent = true;
+    const payment = await this.createPayment(await payment_path, isStudent);
     const event = await this.createEvent();
     createStudentDto.paymentId = payment.id;
     createStudentDto.eventId = event.id;
@@ -70,15 +74,20 @@ export class StudentService {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabase = createClient(supabaseUrl, supabaseKey);
+    const bucketName = 'payment';
+    // the generated file name when
+    // image is uploaded to supabase
+    const file_name = `${uuid}_receipt.png`;
+    const payment_path = `${bucketName}${file_name}`;
+    // converts file to base64 string
+    // supabase has limitations in uploading files
+    // without converting to Base64, causes uploaded file to be incorrectly
+    // uploaded with missing details in supabase
     const base64 = this.toBase64(file);
-
-    const { data, error } = await supabase.storage
-      .from('payment')
-      .upload(`${uuid}_receipt.png`, decode(base64), {
-        contentType: 'image/jpg',
-      });
-    console.log(data);
-    console.log(error);
+    await supabase.storage.from(bucketName).upload(file_name, decode(base64), {
+      contentType: 'image/jpg',
+    });
+    return payment_path;
   }
 
   async findAll() {

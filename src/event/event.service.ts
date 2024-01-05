@@ -28,4 +28,10 @@ export class EventService {
     });
     return event;
   }
+
+  async readActiveEvents() {
+    return this.prismaService.event.findMany({
+      where: { is_active: true },
+    });
+  }
 }

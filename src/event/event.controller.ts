@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Get,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 
@@ -33,6 +34,20 @@ export class EventController {
       console.error(error);
       throw new HttpException(
         'Unable to inactivate event.',
+        HttpStatus.BAD_REQUEST,
+        { cause: error },
+      );
+    }
+  }
+
+  @Get('active')
+  async readActiveEvents() {
+    try {
+      const activeEvents = await this.eventService.readActiveEvents();
+      return activeEvents;
+    } catch (error) {
+      throw new HttpException(
+        'Unable to view active events.',
         HttpStatus.BAD_REQUEST,
         { cause: error },
       );

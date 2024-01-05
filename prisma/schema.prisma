@@ -65,3 +65,13 @@ model testModel {
   firstName String
   lastName String
 }
+
+model Users {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  supabaseUserId String? @unique
+  email String @unique
+  userType String
+ 
+}

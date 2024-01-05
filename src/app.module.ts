@@ -3,9 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentModule } from './student/student.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { SupabaseModule } from 'supabase/supabase.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/user.module';
 
 @Module({
-  imports: [PrismaModule, StudentModule],
+  imports: [PrismaModule, StudentModule, SupabaseModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

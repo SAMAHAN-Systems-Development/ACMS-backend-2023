@@ -1,17 +1,13 @@
 import { PrismaService } from '../src/prisma/prisma.service';
+import { SupabaseService } from '../supabase/supabase.service';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaService();
+const supabase = new SupabaseService();
 
-const students = 30;
-const events = 10;
-
-async function main() {
-  const course = ['BSCS', 'BSIT', 'BSDS'];
-  const statuses = ['accepted', 'declined', 'pending'];
-
+async function seedEvents(n_events) {
   const eventsList = [];
-  for (let i = 0; i < events; i++) {
+  for (let i = 0; i < n_events; i++) {
     eventsList.push({
       title: faker.lorem.words({ min: 3, max: 6 }),
       price: faker.commerce.price({ min: 50, max: 150, symbol: 'Php' }),
@@ -24,8 +20,13 @@ async function main() {
     });
   }
   await prisma.event.createMany({ data: eventsList });
+}
 
-  for (let i = 0; i < students; i++) {
+async function seedStudents(n_students, n_events) {
+  const course = ['BSCS', 'BSIT', 'BSDS'];
+  const statuses = ['accepted', 'declined', 'pending'];
+
+  for (let i = 0; i < n_students; i++) {
     const year_and_course =
       faker.helpers.arrayElement(course) +
       ' ' +
@@ -48,11 +49,60 @@ async function main() {
           },
         },
         event: {
-          connect: { id: Math.ceil(Math.random() * events) },
+          connect: { id: Math.ceil(Math.random() * n_events) },
         },
       },
     });
   }
+}
+
+async function seedUsers() {
+  const users = [
+    {
+      email: 'facilitator@addu.edu.ph',
+      password: 'secretpassword',
+      userType: 'facilitator',
+    },
+    {
+      email: 'cashier@addu.edu.ph',
+      password: 'secretpassword',
+      userType: 'cashier',
+    },
+    {
+      email: 'admin@addu.edu.ph',
+      password: 'secretpassword',
+      userType: 'admin',
+    },
+  ];
+
+  for (const userData of users) {
+    const { user, error } = await supabase.createSupabaseUser(
+      userData.email,
+      userData.password,
+    );
+
+    if (error) {
+      console.error('Supabase signup error:', error);
+      throw error;
+    }
+
+    await prisma.users.create({
+      data: {
+        email: userData.email,
+        userType: userData.userType,
+        supabaseUserId: user.id,
+      },
+    });
+  }
+}
+
+async function main() {
+  const events = 10;
+  const students = 30;
+
+  await seedEvents(events);
+  await seedStudents(students, events);
+  await seedUsers();
 }
 
 main()

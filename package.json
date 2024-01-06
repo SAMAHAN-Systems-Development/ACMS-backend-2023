@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prisma:migrate:reset": "npx prisma migrate reset",
+    "prisma:migrate:reset": "npm run supabase:reset && npx prisma migrate reset",
     "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:dev:deploy": "npx prisma migrate deploy",
     "prisma:generate": "npx prisma generate",
@@ -14,6 +14,7 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:setup": "npm run prisma:migrate:dev && npm run prisma:dev:deploy && npm run prisma:generate",
     "build": "nest build",
+    "supabase:reset": "npx supabase db reset",
     "supabase:build": "npm i && npx nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

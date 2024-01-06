@@ -6,8 +6,10 @@ import {
   ParseIntPipe,
   Patch,
   Get,
+  Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
+import { Event } from '@prisma/client';
 
 @Controller('event')
 export class EventController {
@@ -41,15 +43,19 @@ export class EventController {
   }
 
   @Get('active')
-  async readActiveEvents() {
+  async getActiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
-      const activeEvents = await this.eventService.readActiveEvents();
-      return activeEvents;
+      return await this.eventService.getActiveEvents(page);
     } catch (error) {
       throw new HttpException(
-        'Unable to view active events.',
-        HttpStatus.BAD_REQUEST,
-        { cause: error },
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
       );
     }
   }

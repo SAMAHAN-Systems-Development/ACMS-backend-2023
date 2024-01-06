@@ -1,7 +1,7 @@
 // src/users/user.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, Users } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { SupabaseService } from 'supabase/supabase.service';
 import { UserDto } from './user.dto';
 
@@ -9,7 +9,7 @@ import { UserDto } from './user.dto';
 export class UserService {
   constructor(private readonly prismaService: PrismaService, private readonly supabaseService: SupabaseService,) {}
 
-  async createUser(data: UserDto): Promise<Users> {
+  async createUser(data: UserDto): Promise<User> {
     const { user, error } = await this.supabaseService.createSupabaseUser(
       data.email,  
       data.password,  
@@ -22,20 +22,17 @@ export class UserService {
 
     }
 
-    const prismaData: Prisma.UsersCreateInput = {
-      email: data.email,
-      userType: data.userType,
-      supabaseUserId: user.id
-    };
-    
-
-    return this.prismaService.users.create({
-      data: prismaData,
+    return await this.prismaService.user.create({  
+      data: {  
+        email: data.email,  
+        userType: data.userType,  
+        supabaseUserId: user.id,  
+      },  
     });
   }
 
   async getUserTypeBySupabaseUserId(supabaseId: string): Promise<string | null> {
-    const user = await this.prismaService.users.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         supabaseUserId: supabaseId, 
       },

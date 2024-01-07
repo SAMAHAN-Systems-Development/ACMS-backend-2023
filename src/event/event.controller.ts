@@ -6,7 +6,6 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Get,
   Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
@@ -58,6 +57,24 @@ export class EventController {
   async getActiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
       return await this.eventService.getActiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Get('inactive')
+  async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
+    try {
+      return await this.eventService.getInactiveEvents(page);
     } catch (error) {
       throw new HttpException(
         {

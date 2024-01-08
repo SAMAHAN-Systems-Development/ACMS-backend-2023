@@ -54,6 +54,20 @@ export class PaymentController {
     }
   }
 
+  @Get('declined/:id')
+  async getEventDeclinedPayments(
+    @Param('id', ParseIntPipe) eventId: number,
+    @Query('page') page: number,
+  ): Promise<Student[]> {
+    try {
+      return await this.paymentService.getEventDeclinedPayments(eventId, page);
+    } catch (error) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
+        cause: error,
+      });
+    }
+  }
+
   @Get('pending')
   async getAllPendingPayments(@Query('page') page: number): Promise<Student[]> {
     try {
@@ -75,7 +89,7 @@ export class PaymentController {
   @Get('pending/:id')
   async getEventPendingPayments(
     @Param('id', ParseIntPipe) eventId: number,
-    @Query('page', ParseIntPipe) page: number,
+    @Query('page') page: number,
   ) {
     try {
       return await this.paymentService.getEventPendingPayments(eventId, page);

@@ -34,6 +34,20 @@ export class PaymentController {
     }
   }
 
+  @Get('accepted/:id')
+  async getEventAcceptedPayments(
+    @Param('id', ParseIntPipe) eventId: number,
+    @Query('page') page: number,
+  ): Promise<Student[]> {
+    try {
+      return await this.paymentService.getEventAcceptedPayments(eventId, page);
+    } catch (error) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
+        cause: error,
+      });
+    }
+  }
+
   @Get('declined')
   async getAllDeclinedPayments(
     @Query('page') page: number,

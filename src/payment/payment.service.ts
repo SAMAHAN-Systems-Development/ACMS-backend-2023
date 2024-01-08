@@ -22,6 +22,33 @@ export class PaymentService {
     });
   }
 
+  async getEventAcceptedPayments(
+    eventId: number,
+    page = 1,
+    items = 10,
+  ): Promise<Student[]> {
+    const skipItems = items * (page - 1);
+
+    const acceptedPayments = await this.prisma.student.findMany({
+      include: {
+        event: true,
+        payment: true,
+      },
+      where: {
+        event: {
+          id: eventId,
+        },
+        payment: {
+          status: 'accepted',
+        },
+      },
+      take: items,
+      skip: skipItems,
+    });
+
+    return acceptedPayments;
+  }
+
   async getAllDeclinedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
@@ -45,7 +72,7 @@ export class PaymentService {
   ): Promise<Student[]> {
     const skipItems = items * (page - 1);
 
-    const pendingPayments = await this.prisma.student.findMany({
+    const declinedPayments = await this.prisma.student.findMany({
       include: {
         event: true,
         payment: true,
@@ -62,7 +89,7 @@ export class PaymentService {
       skip: skipItems,
     });
 
-    return pendingPayments;
+    return declinedPayments;
   }
 
   async getAllPendingPayments(page = 1, items = 10): Promise<Student[]> {

@@ -53,4 +53,31 @@ export class PaymentService {
       skip: items * (page - 1),
     });
   }
+
+  async getEventPendingPayments(
+    eventId: number,
+    page = 1,
+    items = 10,
+  ): Promise<Student[]> {
+    const skipItems = items * (page - 1);
+
+    const pendingPayments = await this.prisma.student.findMany({
+      include: {
+        event: true,
+        payment: true,
+      },
+      where: {
+        event: {
+          id: eventId,
+        },
+        payment: {
+          status: 'pending',
+        },
+      },
+      take: items,
+      skip: skipItems,
+    });
+
+    return pendingPayments;
+  }
 }

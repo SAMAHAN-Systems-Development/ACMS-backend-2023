@@ -3,6 +3,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
@@ -67,6 +69,20 @@ export class PaymentController {
           cause: error,
         },
       );
+    }
+  }
+
+  @Get('pending/:id')
+  async getEventPendingPayments(
+    @Param('id', ParseIntPipe) eventId: number,
+    @Query('page', ParseIntPipe) page: number,
+  ) {
+    try {
+      return await this.paymentService.getEventPendingPayments(eventId, page);
+    } catch (error) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
+        cause: error,
+      });
     }
   }
 }

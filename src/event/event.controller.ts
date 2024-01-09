@@ -1,31 +1,33 @@
 import {
   Controller,
+  Body,
   Get,
   HttpException,
   HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
-  Get,
   Query,
+  Post,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { Event } from '@prisma/client';
+import { AddEventDto } from './dto/add-event.dto';
 
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Get(':id')
-  async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
-    try {
-      return await this.eventService.viewEvent(eventId);
-    } catch (error) {
-      throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
-        cause: error,
-      });
-    }
-  }
+  // @Get(':id')
+  // async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
+  //   try {
+  //     return await this.eventService.viewEvent(eventId);
+  //   } catch (error) {
+  //     throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
+  //       cause: error,
+  //     });
+  //   }
+  // }
 
   @Patch('/activate/:id')
   async activateEvent(@Param('id', ParseIntPipe) eventId: number) {
@@ -71,4 +73,16 @@ export class EventController {
       );
     }
   }
+
+  @Post('')
+  async addEvents(@Body() AddEventDto: AddEventDto){
+    console.log(AddEventDto)
+    const AddedEvent = await this.eventService.addEvent(AddEventDto);
+    return { message: 'Event added successfully', data: AddedEvent };
+
+  }
+
+
+  
+
 }

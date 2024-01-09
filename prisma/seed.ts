@@ -86,7 +86,7 @@ async function seedUsers() {
       throw error;
     }
 
-    await prisma.users.create({
+    await prisma.user.create({
       data: {
         email: userData.email,
         userType: userData.userType,

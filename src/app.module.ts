@@ -5,12 +5,11 @@ import { StudentModule } from './student/student.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupabaseModule } from 'supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './users/user.module';
 import { PaymentModule } from './payment/payment.module';
 import { EventModule } from './event/event.module';
 
 @Module({
-  imports: [PrismaModule, StudentModule, PaymentModule, EventModule, SupabaseModule, AuthModule, UserModule],
+  imports: [PrismaModule, StudentModule, PaymentModule, EventModule, SupabaseModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

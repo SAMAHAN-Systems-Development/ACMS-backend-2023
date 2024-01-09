@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'supabase/supabase.service';
-import { UserService } from '../users/user.service';
 import { LoginDto } from './auth.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly supabaseService: SupabaseService, private readonly userService: UserService) {}
+  constructor(private readonly supabaseService: SupabaseService, private readonly prismaService: PrismaService) {}
 
   async login(loginDto: LoginDto) {
     const {email, password} = loginDto
@@ -31,9 +31,22 @@ export class AuthService {
     const userInfo = data?.user;
 
     // Retrieve userType based on supabaseUserId
-    const userType = await this.userService.getUserTypeBySupabaseUserId(userInfo?.id);
+    const userType = await this.getUserTypeBySupabaseUserId(userInfo?.id);
 
     // Return user information
     return { email: userInfo.email, userType };
+  }
+
+  async getUserTypeBySupabaseUserId(supabaseId: string): Promise<string | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        supabaseUserId: supabaseId, 
+      },
+      select: {
+        userType: true,
+      },
+    });
+
+    return user?.userType || null;
   }
 }

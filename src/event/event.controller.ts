@@ -81,8 +81,27 @@ export class EventController {
     return { message: 'Event added successfully', data: AddedEvent };
 
   }
-
+  
+  @Get('inactive')
+  async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
+    try {
+      return await this.eventService.getInactiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
   
 
 }
+
+

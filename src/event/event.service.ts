@@ -71,4 +71,11 @@ export class EventService {
   }
   
 
+  async getInactiveEvents(page = 1, items = 10): Promise<Event[]> {
+    return this.prismaService.event.findMany({
+      where: { is_active: false },
+      take: items,
+      skip: items * (page - 1),
+    });
+  }
 }

@@ -43,7 +43,7 @@ async function main() {
         year_and_course: year_and_course,
         payment: {
           create: {
-            photo_src: 'link/to/payment/receipt.jpg',
+            photo_src: '/placeholderImage.jpg',
             status: faker.helpers.arrayElement(statuses),
           },
         },

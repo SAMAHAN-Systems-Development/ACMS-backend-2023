@@ -75,13 +75,11 @@ export class EventController {
   }
 
   @Post('')
-  async addEvents(@Body() AddEventDto: AddEventDto){
-    console.log(AddEventDto)
+  async addEvents(@Body() AddEventDto: AddEventDto) {
     const AddedEvent = await this.eventService.addEvent(AddEventDto);
     return { message: 'Event added successfully', data: AddedEvent };
-
   }
-  
+
   @Get('inactive')
   async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
@@ -99,9 +97,4 @@ export class EventController {
       );
     }
   }
-
-  
-
 }
-
-

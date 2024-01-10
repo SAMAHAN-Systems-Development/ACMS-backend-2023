@@ -6,7 +6,6 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Get,
   Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';

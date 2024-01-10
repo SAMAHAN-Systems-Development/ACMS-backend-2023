@@ -6,6 +6,6 @@ export class CreateStudentDto {
   lastName: string;
   email: string;
   year_and_course: string;
-  paymentId?: number | null;
+  paymentId: number | null;
   eventId: number | null;
 }

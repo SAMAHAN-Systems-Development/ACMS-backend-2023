@@ -9,6 +9,8 @@ export class EventService {
   async viewEvent(eventId: number) {
     return await this.prismaService.event.findFirst({
       where: { id: eventId },
+      // replaced students with student, students is not
+      // found and causes error
       include: { students: true },
     });
   }

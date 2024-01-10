@@ -1,5 +1,6 @@
 import {
   Controller,
+  Body,
   Get,
   HttpException,
   HttpStatus,
@@ -7,24 +8,26 @@ import {
   ParseIntPipe,
   Patch,
   Query,
+  Post,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { Event } from '@prisma/client';
+import { AddEventDto } from './dto/add-event.dto';
 
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Get(':id')
-  async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
-    try {
-      return await this.eventService.viewEvent(eventId);
-    } catch (error) {
-      throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
-        cause: error,
-      });
-    }
-  }
+  // @Get(':id')
+  // async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
+  //   try {
+  //     return await this.eventService.viewEvent(eventId);
+  //   } catch (error) {
+  //     throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
+  //       cause: error,
+  //     });
+  //   }
+  // }
 
   @Patch('/activate/:id')
   async activateEvent(@Param('id', ParseIntPipe) eventId: number) {
@@ -57,6 +60,30 @@ export class EventController {
   async getActiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
       return await this.eventService.getActiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Post('')
+  async addEvents(@Body() AddEventDto: AddEventDto) {
+    const AddedEvent = await this.eventService.addEvent(AddEventDto);
+    return { message: 'Event added successfully', data: AddedEvent };
+  }
+
+  @Get('inactive')
+  async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
+    try {
+      return await this.eventService.getInactiveEvents(page);
     } catch (error) {
       throw new HttpException(
         {

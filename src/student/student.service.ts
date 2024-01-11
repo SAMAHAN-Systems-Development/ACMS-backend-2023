@@ -53,7 +53,7 @@ export class StudentService {
     this.ValidateFileType(file);
     const uuid = uuidv4();
     const payment_path = await this.supabaseService.uploadImageToDB(file, uuid);
-    createStudentDto.uuid = uuid;
+    createStudentDto.uuid = uuidv4();
     // change this once OAuth is implemented.
     const isStudent = true;
     const payment = await this.createPayment(payment_path, isStudent);

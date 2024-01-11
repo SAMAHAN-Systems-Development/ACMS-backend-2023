@@ -5,20 +5,14 @@ import { AddEventDto } from './dto/add-event.dto';
 
 @Injectable()
 export class EventService {
-
   constructor(private prismaService: PrismaService) {}
 
-  // async viewEvent(eventId: number) {
-  //   return await this.prismaService.event.findFirst({
-  //     where: { id: eventId },
-  //     include: { students: true },
-  //   });
-  // }
-
-  // Commented this one because there is an error and can't run the code
-
-
-
+  async viewEvent(eventId: number) {
+    return await this.prismaService.event.findFirst({
+      where: { id: eventId },
+      include: { students: true },
+    });
+  }
   async activateEvent(eventId: number) {
     const event = await this.prismaService.event.update({
       data: { is_active: true },
@@ -51,9 +45,7 @@ export class EventService {
     });
   }
 
-
   async addEvent(AddEventDto: AddEventDto) {
-
     console.log(AddEventDto.title);
     const event = await this.prismaService.event.create({
       data: {
@@ -62,14 +54,13 @@ export class EventService {
         price: AddEventDto.price,
         max_participants: AddEventDto.max_participants,
         description: AddEventDto.description,
-        date: new Date(),  
-        form_name: 'Event',  
+        date: new Date(),
+        form_name: 'Event',
       },
     });
-    
+
     return event;
   }
-  
 
   async getInactiveEvents(page = 1, items = 10): Promise<Event[]> {
     return this.prismaService.event.findMany({

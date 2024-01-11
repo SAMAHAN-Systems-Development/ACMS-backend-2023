@@ -10,7 +10,7 @@ import { ReadStudentDto } from './dto/read-student.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
-
+import { EmailSender } from '../emailSender/EmailSender';
 @Injectable()
 export class StudentService {
   constructor(
@@ -66,11 +66,11 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
+      return newStudent;
     } catch (ex) {
       console.log(ex);
+      return;
     }
-
-    return newStudent;
   }
 
   async findAll() {

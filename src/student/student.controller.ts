@@ -24,10 +24,6 @@ export class StudentController {
     console.log('find all executed');
     return this.studentService.findAll();
   }
-  // endpoint for when user clicks
-  // submit button
-  // fileIntercepter accepts any files sent
-  // through POST body
   @Post('submit-registration')
   @UseInterceptors(FileInterceptor('file'))
   create(

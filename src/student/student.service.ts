@@ -10,7 +10,6 @@ import { ReadStudentDto } from './dto/read-student.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
-import { EmailSender } from '../emailSender/EmailSender';
 @Injectable()
 export class StudentService {
   constructor(
@@ -53,7 +52,7 @@ export class StudentService {
     this.ValidateFileType(file);
     const uuid = uuidv4();
     const payment_path = await this.supabaseService.uploadImageToDB(file, uuid);
-    createStudentDto.uuid = uuidv4();
+    createStudentDto.uuid = uuid;
     // change this once OAuth is implemented.
     const isStudent = true;
     const payment = await this.createPayment(payment_path, isStudent);

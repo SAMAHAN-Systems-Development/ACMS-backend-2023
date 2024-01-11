@@ -6,11 +6,14 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Student } from '@prisma/client';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('payment')
+@UseGuards(AuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 

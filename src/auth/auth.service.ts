@@ -1,18 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SupabaseService } from 'supabase/supabase.service';
 import { LoginDto } from './auth.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { Response as Res } from 'express';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly supabaseService: SupabaseService, private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly supabaseService: SupabaseService,
+    private readonly prismaService: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
-  async login(loginDto: LoginDto) {
-    const {email, password} = loginDto
+  async login(loginDto: LoginDto, res: Res) {
+    const { email, password } = loginDto;
 
-    // Ensure that both email and password are provided
     if (!email || !password) {
-      return { error: 'Email and password are required.' };
+      throw new UnauthorizedException();
     }
 
     const { data, error } = await this.supabaseService
@@ -23,24 +28,26 @@ export class AuthService {
       });
 
     if (error) {
-      // Handle login error
-      return { error };
+      throw new UnauthorizedException();
     }
-
-    // Access user information from the session
     const userInfo = data?.user;
-
-    // Retrieve userType based on supabaseUserId
     const userType = await this.getUserTypeBySupabaseUserId(userInfo?.id);
+    const payload = { username: email };
+    const accessToken = this.jwtService.sign(payload);
 
-    // Return user information
-    return { email: userInfo.email, userType };
+    const returnValue = res
+      .set({ 'x-access-token': accessToken })
+      .json({ email: userInfo.email, userType });
+
+    return returnValue;
   }
 
-  async getUserTypeBySupabaseUserId(supabaseId: string): Promise<string | null> {
+  async getUserTypeBySupabaseUserId(
+    supabaseId: string,
+  ): Promise<string | null> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        supabaseUserId: supabaseId, 
+        supabaseUserId: supabaseId,
       },
       select: {
         userType: true,

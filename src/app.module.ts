@@ -9,7 +9,14 @@ import { PaymentModule } from './payment/payment.module';
 import { EventModule } from './event/event.module';
 
 @Module({
-  imports: [PrismaModule, StudentModule, PaymentModule, EventModule, SupabaseModule, AuthModule],
+  imports: [
+    PrismaModule,
+    StudentModule,
+    PaymentModule,
+    EventModule,
+    SupabaseModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

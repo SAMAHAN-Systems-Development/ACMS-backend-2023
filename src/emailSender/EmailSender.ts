@@ -1,10 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 export class EmailSender {
-  sendEmail(
-    uuid: string,
-    paymentImg: string,
-    studentEmail: string) {
+  sendEmail(image: string, studentEmail: string) {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -18,12 +16,13 @@ export class EmailSender {
     const mailConfig = {
       from: process.env.client_EMAIL,
       to: studentEmail,
-      subject: 'Kuya para po bababa na kame',
-      text: 'https://www.youtube.com/watch?v=iw9WlA62VF8',
+      subject: 'Hello from Nodemailer',
+      text: 'This is a test email sent using Nodemailer.',
       attachments: [
         {
-          filename: 'receipt.png',
-          content: paymentImg,
+          filename: 'boo.png',
+          content: image,
+          encoding: 'base64',
         },
       ],
     };

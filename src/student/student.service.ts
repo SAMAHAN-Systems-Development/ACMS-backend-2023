@@ -68,9 +68,8 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
-      console.log(file);
-      //this.supabaseService.toBase64(payment.photo_src);
-      //this.emailSender.sendEmail();
+      const fileToBase64 = this.supabaseService.toBase64(file);
+      this.emailSender.sendEmail(fileToBase64, createStudentDto.email);
       return newStudent;
     } catch (ex) {
       console.log(ex);

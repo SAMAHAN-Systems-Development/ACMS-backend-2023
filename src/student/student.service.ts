@@ -10,12 +10,14 @@ import { ReadStudentDto } from './dto/read-student.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
+import { EmailSender } from 'src/emailSender/EmailSender';
 
 @Injectable()
 export class StudentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly supabaseService: SupabaseService,
+    private readonly emailSender: EmailSender,
   ) {}
   async createPayment(payment_path: string, isRegisterByStudent: boolean) {
     try {
@@ -66,11 +68,13 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
+      console.log(file);
+      //this.supabaseService.toBase64(payment.photo_src);
+      //this.emailSender.sendEmail();
+      return newStudent;
     } catch (ex) {
       console.log(ex);
     }
-
-    return newStudent;
   }
 
   async findAll() {

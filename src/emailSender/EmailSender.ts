@@ -1,7 +1,10 @@
 import * as nodemailer from 'nodemailer';
 
 export class EmailSender {
-  sendEmail(studentEmail: string) {
+  sendEmail(
+    uuid: string,
+    paymentImg: string,
+    studentEmail: string) {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -17,9 +20,12 @@ export class EmailSender {
       to: studentEmail,
       subject: 'Kuya para po bababa na kame',
       text: 'https://www.youtube.com/watch?v=iw9WlA62VF8',
-      attachments: [{
-        
-      }]
+      attachments: [
+        {
+          filename: 'receipt.png',
+          content: paymentImg,
+        },
+      ],
     };
     transporter.sendMail(mailConfig, (error, info) => {
       if (error) {

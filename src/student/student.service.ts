@@ -11,6 +11,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
 import { EmailSender } from 'src/emailSender/EmailSender';
+import * as qrcode from 'qrcode';
 
 @Injectable()
 export class StudentService {
@@ -68,8 +69,16 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
-      const fileToBase64 = this.supabaseService.toBase64(file);
-      this.emailSender.sendEmail(fileToBase64, createStudentDto.email);
+      const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
+      console.log(uuid);
+      const qrCode = await qrcode.toDataURL(uuid, {
+        scale: 10,
+      });
+      this.emailSender.sendEmail(
+        receiptImgToBase64,
+        qrCode,
+        createStudentDto.email,
+      );
       return newStudent;
     } catch (ex) {
       console.log(ex);

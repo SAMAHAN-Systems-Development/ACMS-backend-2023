@@ -32,7 +32,7 @@ export class SupabaseService {
     return data;
   }
 
-  toBase64(file: Express.Multer.File) {
+  FiletoBase64(file: Express.Multer.File) {
     let fileToBase64;
     try {
       fileToBase64 = Buffer.from(file.buffer).toString('base64');
@@ -52,7 +52,7 @@ export class SupabaseService {
     // supabase has limitations in uploading files
     // without converting to Base64, causes uploaded file to be incorrectly
     // uploaded with missing details in supabase
-    const base64 = this.toBase64(file);
+    const base64 = this.FiletoBase64(file);
     try {
       await this.supabase.storage
         .from(bucketName)

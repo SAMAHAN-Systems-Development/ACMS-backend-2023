@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 export class EmailSender {
-  sendEmail(image: string, studentEmail: string) {
+  sendEmail(receiptImgToBase64: string, qrCode: string, studentEmail: string) {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -20,9 +20,12 @@ export class EmailSender {
       text: 'This is a test email sent using Nodemailer.',
       attachments: [
         {
-          filename: 'boo.png',
-          content: image,
+          filename: 'receipt.png',
+          content: receiptImgToBase64,
           encoding: 'base64',
+        },
+        {
+          path: qrCode,
         },
       ],
     };

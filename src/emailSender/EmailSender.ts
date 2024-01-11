@@ -25,6 +25,7 @@ export class EmailSender {
           encoding: 'base64',
         },
         {
+          filename: 'qr-code',
           path: qrCode,
         },
       ],

@@ -13,7 +13,7 @@ import { Student } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('payment')
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 

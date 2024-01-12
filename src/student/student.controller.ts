@@ -24,25 +24,25 @@ export class StudentController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   findAll() {
     return this.studentService.findAll();
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentService.update(+id, updateStudentDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.studentService.remove(+id);
   }
 
   @Get(':uuid')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async getStudentByUuid(@Param('uuid') uuid: string): Promise<ReadStudentDto> {
     return this.studentService.getStudentByUuid(uuid);
   }

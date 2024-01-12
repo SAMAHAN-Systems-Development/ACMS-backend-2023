@@ -1,5 +1,6 @@
 import {
   Controller,
+  Body,
   Get,
   HttpException,
   HttpStatus,
@@ -7,12 +8,12 @@ import {
   ParseIntPipe,
   Patch,
   Query,
+  Post,
   Put,
-  Body,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { Event } from '@prisma/client';
-import { AddEventDto } from './dto/add-events.dto';
+import { AddEventDto } from './dto/add-event.dto';
 
 @Controller('event')
 export class EventController {
@@ -81,5 +82,29 @@ export class EventController {
   ) {
     const EditedEvent = await this.eventService.editEvents(id, UpdateEventDto);
     return { message: 'Event added successfully', data: EditedEvent };
+  }
+
+  @Post('')
+  async addEvents(@Body() AddEventDto: AddEventDto) {
+    const AddedEvent = await this.eventService.addEvent(AddEventDto);
+    return { message: 'Event added successfully', data: AddedEvent };
+  }
+
+  @Get('inactive')
+  async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
+    try {
+      return await this.eventService.getInactiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 }

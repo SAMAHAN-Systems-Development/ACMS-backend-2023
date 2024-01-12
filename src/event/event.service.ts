@@ -7,12 +7,12 @@ import { AddEventDto } from './dto/add-events.dto';
 export class EventService {
   constructor(private prismaService: PrismaService) {}
 
-  // async viewEvent(eventId: number) {
-  //   return await this.prismaService.event.findFirst({
-  //     where: { id: eventId },
-  //     include: { students: true },
-  //   });
-  // }
+  async viewEvent(eventId: number) {
+    return await this.prismaService.event.findFirst({
+      where: { id: eventId },
+      include: { students: true },
+    });
+  }
 
   async activateEvent(eventId: number) {
     const event = await this.prismaService.event.update({
@@ -46,7 +46,6 @@ export class EventService {
     });
   }
 
-
   async editEvents(id: number, editEventDto: AddEventDto) {
     const updatedEvent = await this.prismaService.event.update({
       data: {
@@ -55,15 +54,12 @@ export class EventService {
         price: editEventDto.price,
         max_participants: editEventDto.max_participants,
         description: editEventDto.description,
-        date: new Date(),  
-        form_name: 'Event',  
+        date: new Date(),
+        form_name: 'Event',
       },
       where: { id },
     });
-   
+
     return updatedEvent;
   }
-
-
-
 }

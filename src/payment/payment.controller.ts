@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
@@ -11,15 +12,18 @@ import {
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Student } from '@prisma/client';
+import { AcceptPaymentDto } from './dto/accept-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('accept')
-  async acceptPayments(): Promise<Student[]> {
+  async acceptPayments(
+    @Body() acceptPaymentDto: AcceptPaymentDto
+    ): Promise<Student[]> {
     try {
-      return await this.paymentService.acceptPayments();
+      return await this.paymentService.acceptPayments(acceptPaymentDto.paymentIds);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
@@ -30,7 +34,7 @@ export class PaymentController {
       }
     }
   }
-  
+
   @Get('accepted')
   async getAllAcceptedPayments(
     @Query('page') page: number,

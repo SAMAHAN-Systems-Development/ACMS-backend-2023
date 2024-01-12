@@ -69,6 +69,7 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
+      
       const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
       console.log(uuid);
       const qrCode = await qrcode.toDataURL(uuid, {
@@ -82,6 +83,7 @@ export class StudentService {
       return newStudent;
     } catch (ex) {
       console.log(ex);
+      return;
     }
   }
 

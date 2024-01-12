@@ -24,7 +24,6 @@ export class StudentController {
     console.log('find all executed');
     return this.studentService.findAll();
   }
-
   @Post('submit-registration')
   @UseInterceptors(FileInterceptor('file'))
   create(

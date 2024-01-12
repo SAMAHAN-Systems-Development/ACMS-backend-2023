@@ -13,6 +13,7 @@ export class EventService {
       include: { students: true },
     });
   }
+
   async activateEvent(eventId: number) {
     const event = await this.prismaService.event.update({
       data: { is_active: true },
@@ -68,5 +69,22 @@ export class EventService {
       take: items,
       skip: items * (page - 1),
     });
+  }
+
+  async editEvents(id: number, editEventDto: AddEventDto) {
+    const updatedEvent = await this.prismaService.event.update({
+      data: {
+        title: editEventDto.title,
+        requires_payment: editEventDto.requires_payment,
+        price: editEventDto.price,
+        max_participants: editEventDto.max_participants,
+        description: editEventDto.description,
+        date: new Date(),
+        form_name: 'Event',
+      },
+      where: { id },
+    });
+
+    return updatedEvent;
   }
 }

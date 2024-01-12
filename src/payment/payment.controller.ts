@@ -30,6 +30,21 @@ export class PaymentController {
       }
     }
   }
+
+  @Post('decline')
+  async declinePayments(): Promise<Student[]> {
+    try {
+      return await this.paymentService.declinePayments();
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      } else {
+        throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
+          cause: error,
+        });
+      }
+    }
+  }
   
   @Get('accepted')
   async getAllAcceptedPayments(

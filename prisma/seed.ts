@@ -22,9 +22,21 @@ async function seedEvents(n_events) {
   await prisma.event.createMany({ data: eventsList });
 }
 
+async function seedPayments(n_students) {
+  const statuses = ['accepted', 'declined', 'pending'];
+  const paymentList = [];
+  for (let i = 0; i < n_students; i++) {
+    paymentList.push({
+      photo_src: '/placeholderImage.jpg',
+      status: faker.helpers.arrayElement(statuses),
+    });
+  }
+  await prisma.payment.createMany({ data: paymentList });
+}
+
 async function seedStudents(n_students, n_events) {
   const course = ['BSCS', 'BSIT', 'BSDS'];
-  const statuses = ['accepted', 'declined', 'pending'];
+  const studentList = [];
 
   for (let i = 0; i < n_students; i++) {
     const year_and_course =
@@ -35,25 +47,21 @@ async function seedStudents(n_students, n_events) {
       faker.string.fromCharacters('ABC');
 
     // https://github.com/prisma/prisma/issues/5455
-    await prisma.student.create({
-      data: {
-        uuid: faker.string.uuid(),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        year_and_course: year_and_course,
-        payment: {
-          create: {
-            photo_src: '/placeholderImage.jpg',
-            status: faker.helpers.arrayElement(statuses),
-          },
-        },
-        event: {
-          connect: { id: Math.ceil(Math.random() * n_events) },
-        },
-      },
+
+    const paymentId = i + 1;
+    const eventId = Math.ceil(Math.random() * n_events);
+    studentList.push({
+      uuid: faker.string.uuid(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email(),
+      year_and_course: year_and_course,
+      paymentId: paymentId,
+      eventId: eventId,
     });
   }
+
+  await prisma.student.createMany({ data: studentList });
 }
 
 async function seedUsers() {
@@ -75,6 +83,8 @@ async function seedUsers() {
     },
   ];
 
+  const userList = [];
+
   for (const userData of users) {
     const { user, error } = await supabase.createSupabaseUser(
       userData.email,
@@ -86,14 +96,14 @@ async function seedUsers() {
       throw error;
     }
 
-    await prisma.user.create({
-      data: {
-        email: userData.email,
-        userType: userData.userType,
-        supabaseUserId: user.id,
-      },
+    userList.push({
+      email: userData.email,
+      userType: userData.userType,
+      supabaseId: user.id,
     });
   }
+
+  await prisma.user.createMany({ data: userList });
 }
 
 async function main() {
@@ -101,6 +111,7 @@ async function main() {
   const students = 30;
 
   await seedEvents(events);
+  await seedPayments(students);
   await seedStudents(students, events);
   await seedUsers();
 }

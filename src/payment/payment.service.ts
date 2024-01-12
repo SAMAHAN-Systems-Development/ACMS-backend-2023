@@ -49,10 +49,13 @@ export class PaymentService {
     return acceptedPayments;
   }
 
-  async declinePayments(): Promise<Student[]> {
+  async declinePayments(paymentIds: number[]): Promise<Student[]> {
     const pendingPayments = await this.prisma.student.findMany({
       where: {
         payment: {
+          id: {
+            in: paymentIds,
+          },
           status: 'pending',
         },
       },
@@ -61,13 +64,13 @@ export class PaymentService {
         event: {},
       },
     });
-
+  
     if (!pendingPayments || pendingPayments.length === 0) {
       throw new NotFoundException('No pending payments found.');
     }
-
+  
     const declinedPayments: Student[] = [];
-
+  
     for (const pendingPayment of pendingPayments) {
       const declinedPayment = await this.prisma.student.update({
         where: {
@@ -85,13 +88,13 @@ export class PaymentService {
           event: {},
         },
       });
-
+  
       declinedPayments.push(declinedPayment);
     }
-
+  
     return declinedPayments;
   }
-
+  
   async getAllAcceptedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {

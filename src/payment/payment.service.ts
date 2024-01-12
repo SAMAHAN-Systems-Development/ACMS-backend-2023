@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Student } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -6,10 +6,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  async acceptPayments(): Promise<Student[]> {
+  async acceptPayments(paymentIds: number[]): Promise<Student[]> {
     const pendingPayments = await this.prisma.student.findMany({
       where: {
         payment: {
+          id: {
+            in: paymentIds,
+          },
           status: 'pending',
         },
       },
@@ -18,13 +21,13 @@ export class PaymentService {
         event: {},
       },
     });
-  
+
     if (!pendingPayments || pendingPayments.length === 0) {
       throw new NotFoundException('No pending payments found.');
     }
-  
+
     const acceptedPayments: Student[] = [];
-  
+
     for (const pendingPayment of pendingPayments) {
       const acceptedPayment = await this.prisma.student.update({
         where: {
@@ -42,10 +45,10 @@ export class PaymentService {
           event: {},
         },
       });
-  
+
       acceptedPayments.push(acceptedPayment);
     }
-  
+
     return acceptedPayments;
   }
 
@@ -64,13 +67,13 @@ export class PaymentService {
         event: {},
       },
     });
-  
+
     if (!pendingPayments || pendingPayments.length === 0) {
       throw new NotFoundException('No pending payments found.');
     }
-  
+
     const declinedPayments: Student[] = [];
-  
+
     for (const pendingPayment of pendingPayments) {
       const declinedPayment = await this.prisma.student.update({
         where: {
@@ -88,13 +91,13 @@ export class PaymentService {
           event: {},
         },
       });
-  
+
       declinedPayments.push(declinedPayment);
     }
-  
+
     return declinedPayments;
   }
-  
+
   async getAllAcceptedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {

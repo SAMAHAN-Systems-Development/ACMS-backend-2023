@@ -16,6 +16,7 @@ import { EventService } from './event.service';
 import { Event } from '@prisma/client';
 import { AddEventDto } from './dto/add-event.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('event')
 @UseGuards(AuthGuard)
@@ -23,6 +24,7 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get(':id')
+  @Roles('admin')
   async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.viewEvent(eventId);
@@ -34,6 +36,7 @@ export class EventController {
   }
 
   @Patch('/activate/:id')
+  @Roles('admin')
   async activateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.activateEvent(eventId);
@@ -47,6 +50,7 @@ export class EventController {
   }
 
   @Patch('/inactivate/:id')
+  @Roles('admin')
   async inactivateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.inactivateEvent(eventId);
@@ -61,6 +65,7 @@ export class EventController {
   }
 
   @Get('active')
+  @Roles('admin', 'facilitator')
   async getActiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
       return await this.eventService.getActiveEvents(page);
@@ -79,6 +84,7 @@ export class EventController {
   }
 
   @Put(':id')
+  @Roles('admin')
   async editEvents(
     @Param('id') id: number,
     @Body() UpdateEventDto: AddEventDto,
@@ -88,12 +94,14 @@ export class EventController {
   }
 
   @Post('')
+  @Roles('admin')
   async addEvents(@Body() AddEventDto: AddEventDto) {
     const AddedEvent = await this.eventService.addEvent(AddEventDto);
     return { message: 'Event added successfully', data: AddedEvent };
   }
 
   @Get('inactive')
+  @Roles('admin')
   async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
     try {
       return await this.eventService.getInactiveEvents(page);

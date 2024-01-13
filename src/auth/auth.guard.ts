@@ -4,34 +4,56 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
     const environment = process.env.NODE_ENV || 'development';
 
-    if (environment === 'development') {
+    const allowedRoles = this.reflector.get<string[]>(
+      'allowedRoles',
+      context.getHandler(),
+    ) ?? ['any'];
+
+    if (
+      environment === 'development' ||
+      (allowedRoles.includes('guest') && allowedRoles.length == 1) // only guest
+    ) {
       return true;
     }
 
     if (!token) {
       throw new UnauthorizedException();
     }
+
     try {
-      await this.jwtService.verifyAsync(token, {
+      const { email, role } = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
+
+      request.user = { email: email, role: role };
+
+      // if 'any' is in allowedRoles,
+      // anyone authenticated can access
+      if (allowedRoles.includes('any')) {
+        return true;
+      }
+
+      if (allowedRoles.includes(role)) {
+        return true;
+      }
     } catch {
       throw new UnauthorizedException();
     }
 
-    return true;
+    throw new UnauthorizedException();
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

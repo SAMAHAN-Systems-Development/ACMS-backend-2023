@@ -1,10 +1,102 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Student } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
+
+  async acceptPayments(paymentIds: number[]): Promise<Student[]> {
+    const pendingPayments = await this.prisma.student.findMany({
+      where: {
+        payment: {
+          id: {
+            in: paymentIds,
+          },
+          status: 'pending',
+        },
+      },
+      include: {
+        payment: {},
+        event: {},
+      },
+    });
+
+    if (!pendingPayments || pendingPayments.length === 0) {
+      throw new NotFoundException('No pending payments found.');
+    }
+
+    const acceptedPayments: Student[] = [];
+
+    for (const pendingPayment of pendingPayments) {
+      const acceptedPayment = await this.prisma.student.update({
+        where: {
+          id: pendingPayment.id,
+        },
+        data: {
+          payment: {
+            update: {
+              status: 'accepted',
+            },
+          },
+        },
+        include: {
+          payment: {},
+          event: {},
+        },
+      });
+
+      acceptedPayments.push(acceptedPayment);
+    }
+
+    return acceptedPayments;
+  }
+
+  async declinePayments(paymentIds: number[]): Promise<Student[]> {
+    const pendingPayments = await this.prisma.student.findMany({
+      where: {
+        payment: {
+          id: {
+            in: paymentIds,
+          },
+          status: 'pending',
+        },
+      },
+      include: {
+        payment: {},
+        event: {},
+      },
+    });
+
+    if (!pendingPayments || pendingPayments.length === 0) {
+      throw new NotFoundException('No pending payments found.');
+    }
+
+    const declinedPayments: Student[] = [];
+
+    for (const pendingPayment of pendingPayments) {
+      const declinedPayment = await this.prisma.student.update({
+        where: {
+          id: pendingPayment.id,
+        },
+        data: {
+          payment: {
+            update: {
+              status: 'declined',
+            },
+          },
+        },
+        include: {
+          payment: {},
+          event: {},
+        },
+      });
+
+      declinedPayments.push(declinedPayment);
+    }
+
+    return declinedPayments;
+  }
 
   async getAllAcceptedPayments(page = 1, items = 10): Promise<Student[]> {
     return this.prisma.student.findMany({

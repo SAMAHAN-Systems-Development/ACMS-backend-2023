@@ -99,7 +99,7 @@ async function seedUsers() {
     userList.push({
       email: userData.email,
       userType: userData.userType,
-      supabaseId: user.id,
+      supabaseUserId: user.id,
     });
   }
 

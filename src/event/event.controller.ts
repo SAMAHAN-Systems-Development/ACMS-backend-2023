@@ -18,7 +18,7 @@ import { AddEventDto } from './dto/add-event.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 

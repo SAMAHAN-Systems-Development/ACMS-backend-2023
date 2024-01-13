@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -34,10 +35,11 @@ export class StudentController {
   @Roles('guest', 'cashier')
   @UseInterceptors(FileInterceptor('file'))
   create(
-    @UploadedFile() file: Express.Multer.File,
+    @Request() req,
     @Body() createStudentDto: CreateStudentDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.studentService.createStudent(createStudentDto, file);
+    return this.studentService.createStudent(req, createStudentDto, file);
   }
 
   @Put(':id')

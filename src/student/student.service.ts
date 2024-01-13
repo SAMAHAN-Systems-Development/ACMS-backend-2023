@@ -3,6 +3,7 @@ import {
   HttpException,
   Injectable,
   NotFoundException,
+  Request,
 } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
@@ -50,9 +51,13 @@ export class StudentService {
   }
 
   async createStudent(
+    req: Request,
     createStudentDto: CreateStudentDto,
     file: Express.Multer.File,
   ) {
+    const user = req['user'];
+    console.log(user);
+
     this.ValidateFileType(file);
     const uuid = uuidv4();
     const payment_path = await this.supabaseService.uploadImageToDB(file, uuid);
@@ -69,7 +74,7 @@ export class StudentService {
       newStudent = this.prisma.student.create({
         data: createStudentDto,
       });
-      
+
       const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
       console.log(uuid);
       const qrCode = await qrcode.toDataURL(uuid, {

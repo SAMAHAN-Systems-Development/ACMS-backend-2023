@@ -22,17 +22,6 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
     ) ?? ['any'];
 
-    if (
-      environment === 'development' ||
-      (allowedRoles.includes('guest') && allowedRoles.length == 1) // only guest
-    ) {
-      return true;
-    }
-
-    if (!token) {
-      throw new UnauthorizedException();
-    }
-
     try {
       const { email, role } = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
@@ -50,7 +39,14 @@ export class AuthGuard implements CanActivate {
         return true;
       }
     } catch {
-      throw new UnauthorizedException();
+      // do nothing
+    }
+
+    if (
+      environment === 'development' ||
+      allowedRoles.includes('guest') // only guest
+    ) {
+      return true;
     }
 
     throw new UnauthorizedException();

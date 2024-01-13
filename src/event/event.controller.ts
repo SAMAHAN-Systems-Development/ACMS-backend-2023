@@ -9,13 +9,16 @@ import {
   Patch,
   Query,
   Post,
+  UseGuards,
   Put,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { Event } from '@prisma/client';
 import { AddEventDto } from './dto/add-event.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event')
+@UseGuards(AuthGuard)
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 

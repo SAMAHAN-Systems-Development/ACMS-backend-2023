@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
         return true;
       }
     } catch {
-      // do nothing
+      request.user = { role: 'guest' };
     }
 
     if (

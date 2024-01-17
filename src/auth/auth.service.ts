@@ -8,52 +8,38 @@ import { Response as Res } from 'express';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly supabaseService: SupabaseService,
     private readonly prismaService: PrismaService,
     private jwtService: JwtService,
   ) {}
 
   async login(loginDto: LoginDto, res: Res) {
-    const { email, password } = loginDto;
+    const { supabaseUserId } = loginDto;
 
-    if (!email || !password) {
-      throw new UnauthorizedException();
-    }
-
-    const { data, error } = await this.supabaseService
-      .getSupabase()
-      .auth.signInWithPassword({
-        email,
-        password,
-      });
-
-    if (error) {
-      throw new UnauthorizedException();
-    }
-    const userInfo = data?.user;
-    const userType = await this.getUserTypeBySupabaseUserId(userInfo?.id);
+    const { email, userType } = await this.getUserInfoBySupabaseUserId(
+      supabaseUserId,
+    );
     const payload = { username: email };
     const accessToken = this.jwtService.sign(payload);
 
     const returnValue = res
       .set({ 'x-access-token': accessToken })
-      .json({ email: userInfo.email, userType });
-
+      .json({ email, userType });
     return returnValue;
   }
 
-  async getUserTypeBySupabaseUserId(
-    supabaseId: string,
-  ): Promise<string | null> {
+  async getUserInfoBySupabaseUserId(
+    supabaseUserId: string,
+  ): Promise<{ email: string; userType: string }> {
     const user = await this.prismaService.user.findUnique({
       where: {
-        supabaseUserId: supabaseId,
+        supabaseUserId: supabaseUserId,
       },
       select: {
+        email: true,
         userType: true,
       },
     });
 
-    return user?.userType || null;
+    return user;
   }
 }

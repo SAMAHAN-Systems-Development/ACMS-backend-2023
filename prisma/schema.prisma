@@ -1,66 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Student {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  uuid String @unique
-  firstName String
-  lastName String
-  email String
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  uuid            String   @unique
+  firstName       String
+  lastName        String
+  email           String
   year_and_course String
-
-  payment Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int @unique
-
-  event Event @relation(fields: [eventId], references: [id])
-  eventId Int @unique
+  paymentId       Int      @unique
+  eventId         Int
+  event           Event    @relation(fields: [eventId], references: [id])
+  payment         Payment  @relation(fields: [paymentId], references: [id])
 }
 
 model Payment {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   photo_src String
-  status String
-
-  student Student?
+  status    String
+  student   Student?
 }
 
 model Event {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  title String
-  price String
-  requires_payment Boolean @default(true)
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  title            String
+  price            String
   max_participants Int
-  description String
-  date DateTime
-  is_active Boolean @default(true)
-  form_name String
-
-  student Student?
+  description      String
+  date             DateTime
+  is_active        Boolean   @default(true)
+  form_name        String
+  requires_payment Boolean   @default(true)
+  students         Student[]
 }
 
 model testModel {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   firstName String
-  lastName String
+  lastName  String
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  supabaseUserId String   @unique
+  email          String   @unique
+  userType       String
 }

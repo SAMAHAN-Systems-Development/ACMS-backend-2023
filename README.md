@@ -1,5 +1,7 @@
 # **ACMS Backend**
 
+More info at [ACMS Documentation](https://www.notion.so/samahan-sysdev/Automated-Crowd-Monitoring-System-ACMS-2023-Documentation-f4a08ad5ef8a48c68d7ae21bec210fc1)
+
 ### Tools that needs to be installed:
 
 - Docker (https://docs.docker.com/desktop/install/windows-install/)
@@ -87,8 +89,8 @@ npx supabase start
    1. Create a `.env` file in your root directory
    2. Add this to your `.env` file:
 
-   ```jsx
-   DATABASE_URL ='postgresql://postgres:postgres@localhost:54322/postgres?schema=public';
+   ```bash
+   DATABASE_URL='postgresql://postgres:postgres@localhost:54322/postgres?schema=public';
    DIRECT_URL='postgresql://postgres:postgres@localhost:54322/postgres?schema=public';
    SUPABASE_URL='http://127.0.0.1:54321';
    SUPABASE_KEY='supabase_key';

@@ -1,73 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# **ACMS Backend**
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Tools that needs to be installed:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Docker (https://docs.docker.com/desktop/install/windows-install/)
+- Node (https://nodejs.org/en/download)
+- NestJS CLI (https://docs.nestjs.com/cli/overview)
+- VS Code (https://code.visualstudio.com/)
 
-## Description
+### Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [NestJS](https://nestjs.com/) - Back-end Framework
+- [Prisma](https://www.prisma.io/) - Object Relational Mapping (ORM) Tool
+- [Supabase](https://supabase.com/docs) - Database, Storage and Authentication Provider
+- [PostgreSQL](https://www.postgresql.org/) - Database Management System
+- [Docker](https://www.docker.com/) - Containerization Tool
+- [Git](https://git-scm.com/)/[Github](https://github.com/) - Version Control
 
-## Installation
+### Database Design:
+
+**Student**
+
+| Type    | Column Name     |
+| ------- | --------------- |
+| String  | uuid            |
+| String  | name            |
+| String  | email           |
+| String  | year_and_course |
+| Payment | payment         |
+| Event   | event           |
+
+**Payment**
+
+| Type    | Column Name |
+| ------- | ----------- |
+| Student | student     |
+| String  | photo_src   |
+| String  | status      |
+
+**Event**
+
+| Type    | Column Name      |
+| ------- | ---------------- |
+| String  | title            |
+| String  | price            |
+| Integer | people_max_limit |
+| Boolean | requires_payment |
+| String  | description      |
+| Boolean | isActive         |
+| String  | formName         |
+| Student | student          |
+
+### Setting up your application
+
+1. Clone the Repository:
 
 ```bash
-$ npm install
+git clone https://github.com/SAMAHAN-Systems-Development/ACMS-backend-2023
 ```
 
-## Running the app
+1. Fetch the updates:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git fetch
 ```
 
-## Test
+1. Switch to the branch of your ticket, for example:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git checkout 1-login-of-facilitator-cashier-and-admin
 ```
 
-## Support
+1. Install the libraries with this command:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm i
+```
 
-## Stay in touch
+1. Install and create the docker containers with this command (make sure that you already started your docker application):
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npx supabase start
+```
 
-## License
+1. Add a .env file
 
-Nest is [MIT licensed](LICENSE).
+   1. Create a `.env` file in your root directory
+   2. Add this to your `.env` file:
+
+   ```jsx
+   DATABASE_URL ='postgresql://postgres:postgres@localhost:54322/postgres?schema=public';
+   DIRECT_URL='postgresql://postgres:postgres@localhost:54322/postgres?schema=public';
+   SUPABASE_URL='http://127.0.0.1:54321';
+   SUPABASE_KEY='supabase_key';
+   FRONTEND_URL='http://localhost:3001';
+   NODE_ENV='development';
+   ```
+
+2. Update the database by the Prisma migrations with these commands:
+
+```bash
+npm run prisma:migrate:reset
+```
+
+```bash
+npx prisma generate
+```
+
+### Running your application
+
+If you just turned your pc on and you want to start the application, run the following commands:
+
+1. Pull from the main
+
+```bash
+git pull origin main
+```
+
+1. Install the libraries
+
+```bash
+npm i
+```
+
+1. Run the docker containers (make sure that you already started your docker application)
+
+```bash
+npx supabase start
+```
+
+1. Run the NestJS backend
+
+```bash
+npm run start
+```
+
+- 📌 After you finish programming, run this command to stop the docker containers:
+  ```bash
+  npx supabase stop
+  ```

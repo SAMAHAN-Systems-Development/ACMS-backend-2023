@@ -226,4 +226,17 @@ export class PaymentService {
 
     return pendingPayments;
   }
+
+  async restorePayments(paymentIds: number[]) {
+    return await this.prisma.payment.updateMany({
+      where: {
+        id: {
+          in: paymentIds,
+        },
+      },
+      data: {
+        status: 'pending',
+      },
+    });
+  }
 }

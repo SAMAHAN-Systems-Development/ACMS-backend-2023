@@ -1,4 +1,3 @@
 export class DeclinePaymentDto {
-    paymentIds: number[];
-  }
-  
+  paymentIds: number[];
+}

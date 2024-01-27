@@ -15,6 +15,7 @@ import { PaymentService } from './payment.service';
 import { Student } from '@prisma/client';
 import { AcceptPaymentDto } from './dto/accept-payment.dto';
 import { DeclinePaymentDto } from './dto/decline-payment.dto';
+import { RestorePaymentDto } from './dto/restore-payment.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('payment')
@@ -161,6 +162,22 @@ export class PaymentController {
   ) {
     try {
       return await this.paymentService.getEventPendingPayments(eventId, page);
+    } catch (error) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
+        cause: error,
+      });
+    }
+  }
+
+  @Post('restore')
+  async restorePayments(@Body() restorePaymentDto: RestorePaymentDto) {
+    let paymentIds = restorePaymentDto.paymentIds;
+    if (typeof restorePaymentDto.paymentIds === 'string') {
+      paymentIds = JSON.parse(restorePaymentDto.paymentIds);
+    }
+
+    try {
+      return await this.paymentService.restorePayments(paymentIds);
     } catch (error) {
       throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST, {
         cause: error,

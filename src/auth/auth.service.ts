@@ -18,11 +18,14 @@ export class AuthService {
     const { email, userType } = await this.getUserInfoBySupabaseUserId(
       supabaseUserId,
     );
-    const payload = { username: email };
+    const payload = { username: email, supabaseUserId: supabaseUserId };
     const accessToken = this.jwtService.sign(payload);
 
     const returnValue = res
-      .set({ 'x-access-token': accessToken })
+      .set({
+        'x-access-token': accessToken,
+        'Access-Control-Expose-Headers': 'x-access-token',
+      })
       .json({ email, userType });
     return returnValue;
   }

@@ -72,7 +72,7 @@ export class PaymentController {
   @Get('accepted')
   async getAllAcceptedPayments(
     @Query('page') page: number,
-  ): Promise<Student[]> {
+  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
     try {
       return this.paymentService.getAllAcceptedPayments(page);
     } catch (error) {
@@ -106,7 +106,7 @@ export class PaymentController {
   @Get('declined')
   async getAllDeclinedPayments(
     @Query('page') page: number,
-  ): Promise<Student[]> {
+  ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
     try {
       return this.paymentService.getAllDeclinedPayments(page);
     } catch (error) {

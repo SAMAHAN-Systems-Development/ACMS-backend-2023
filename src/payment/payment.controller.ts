@@ -17,6 +17,7 @@ import { AcceptPaymentDto } from './dto/accept-payment.dto';
 import { DeclinePaymentDto } from './dto/decline-payment.dto';
 import { RestorePaymentDto } from './dto/restore-payment.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('payment')
 @UseGuards(AuthGuard)
@@ -24,6 +25,7 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('accept')
+  @Roles('admin')
   async acceptPayments(
     @Body() acceptPaymentDto: AcceptPaymentDto,
   ): Promise<Student[]> {
@@ -47,6 +49,7 @@ export class PaymentController {
   }
 
   @Post('decline')
+  @Roles('admin')
   async declinePayments(
     @Body() declinePaymentDto: DeclinePaymentDto,
   ): Promise<Student[]> {
@@ -70,6 +73,7 @@ export class PaymentController {
   }
 
   @Get('accepted')
+  @Roles('admin')
   async getAllAcceptedPayments(
     @Query('page') page: number,
   ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
@@ -90,6 +94,7 @@ export class PaymentController {
   }
 
   @Get('accepted/:id')
+  @Roles('admin')
   async getEventAcceptedPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,
@@ -104,6 +109,7 @@ export class PaymentController {
   }
 
   @Get('declined')
+  @Roles('admin')
   async getAllDeclinedPayments(
     @Query('page') page: number,
   ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
@@ -124,6 +130,7 @@ export class PaymentController {
   }
 
   @Get('declined/:id')
+  @Roles('admin')
   async getEventDeclinedPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,
@@ -138,6 +145,7 @@ export class PaymentController {
   }
 
   @Get('pending')
+  @Roles('admin')
   async getAllPendingPayments(@Query('page') page: number): Promise<Student[]> {
     try {
       return this.paymentService.getAllPendingPayments(page);
@@ -156,6 +164,7 @@ export class PaymentController {
   }
 
   @Get('pending/:id')
+  @Roles('admin')
   async getEventPendingPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,

@@ -38,12 +38,23 @@ export class EventService {
     return event;
   }
 
-  async getActiveEvents(page = 1, items = 10): Promise<Event[]> {
-    return this.prismaService.event.findMany({
+  async getActiveEvents(
+    page = 1,
+    items = 10,
+  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
+    const activeEvents = await this.prismaService.event.findMany({
       where: { is_active: true },
       take: items,
       skip: items * (page - 1),
     });
+
+    const totalCount = await this.prismaService.event.count({
+      where: { is_active: true },
+    });
+
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { activeEvents, maxPage };
   }
 
   async addEvent(AddEventDto: AddEventDto) {
@@ -63,15 +74,26 @@ export class EventService {
     return event;
   }
 
-  async getInactiveEvents(page = 1, items = 10): Promise<Event[]> {
-    return this.prismaService.event.findMany({
+  async getInactiveEvents(
+    page = 1,
+    items = 10,
+  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
+    const inactiveEvents = await this.prismaService.event.findMany({
       where: { is_active: false },
       take: items,
       skip: items * (page - 1),
     });
+
+    const totalCount = await this.prismaService.event.count({
+      where: { is_active: false },
+    });
+
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { inactiveEvents, maxPage };
   }
 
-  async editEvents(id: number, editEventDto: AddEventDto) {
+  async editEvent(id: number, editEventDto: AddEventDto) {
     const updatedEvent = await this.prismaService.event.update({
       data: {
         title: editEventDto.title,

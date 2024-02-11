@@ -61,7 +61,9 @@ export class EventController {
   }
 
   @Get('active')
-  async getActiveEvents(@Query('page') page: number): Promise<Event[]> {
+  async getActiveEvents(
+    @Query('page') page: number,
+  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
     try {
       return await this.eventService.getActiveEvents(page);
     } catch (error) {
@@ -79,11 +81,11 @@ export class EventController {
   }
 
   @Put(':id')
-  async editEvents(
+  async editEvent(
     @Param('id') id: number,
     @Body() UpdateEventDto: AddEventDto,
   ) {
-    const EditedEvent = await this.eventService.editEvents(id, UpdateEventDto);
+    const EditedEvent = await this.eventService.editEvent(id, UpdateEventDto);
     return { message: 'Event added successfully', data: EditedEvent };
   }
 
@@ -94,7 +96,9 @@ export class EventController {
   }
 
   @Get('inactive')
-  async getInactiveEvents(@Query('page') page: number): Promise<Event[]> {
+  async getInactiveEvents(
+    @Query('page') page: number,
+  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
     try {
       return await this.eventService.getInactiveEvents(page);
     } catch (error) {

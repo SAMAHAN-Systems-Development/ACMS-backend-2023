@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  async acceptPayments(paymentIds: number[]): Promise<Student[]> {
+  async acceptPayments(paymentIds: number[]) {
     const pendingPayments = await this.prisma.student.findMany({
       where: {
         payment: {
@@ -26,10 +26,8 @@ export class PaymentService {
       throw new NotFoundException('No pending payments found.');
     }
 
-    const acceptedPayments: Student[] = [];
-
     for (const pendingPayment of pendingPayments) {
-      const acceptedPayment = await this.prisma.student.update({
+      await this.prisma.student.update({
         where: {
           id: pendingPayment.id,
         },
@@ -45,14 +43,10 @@ export class PaymentService {
           event: {},
         },
       });
-
-      acceptedPayments.push(acceptedPayment);
     }
-
-    return acceptedPayments;
   }
 
-  async declinePayments(paymentIds: number[]): Promise<Student[]> {
+  async declinePayments(paymentIds: number[]) {
     const pendingPayments = await this.prisma.student.findMany({
       where: {
         payment: {
@@ -72,10 +66,8 @@ export class PaymentService {
       throw new NotFoundException('No pending payments found.');
     }
 
-    const declinedPayments: Student[] = [];
-
     for (const pendingPayment of pendingPayments) {
-      const declinedPayment = await this.prisma.student.update({
+      await this.prisma.student.update({
         where: {
           id: pendingPayment.id,
         },
@@ -91,11 +83,7 @@ export class PaymentService {
           event: {},
         },
       });
-
-      declinedPayments.push(declinedPayment);
     }
-
-    return declinedPayments;
   }
 
   async getAllAcceptedPayments(
@@ -135,7 +123,7 @@ export class PaymentService {
     eventId: number,
     page = 1,
     items = 10,
-  ): Promise<Student[]> {
+  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
     const skipItems = items * (page - 1);
 
     const acceptedPayments = await this.prisma.student.findMany({
@@ -155,7 +143,20 @@ export class PaymentService {
       skip: skipItems,
     });
 
-    return acceptedPayments;
+    const totalCount = await this.prisma.student.count({
+      where: {
+        event: {
+          id: eventId,
+        },
+        payment: {
+          status: 'accepted',
+        },
+      },
+    });
+
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { acceptedPayments, maxPage };
   }
 
   async getAllDeclinedPayments(
@@ -192,7 +193,7 @@ export class PaymentService {
     eventId: number,
     page = 1,
     items = 10,
-  ): Promise<Student[]> {
+  ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
     const skipItems = items * (page - 1);
 
     const declinedPayments = await this.prisma.student.findMany({
@@ -212,11 +213,27 @@ export class PaymentService {
       skip: skipItems,
     });
 
-    return declinedPayments;
+    const totalCount = await this.prisma.student.count({
+      where: {
+        event: {
+          id: eventId,
+        },
+        payment: {
+          status: 'declined',
+        },
+      },
+    });
+
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { declinedPayments, maxPage };
   }
 
-  async getAllPendingPayments(page = 1, items = 10): Promise<Student[]> {
-    return this.prisma.student.findMany({
+  async getAllPendingPayments(
+    page = 1,
+    items = 10,
+  ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
+    const pendingPayments = await this.prisma.student.findMany({
       include: {
         payment: {},
         event: {},
@@ -229,13 +246,24 @@ export class PaymentService {
       take: items,
       skip: items * (page - 1),
     });
+
+    const totalCount = await this.prisma.student.count({
+      where: {
+        payment: {
+          status: 'pending',
+        },
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { pendingPayments, maxPage };
   }
 
   async getEventPendingPayments(
     eventId: number,
     page = 1,
     items = 10,
-  ): Promise<Student[]> {
+  ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
     const skipItems = items * (page - 1);
 
     const pendingPayments = await this.prisma.student.findMany({
@@ -255,11 +283,24 @@ export class PaymentService {
       skip: skipItems,
     });
 
-    return pendingPayments;
+    const totalCount = await this.prisma.student.count({
+      where: {
+        event: {
+          id: eventId,
+        },
+        payment: {
+          status: 'pending',
+        },
+      },
+    });
+
+    const maxPage = Math.ceil(totalCount / items);
+
+    return { pendingPayments, maxPage };
   }
 
   async restorePayments(paymentIds: number[]) {
-    return await this.prisma.payment.updateMany({
+    const pendingPayments = await this.prisma.payment.updateMany({
       where: {
         id: {
           in: paymentIds,

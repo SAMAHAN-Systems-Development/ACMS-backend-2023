@@ -24,13 +24,9 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('accept')
-  async acceptPayments(
-    @Body() acceptPaymentDto: AcceptPaymentDto,
-  ): Promise<Student[]> {
+  async acceptPayments(@Body() acceptPaymentDto: AcceptPaymentDto) {
     try {
-      return await this.paymentService.acceptPayments(
-        acceptPaymentDto.paymentIds,
-      );
+      await this.paymentService.acceptPayments(acceptPaymentDto.paymentIds);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
@@ -47,13 +43,9 @@ export class PaymentController {
   }
 
   @Post('decline')
-  async declinePayments(
-    @Body() declinePaymentDto: DeclinePaymentDto,
-  ): Promise<Student[]> {
+  async declinePayments(@Body() declinePaymentDto: DeclinePaymentDto) {
     try {
-      return await this.paymentService.declinePayments(
-        declinePaymentDto.paymentIds,
-      );
+      await this.paymentService.declinePayments(declinePaymentDto.paymentIds);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
@@ -93,7 +85,7 @@ export class PaymentController {
   async getEventAcceptedPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,
-  ): Promise<Student[]> {
+  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
     try {
       return await this.paymentService.getEventAcceptedPayments(eventId, page);
     } catch (error) {
@@ -127,7 +119,7 @@ export class PaymentController {
   async getEventDeclinedPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,
-  ): Promise<Student[]> {
+  ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
     try {
       return await this.paymentService.getEventDeclinedPayments(eventId, page);
     } catch (error) {
@@ -138,7 +130,9 @@ export class PaymentController {
   }
 
   @Get('pending')
-  async getAllPendingPayments(@Query('page') page: number): Promise<Student[]> {
+  async getAllPendingPayments(
+    @Query('page') page: number,
+  ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
     try {
       return this.paymentService.getAllPendingPayments(page);
     } catch (error) {
@@ -159,7 +153,7 @@ export class PaymentController {
   async getEventPendingPayments(
     @Param('id', ParseIntPipe) eventId: number,
     @Query('page') page: number,
-  ) {
+  ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
     try {
       return await this.paymentService.getEventPendingPayments(eventId, page);
     } catch (error) {
@@ -171,11 +165,7 @@ export class PaymentController {
 
   @Post('restore')
   async restorePayments(@Body() restorePaymentDto: RestorePaymentDto) {
-    let paymentIds = restorePaymentDto.paymentIds;
-    if (typeof restorePaymentDto.paymentIds === 'string') {
-      paymentIds = JSON.parse(restorePaymentDto.paymentIds);
-    }
-
+    const paymentIds = restorePaymentDto.paymentIds;
     try {
       return await this.paymentService.restorePayments(paymentIds);
     } catch (error) {

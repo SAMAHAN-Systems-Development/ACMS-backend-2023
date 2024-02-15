@@ -5,17 +5,19 @@ import { AddEventDto } from './dto/add-event.dto';
 
 @Injectable()
 export class EventService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async viewEvent(eventId: number) {
-    return await this.prismaService.event.findFirst({
+    const event = await this.prisma.event.findFirst({
       where: { id: eventId },
       include: { students: true },
     });
+
+    return event;
   }
 
   async activateEvent(eventId: number) {
-    const event = await this.prismaService.event.update({
+    const event = await this.prisma.event.update({
       data: { is_active: true },
       where: { id: eventId },
       select: {
@@ -27,7 +29,7 @@ export class EventService {
   }
 
   async inactivateEvent(eventId: number) {
-    const event = await this.prismaService.event.update({
+    const event = await this.prisma.event.update({
       data: { is_active: false },
       where: { id: eventId },
       select: {
@@ -42,13 +44,14 @@ export class EventService {
     page = 1,
     items = 10,
   ): Promise<{ activeEvents: Event[]; maxPage: number }> {
-    const activeEvents = await this.prismaService.event.findMany({
+    const activeEvents = await this.prisma.event.findMany({
       where: { is_active: true },
+      include: { students: true },
       take: items,
       skip: items * (page - 1),
     });
 
-    const totalCount = await this.prismaService.event.count({
+    const totalCount = await this.prisma.event.count({
       where: { is_active: true },
     });
 
@@ -59,7 +62,7 @@ export class EventService {
 
   async addEvent(AddEventDto: AddEventDto) {
     console.log(AddEventDto.title);
-    const event = await this.prismaService.event.create({
+    const event = await this.prisma.event.create({
       data: {
         title: AddEventDto.title,
         requires_payment: AddEventDto.requires_payment,
@@ -78,13 +81,14 @@ export class EventService {
     page = 1,
     items = 10,
   ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
-    const inactiveEvents = await this.prismaService.event.findMany({
+    const inactiveEvents = await this.prisma.event.findMany({
       where: { is_active: false },
+      include: { students: true },
       take: items,
       skip: items * (page - 1),
     });
 
-    const totalCount = await this.prismaService.event.count({
+    const totalCount = await this.prisma.event.count({
       where: { is_active: false },
     });
 
@@ -94,7 +98,7 @@ export class EventService {
   }
 
   async editEvent(id: number, editEventDto: AddEventDto) {
-    const updatedEvent = await this.prismaService.event.update({
+    const updatedEvent = await this.prisma.event.update({
       data: {
         title: editEventDto.title,
         requires_payment: editEventDto.requires_payment,
@@ -108,5 +112,14 @@ export class EventService {
     });
 
     return updatedEvent;
+  }
+
+  async getAllActiveEvents() {
+    const activeEvents = await this.prisma.event.findMany({
+      select: { title: true, id: true },
+      where: { is_active: true },
+    });
+
+    return activeEvents;
   }
 }

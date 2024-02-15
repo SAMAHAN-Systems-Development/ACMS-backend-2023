@@ -22,6 +22,46 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  @Get('active')
+  async getActiveEvents(
+    @Query('page') page: number,
+  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
+    try {
+      return await this.eventService.getActiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  @Get('inactive')
+  async getInactiveEvents(
+    @Query('page') page: number,
+  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
+    try {
+      return await this.eventService.getInactiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
   @Get(':id')
   async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
@@ -60,26 +100,6 @@ export class EventController {
     }
   }
 
-  @Get('active')
-  async getActiveEvents(
-    @Query('page') page: number,
-  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
-    try {
-      return await this.eventService.getActiveEvents(page);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Something went wrong',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
-  }
-
   @Put(':id')
   async editEvent(
     @Param('id') id: number,
@@ -95,22 +115,16 @@ export class EventController {
     return { message: 'Event added successfully', data: AddedEvent };
   }
 
-  @Get('inactive')
-  async getInactiveEvents(
-    @Query('page') page: number,
-  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
+  @Get('/active/all/title')
+  async getAllTitleOfActiveEvents() {
     try {
-      return await this.eventService.getInactiveEvents(page);
+      return await this.eventService.getAllActiveEvents();
     } catch (error) {
+      console.error(error);
       throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Something went wrong',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
+        'Unable to fetch all active events.',
+        HttpStatus.BAD_REQUEST,
+        { cause: error },
       );
     }
   }

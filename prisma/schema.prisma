@@ -9,18 +9,19 @@ datasource db {
 }
 
 model Student {
-  id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  uuid            String   @unique
-  firstName       String
-  lastName        String
-  email           String
-  year_and_course String
-  paymentId       Int      @unique
-  eventId         Int
-  event           Event    @relation(fields: [eventId], references: [id])
-  payment         Payment  @relation(fields: [paymentId], references: [id])
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  uuid             String   @unique
+  firstName        String
+  lastName         String
+  email            String
+  year_and_course  String
+  requires_payment Boolean  @default(true)
+  paymentId        Int      @unique
+  eventId          Int
+  event            Event    @relation(fields: [eventId], references: [id])
+  payment          Payment  @relation(fields: [paymentId], references: [id])
 }
 
 model Payment {

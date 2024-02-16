@@ -49,42 +49,54 @@ export class StudentService {
     }
   }
 
-  async createStudent(
-    createStudentDto: CreateStudentDto,
-    file: Express.Multer.File,
-  ) {
-    this.ValidateFileType(file);
+  async createStudent(createStudentDto: CreateStudentDto) {
+    const payment = await this.createPayment(
+      createStudentDto.photo_src,
+      createStudentDto.isSubmittedByStudent,
+    );
     const uuid = uuidv4();
-    const payment_path = await this.supabaseService.uploadImageToDB(file, uuid);
-    createStudentDto.uuid = uuid;
-    // change this once OAuth is implemented.
-    const isStudent = true;
-    const payment = await this.createPayment(payment_path, isStudent);
-    createStudentDto.paymentId = payment.id;
+    const newStudent = this.prisma.student.create({
+      data: {
+        uuid: uuid,
+        firstName: createStudentDto.firstName,
+        lastName: createStudentDto.lastName,
+        email: createStudentDto.email,
+        year_and_course: createStudentDto.year_and_course,
+        paymentId: payment.id,
+        eventId: createStudentDto.eventId,
+        requires_payment: createStudentDto.isSubmittedByStudent,
+      },
+    });
+    return newStudent;
+
+    // this.ValidateFileType(file);
+    // const payment_path = await this.supabaseService.uploadImageToDB(file, uuid);
+    // createStudentDto.uuid = uuid;
+    // createStudentDto.paymentId = payment.id;
     // converts eventId to Number, because
     // http body can only accept Strings
-    createStudentDto.eventId = Number(createStudentDto.eventId);
-    let newStudent;
-    try {
-      newStudent = this.prisma.student.create({
-        data: createStudentDto,
-      });
+    // createStudentDto.eventId = Number(createStudentDto.eventId);
+    // let newStudent;
+    // try {
+    //   newStudent = this.prisma.student.create({
+    //     data: createStudentDto,
+    //   });
 
-      const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
-      console.log(uuid);
-      const qrCode = await qrcode.toDataURL(uuid, {
-        scale: 10,
-      });
-      this.emailSender.sendEmail(
-        receiptImgToBase64,
-        qrCode,
-        createStudentDto.email,
-      );
-      return newStudent;
-    } catch (ex) {
-      console.log(ex);
-      return;
-    }
+    //   const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
+    //   console.log(uuid);
+    //   const qrCode = await qrcode.toDataURL(uuid, {
+    //     scale: 10,
+    //   });
+    //   this.emailSender.sendEmail(
+    //     receiptImgToBase64,
+    //     qrCode,
+    //     createStudentDto.email,
+    //   );
+    //   return newStudent;
+    // } catch (ex) {
+    //   console.log(ex);
+    //   return;
+    // }
   }
 
   async findAll() {

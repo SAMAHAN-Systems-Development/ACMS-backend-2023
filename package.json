@@ -13,6 +13,7 @@
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npx prisma db seed",
     "prisma:setup": "npm run prisma:migrate:dev && npm run prisma:dev:deploy && npm run prisma:generate",
+    "prisma:format": "npx prisma format",
     "build": "nest build",
     "supabase:reset": "npx supabase db reset",
     "supabase:build": "npm i && npx nest build",

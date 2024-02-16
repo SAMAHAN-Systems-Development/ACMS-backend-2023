@@ -29,11 +29,8 @@ export class StudentController {
   }
   @Post('submit-registration')
   @UseInterceptors(FileInterceptor('file'))
-  create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() createStudentDto: CreateStudentDto,
-  ) {
-    return this.studentService.createStudent(createStudentDto, file);
+  create(@Body() createStudentDto: CreateStudentDto) {
+    return this.studentService.createStudent(createStudentDto);
   }
 
   @Put(':id')

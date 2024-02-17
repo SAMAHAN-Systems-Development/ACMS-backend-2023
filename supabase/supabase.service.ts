@@ -32,36 +32,36 @@ export class SupabaseService {
     return data;
   }
 
-  FiletoBase64(file: Express.Multer.File) {
-    let fileToBase64;
-    try {
-      fileToBase64 = Buffer.from(file.buffer).toString('base64');
-    } catch (ex) {
-      console.log(ex);
-    }
-    return fileToBase64;
-  }
+  // FiletoBase64(file: Express.Multer.File) {
+  //   let fileToBase64;
+  //   try {
+  //     fileToBase64 = Buffer.from(file.buffer).toString('base64');
+  //   } catch (ex) {
+  //     console.log(ex);
+  //   }
+  //   return fileToBase64;
+  // }
 
-  async uploadImageToDB(file: Express.Multer.File, uuid: string) {
-    const bucketName = 'payment';
-    // the generated file name when
-    // image is uploaded to supabase
-    const file_name = `${uuid}_receipt.png`;
-    const payment_path = `${bucketName}${file_name}`;
-    // converts file to base64 string
-    // supabase has limitations in uploading files
-    // without converting to Base64, causes uploaded file to be incorrectly
-    // uploaded with missing details in supabase
-    const base64 = this.FiletoBase64(file);
-    try {
-      await this.supabase.storage
-        .from(bucketName)
-        .upload(file_name, decode(base64), {
-          contentType: 'image/jpg',
-        });
-    } catch (ex) {
-      console.log(ex);
-    }
-    return payment_path;
-  }
+  // async uploadImageToDB(file: Express.Multer.File, uuid: string) {
+  //   const bucketName = 'payment';
+  //   // the generated file name when
+  //   // image is uploaded to supabase
+  //   const file_name = `${uuid}_receipt.png`;
+  //   const payment_path = `${bucketName}${file_name}`;
+  //   // converts file to base64 string
+  //   // supabase has limitations in uploading files
+  //   // without converting to Base64, causes uploaded file to be incorrectly
+  //   // uploaded with missing details in supabase
+  //   const base64 = this.FiletoBase64(file);
+  //   try {
+  //     await this.supabase.storage
+  //       .from(bucketName)
+  //       .upload(file_name, decode(base64), {
+  //         contentType: 'image/jpg',
+  //       });
+  //   } catch (ex) {
+  //     console.log(ex);
+  //   }
+  //   return payment_path;
+  // }
 }

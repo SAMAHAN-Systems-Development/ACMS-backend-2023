@@ -38,16 +38,16 @@ export class StudentService {
 
   // validates image file uploaded
   // to check if its correct image type
-  async ValidateFileType(file: Express.Multer.File) {
-    const validator = new FileTypeValidator({
-      fileType: /(jpg|jpeg|png|webp)$/,
-    });
-    if (validator.isValid(file)) {
-      return file;
-    } else {
-      throw new HttpException('Uploaded file is not an image!', 400);
-    }
-  }
+  // async ValidateFileType(file: Express.Multer.File) {
+  //   const validator = new FileTypeValidator({
+  //     fileType: /(jpg|jpeg|png|webp)$/,
+  //   });
+  //   if (validator.isValid(file)) {
+  //     return file;
+  //   } else {
+  //     throw new HttpException('Uploaded file is not an image!', 400);
+  //   }
+  // }
 
   async createStudent(createStudentDto: CreateStudentDto) {
     const payment = await this.createPayment(

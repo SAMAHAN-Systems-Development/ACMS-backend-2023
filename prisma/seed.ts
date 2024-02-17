@@ -67,19 +67,19 @@ async function seedStudents(n_students, n_events) {
 async function seedUsers() {
   const users = [
     {
-      email: 'facilitator@addu.edu.ph',
+      email: 'viverbungag@gmail.com',
+      password: 'secretpassword',
+      userType: 'admin',
+    },
+    {
+      email: 'viverbungag2@gmail.com',
       password: 'secretpassword',
       userType: 'facilitator',
     },
     {
-      email: 'cashier@addu.edu.ph',
+      email: 'viverbungag3@gmail.com',
       password: 'secretpassword',
       userType: 'cashier',
-    },
-    {
-      email: 'admin@addu.edu.ph',
-      password: 'secretpassword',
-      userType: 'admin',
     },
   ];
 

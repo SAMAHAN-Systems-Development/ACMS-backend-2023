@@ -122,4 +122,26 @@ export class StudentService {
       throw new NotFoundException('Student Not Found');
     }
   }
+
+  async getStudentByUuidAndEventId(
+    uuid: string,
+    eventId: number,
+  ): Promise<ReadStudentDto> {
+    try {
+      const student = await this.prisma.student.findUnique({
+        where: { uuid, eventId },
+        include: { event: true, payment: true },
+      });
+
+      if (student.requires_payment) {
+        if (student.payment.status === 'accepted') {
+          return student;
+        }
+        throw new HttpException('Payment is still pending', 403);
+      }
+      return student;
+    } catch (error) {
+      throw new NotFoundException('Student Not Found');
+    }
+  }
 }

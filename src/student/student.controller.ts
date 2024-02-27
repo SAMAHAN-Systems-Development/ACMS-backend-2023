@@ -50,4 +50,16 @@ export class StudentController {
   async getStudentByUuid(@Param('uuid') uuid: string): Promise<ReadStudentDto> {
     return this.studentService.getStudentByUuid(uuid);
   }
+
+  @Get(':uuid/:eventId')
+  @UseGuards(AuthGuard)
+  async getStudentByUuidAndEventId(
+    @Param('uuid') uuid: string,
+    @Param('eventId') eventId: number,
+  ): Promise<ReadStudentDto> {
+    return this.studentService.getStudentByUuidAndEventId(
+      uuid,
+      Number(eventId),
+    );
+  }
 }

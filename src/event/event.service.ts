@@ -60,17 +60,17 @@ export class EventService {
     return { activeEvents, maxPage };
   }
 
-  async addEvent(AddEventDto: AddEventDto) {
-    console.log(AddEventDto.title);
+  async addEvent(addEventDto: AddEventDto) {
+    const formName = addEventDto.title.toLowerCase().split(' ').join('-');
     const event = await this.prisma.event.create({
       data: {
-        title: AddEventDto.title,
-        requires_payment: AddEventDto.requires_payment,
-        price: AddEventDto.price,
-        max_participants: AddEventDto.max_participants,
-        description: AddEventDto.description,
+        title: addEventDto.title,
+        requires_payment: addEventDto.requires_payment,
+        price: addEventDto.price,
+        max_participants: addEventDto.max_participants,
+        description: addEventDto.description,
         date: new Date(),
-        form_name: 'Event',
+        form_name: formName,
       },
     });
 
@@ -98,6 +98,7 @@ export class EventService {
   }
 
   async editEvent(id: number, editEventDto: AddEventDto) {
+    const formName = editEventDto.title.toLowerCase().split(' ').join('-');
     const updatedEvent = await this.prisma.event.update({
       data: {
         title: editEventDto.title,
@@ -105,8 +106,8 @@ export class EventService {
         price: editEventDto.price,
         max_participants: editEventDto.max_participants,
         description: editEventDto.description,
-        date: new Date(),
-        form_name: 'Event',
+        date: editEventDto.date,
+        form_name: formName,
       },
       where: { id },
     });
@@ -121,5 +122,13 @@ export class EventService {
     });
 
     return activeEvents;
+  }
+
+  async getEventByFormName(formName: string) {
+    const event = await this.prisma.event.findFirst({
+      where: { form_name: formName, is_active: true },
+    });
+
+    return event;
   }
 }

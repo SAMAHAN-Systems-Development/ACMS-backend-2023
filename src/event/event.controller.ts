@@ -18,11 +18,11 @@ import { AddEventDto } from './dto/add-event.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event')
-@UseGuards(AuthGuard)
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get('active')
+  @UseGuards(AuthGuard)
   async getActiveEvents(
     @Query('page') page: number,
   ): Promise<{ activeEvents: Event[]; maxPage: number }> {
@@ -43,6 +43,7 @@ export class EventController {
   }
 
   @Get('inactive')
+  @UseGuards(AuthGuard)
   async getInactiveEvents(
     @Query('page') page: number,
   ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
@@ -63,6 +64,7 @@ export class EventController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.viewEvent(eventId);
@@ -74,6 +76,7 @@ export class EventController {
   }
 
   @Patch('/activate/:id')
+  @UseGuards(AuthGuard)
   async activateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.activateEvent(eventId);
@@ -87,6 +90,7 @@ export class EventController {
   }
 
   @Patch('/inactivate/:id')
+  @UseGuards(AuthGuard)
   async inactivateEvent(@Param('id', ParseIntPipe) eventId: number) {
     try {
       return await this.eventService.inactivateEvent(eventId);
@@ -101,21 +105,27 @@ export class EventController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   async editEvent(
     @Param('id') id: number,
     @Body() UpdateEventDto: AddEventDto,
   ) {
-    const EditedEvent = await this.eventService.editEvent(id, UpdateEventDto);
+    const EditedEvent = await this.eventService.editEvent(
+      Number(id),
+      UpdateEventDto,
+    );
     return { message: 'Event added successfully', data: EditedEvent };
   }
 
   @Post('')
-  async addEvents(@Body() AddEventDto: AddEventDto) {
-    const AddedEvent = await this.eventService.addEvent(AddEventDto);
+  @UseGuards(AuthGuard)
+  async addEvents(@Body() addEventDto: AddEventDto) {
+    const AddedEvent = await this.eventService.addEvent(addEventDto);
     return { message: 'Event added successfully', data: AddedEvent };
   }
 
   @Get('/active/all/title')
+  @UseGuards(AuthGuard)
   async getAllTitleOfActiveEvents() {
     try {
       return await this.eventService.getAllActiveEvents();
@@ -123,6 +133,20 @@ export class EventController {
       console.error(error);
       throw new HttpException(
         'Unable to fetch all active events.',
+        HttpStatus.BAD_REQUEST,
+        { cause: error },
+      );
+    }
+  }
+
+  @Get('/form-name/:formName')
+  async getEventByFormName(@Param('formName') formName: string) {
+    try {
+      return await this.eventService.getEventByFormName(formName);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Unable to find the event.',
         HttpStatus.BAD_REQUEST,
         { cause: error },
       );

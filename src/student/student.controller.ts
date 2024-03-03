@@ -28,7 +28,6 @@ export class StudentController {
     return this.studentService.findAll();
   }
   @Post('submit-registration')
-  @UseInterceptors(FileInterceptor('file'))
   create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentService.createStudent(createStudentDto);
   }
@@ -46,7 +45,6 @@ export class StudentController {
   }
 
   @Get(':uuid')
-  @UseGuards(AuthGuard)
   async getStudentByUuid(@Param('uuid') uuid: string): Promise<ReadStudentDto> {
     return this.studentService.getStudentByUuid(uuid);
   }

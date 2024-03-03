@@ -8,15 +8,17 @@ const supabase = new SupabaseService();
 async function seedEvents(n_events) {
   const eventsList = [];
   for (let i = 0; i < n_events; i++) {
+    const title = faker.lorem.words({ min: 3, max: 6 });
+    const formName = title.toLowerCase().split(' ').join('-');
     eventsList.push({
-      title: faker.lorem.words({ min: 3, max: 6 }),
+      title: title,
       price: faker.commerce.price({ min: 50, max: 150, symbol: 'Php' }),
       requires_payment: faker.datatype.boolean(),
       max_participants: faker.number.int({ min: 20, max: 200 }),
       description: faker.lorem.text(),
       date: faker.date.soon({ days: 90, refDate: new Date() }),
       is_active: faker.datatype.boolean(),
-      form_name: faker.lorem.words({ min: 2, max: 6 }),
+      form_name: formName,
     });
   }
   await prisma.event.createMany({ data: eventsList });

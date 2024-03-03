@@ -4,4 +4,5 @@ export class AddEventDto {
   price: string;
   max_participants: number;
   description: string;
+  date: Date;
 }

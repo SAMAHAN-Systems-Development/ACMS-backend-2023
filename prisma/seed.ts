@@ -12,7 +12,7 @@ async function seedEvents(n_events) {
     const formName = title.toLowerCase().split(' ').join('-');
     eventsList.push({
       title: title,
-      price: faker.commerce.price({ min: 50, max: 150, symbol: 'Php' }),
+      price: faker.number.int({ min: 100, max: 200 }),
       requires_payment: faker.datatype.boolean(),
       max_participants: faker.number.int({ min: 20, max: 200 }),
       description: faker.lorem.text(),

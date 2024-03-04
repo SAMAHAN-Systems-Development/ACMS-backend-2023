@@ -38,7 +38,7 @@ model Event {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   title            String    @unique
-  price            String
+  price            Float
   max_participants Int
   description      String
   date             DateTime

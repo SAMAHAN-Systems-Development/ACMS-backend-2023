@@ -36,25 +36,16 @@ export class StudentService {
     }
   }
 
-  // validates image file uploaded
-  // to check if its correct image type
-  // async ValidateFileType(file: Express.Multer.File) {
-  //   const validator = new FileTypeValidator({
-  //     fileType: /(jpg|jpeg|png|webp)$/,
-  //   });
-  //   if (validator.isValid(file)) {
-  //     return file;
-  //   } else {
-  //     throw new HttpException('Uploaded file is not an image!', 400);
-  //   }
-  // }
-
   async createStudent(createStudentDto: CreateStudentDto) {
     const payment = await this.createPayment(
       createStudentDto.photo_src,
       createStudentDto.isSubmittedByStudent,
     );
     const uuid = uuidv4();
+    const requires_payment =
+      createStudentDto.isSubmittedByStudent &&
+      createStudentDto.event_requires_payment;
+
     const newStudent = this.prisma.student.create({
       data: {
         uuid: uuid,
@@ -64,9 +55,19 @@ export class StudentService {
         year_and_course: createStudentDto.year_and_course,
         paymentId: payment.id,
         eventId: createStudentDto.eventId,
-        requires_payment: createStudentDto.isSubmittedByStudent,
+        requires_payment: requires_payment,
       },
     });
+
+    const qrCode = await qrcode.toDataURL(uuid, {
+      scale: 10,
+    });
+    this.emailSender.sendEmail(
+      createStudentDto.photo_src,
+      qrCode,
+      createStudentDto.email,
+      requires_payment,
+    );
     return newStudent;
 
     // this.ValidateFileType(file);
@@ -81,17 +82,8 @@ export class StudentService {
     //   newStudent = this.prisma.student.create({
     //     data: createStudentDto,
     //   });
-
-    //   const receiptImgToBase64 = this.supabaseService.FiletoBase64(file);
     //   console.log(uuid);
-    //   const qrCode = await qrcode.toDataURL(uuid, {
-    //     scale: 10,
-    //   });
-    //   this.emailSender.sendEmail(
-    //     receiptImgToBase64,
-    //     qrCode,
-    //     createStudentDto.email,
-    //   );
+
     //   return newStudent;
     // } catch (ex) {
     //   console.log(ex);

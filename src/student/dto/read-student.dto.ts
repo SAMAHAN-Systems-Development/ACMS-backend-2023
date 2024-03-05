@@ -8,7 +8,7 @@ export class ReadStudentDto {
     createdAt: Date;
     updatedAt: Date;
     title: string;
-    price: string;
+    price: number;
     requires_payment: boolean;
     max_participants: number;
     description: string;

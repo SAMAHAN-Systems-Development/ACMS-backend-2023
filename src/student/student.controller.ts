@@ -45,7 +45,7 @@ export class StudentController {
   }
 
   @Get(':uuid')
-  async getStudentByUuid(@Param('uuid') uuid: string): Promise<ReadStudentDto> {
+  async getStudentByUuid(@Param('uuid') uuid: string) {
     return this.studentService.getStudentByUuid(uuid);
   }
 
@@ -54,7 +54,7 @@ export class StudentController {
   async getStudentByUuidAndEventId(
     @Param('uuid') uuid: string,
     @Param('eventId') eventId: number,
-  ): Promise<ReadStudentDto> {
+  ) {
     return this.studentService.getStudentByUuidAndEventId(
       uuid,
       Number(eventId),

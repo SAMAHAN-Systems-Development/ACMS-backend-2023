@@ -104,7 +104,7 @@ export class StudentService {
     return `This action removes a #${id} student`;
   }
 
-  async getStudentByUuid(uuid: string): Promise<ReadStudentDto> {
+  async getStudentByUuid(uuid: string) {
     try {
       return await this.prisma.student.findUnique({
         where: { uuid },
@@ -115,10 +115,7 @@ export class StudentService {
     }
   }
 
-  async getStudentByUuidAndEventId(
-    uuid: string,
-    eventId: number,
-  ): Promise<ReadStudentDto> {
+  async getStudentByUuidAndEventId(uuid: string, eventId: number) {
     try {
       const student = await this.prisma.student.findUnique({
         where: { uuid, eventId },

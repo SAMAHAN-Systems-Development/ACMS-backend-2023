@@ -32,18 +32,6 @@ export class StudentController {
     return this.studentService.createStudent(createStudentDto);
   }
 
-  @Put(':id')
-  @UseGuards(AuthGuard)
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentService.update(+id, updateStudentDto);
-  }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard)
-  remove(@Param('id') id: string) {
-    return this.studentService.remove(+id);
-  }
-
   @Get(':uuid')
   async getStudentByUuid(@Param('uuid') uuid: string) {
     return this.studentService.getStudentByUuid(uuid);

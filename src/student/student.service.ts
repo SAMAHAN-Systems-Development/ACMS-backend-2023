@@ -5,14 +5,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
 import { EmailSender } from 'src/emailSender/EmailSender';
 import * as qrcode from 'qrcode';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server } from 'socket.io';
 
 @Injectable()
+@WebSocketGateway()
 export class StudentService {
+  @WebSocketServer()
+  server: Server;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly supabaseService: SupabaseService,
     private readonly emailSender: EmailSender,
   ) {}
+
   async createPayment(payment_path: string, isRegisterByStudent: boolean) {
     try {
       return await this.prisma.payment.create({
@@ -69,7 +80,15 @@ export class StudentService {
       createStudentDto.email,
       requires_payment,
     );
+
+    this.sendTicketLeftWebsocketData();
+
     return newStudent;
+  }
+
+  @SubscribeMessage('ticketsLeftMessage')
+  async sendTicketLeftWebsocketData() {
+    this.server.emit('ticketsLeft', 'hello');
   }
 
   async findAll() {

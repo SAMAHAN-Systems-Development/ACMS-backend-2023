@@ -9,19 +9,19 @@ datasource db {
 }
 
 model Student {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  uuid             String   @unique
-  firstName        String
-  lastName         String
-  email            String
-  year_and_course  String
-  requires_payment Boolean  @default(true)
-  paymentId        Int      @unique
-  eventId          Int
-  event            Event    @relation(fields: [eventId], references: [id])
-  payment          Payment  @relation(fields: [paymentId], references: [id])
+  id                 Int              @id @default(autoincrement())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  uuid               String           @unique
+  firstName          String
+  lastName           String
+  email              String
+  year_and_course    String
+  requires_payment   Boolean          @default(true)
+  paymentId          Int              @unique
+  eventTierOnEventId Int
+  eventTierOnEvent   EventTierOnEvent @relation(fields: [eventTierOnEventId], references: [id])
+  payment            Payment          @relation(fields: [paymentId], references: [id])
 }
 
 model Payment {
@@ -34,18 +34,38 @@ model Payment {
 }
 
 model Event {
-  id               Int       @id @default(autoincrement())
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  title            String    @unique
-  price            Float
-  max_participants Int
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  title            String             @unique
   description      String
   date             DateTime
-  is_active        Boolean   @default(true)
+  is_active        Boolean            @default(true)
   form_name        String
-  requires_payment Boolean   @default(true)
-  students         Student[]
+  requires_payment Boolean            @default(true)
+  eventTierOnEvent EventTierOnEvent[]
+}
+
+model EventTier {
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  name             String
+  price            Float
+  max_participants Int
+  is_active        Boolean            @default(true)
+  events           EventTierOnEvent[]
+}
+
+model EventTierOnEvent {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  eventId     Int
+  eventTierId Int
+  event       Event     @relation(fields: [eventId], references: [id])
+  eventTier   EventTier @relation(fields: [eventTierId], references: [id])
+  students    Student[]
 }
 
 model testModel {

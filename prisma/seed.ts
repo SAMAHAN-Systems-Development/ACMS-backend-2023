@@ -6,22 +6,47 @@ const prisma = new PrismaService();
 const supabase = new SupabaseService();
 
 async function seedEvents(n_events) {
+  const tiers = ['vvip', 'gold', 'silver', 'bronze', 'genad'];
+
+  const tierList = [];
+  for (let i = 0; i < tiers.length; i++) {
+    const tier = tiers[i];
+    tierList.push({
+      name: tier,
+      price: faker.number.int({ min: 100, max: 200 }),
+      max_participants: faker.number.int({ min: 20, max: 200 }),
+      is_active: true,
+    });
+  }
+  await prisma.eventTier.createMany({ data: tierList });
+
   const eventsList = [];
   for (let i = 0; i < n_events; i++) {
     const title = faker.lorem.words({ min: 3, max: 6 });
     const formName = title.toLowerCase().split(' ').join('-');
-    eventsList.push({
+    const event = {
       title: title,
-      price: faker.number.int({ min: 100, max: 200 }),
       requires_payment: faker.datatype.boolean(),
-      max_participants: faker.number.int({ min: 20, max: 200 }),
       description: faker.lorem.text(),
       date: faker.date.soon({ days: 90, refDate: new Date() }),
       is_active: faker.datatype.boolean(),
       form_name: formName,
-    });
+    };
+
+    eventsList.push(event);
   }
   await prisma.event.createMany({ data: eventsList });
+
+  for (let i = 0; i < n_events; i++) {
+    for (let j = 0; j < tiers.length; j++) {
+      await prisma.eventTierOnEvent.create({
+        data: {
+          eventId: i + 1,
+          eventTierId: j + 1,
+        },
+      });
+    }
+  }
 }
 
 async function seedPayments(n_students) {
@@ -36,7 +61,7 @@ async function seedPayments(n_students) {
   await prisma.payment.createMany({ data: paymentList });
 }
 
-async function seedStudents(n_students, n_events) {
+async function seedStudents(n_students, n_events, n_tiers) {
   const course = ['BSCS', 'BSIT', 'BSDS'];
   const studentList = [];
 
@@ -51,7 +76,10 @@ async function seedStudents(n_students, n_events) {
     // https://github.com/prisma/prisma/issues/5455
 
     const paymentId = i + 1;
-    const eventId = Math.ceil(Math.random() * n_events);
+    const eventTierOnEventId = faker.number.int({
+      min: 1,
+      max: n_events * n_tiers,
+    });
     studentList.push({
       uuid: faker.string.uuid(),
       firstName: faker.person.firstName(),
@@ -59,7 +87,7 @@ async function seedStudents(n_students, n_events) {
       email: faker.internet.email(),
       year_and_course: year_and_course,
       paymentId: paymentId,
-      eventId: eventId,
+      eventTierOnEventId: eventTierOnEventId,
     });
   }
 
@@ -110,11 +138,12 @@ async function seedUsers() {
 
 async function main() {
   const events = 10;
-  const students = 30;
+  const students = 80;
+  const tiers = 5;
 
   await seedEvents(events);
   await seedPayments(students);
-  await seedStudents(students, events);
+  await seedStudents(students, events, tiers);
   await seedUsers();
 }
 

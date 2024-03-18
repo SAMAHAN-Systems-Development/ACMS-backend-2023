@@ -21,47 +21,47 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Get('active')
-  @UseGuards(AuthGuard)
-  async getActiveEvents(
-    @Query('page') page: number,
-  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
-    try {
-      return await this.eventService.getActiveEvents(page);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Something went wrong',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
-  }
+  // @Get('active')
+  // @UseGuards(AuthGuard)
+  // async getActiveEvents(
+  //   @Query('page') page: number,
+  // ): Promise<{ activeEvents: Event[]; maxPage: number }> {
+  //   try {
+  //     return await this.eventService.getActiveEvents(page);
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       {
+  //         status: HttpStatus.FORBIDDEN,
+  //         error: 'Something went wrong',
+  //       },
+  //       HttpStatus.FORBIDDEN,
+  //       {
+  //         cause: error,
+  //       },
+  //     );
+  //   }
+  // }
 
-  @Get('inactive')
-  @UseGuards(AuthGuard)
-  async getInactiveEvents(
-    @Query('page') page: number,
-  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
-    try {
-      return await this.eventService.getInactiveEvents(page);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Something went wrong',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
-  }
+  // @Get('inactive')
+  // @UseGuards(AuthGuard)
+  // async getInactiveEvents(
+  //   @Query('page') page: number,
+  // ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
+  //   try {
+  //     return await this.eventService.getInactiveEvents(page);
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       {
+  //         status: HttpStatus.FORBIDDEN,
+  //         error: 'Something went wrong',
+  //       },
+  //       HttpStatus.FORBIDDEN,
+  //       {
+  //         cause: error,
+  //       },
+  //     );
+  //   }
+  // }
 
   @Get(':id')
   @UseGuards(AuthGuard)
@@ -104,25 +104,25 @@ export class EventController {
     }
   }
 
-  @Put(':id')
-  @UseGuards(AuthGuard)
-  async editEvent(
-    @Param('id') id: number,
-    @Body() UpdateEventDto: AddEventDto,
-  ) {
-    const EditedEvent = await this.eventService.editEvent(
-      Number(id),
-      UpdateEventDto,
-    );
-    return { message: 'Event added successfully', data: EditedEvent };
-  }
+  // @Put(':id')
+  // @UseGuards(AuthGuard)
+  // async editEvent(
+  //   @Param('id') id: number,
+  //   @Body() UpdateEventDto: AddEventDto,
+  // ) {
+  //   const EditedEvent = await this.eventService.editEvent(
+  //     Number(id),
+  //     UpdateEventDto,
+  //   );
+  //   return { message: 'Event added successfully', data: EditedEvent };
+  // }
 
-  @Post('')
-  @UseGuards(AuthGuard)
-  async addEvents(@Body() addEventDto: AddEventDto) {
-    const AddedEvent = await this.eventService.addEvent(addEventDto);
-    return { message: 'Event added successfully', data: AddedEvent };
-  }
+  // @Post('')
+  // @UseGuards(AuthGuard)
+  // async addEvents(@Body() addEventDto: AddEventDto) {
+  //   const AddedEvent = await this.eventService.addEvent(addEventDto);
+  //   return { message: 'Event added successfully', data: AddedEvent };
+  // }
 
   @Get('/active/all/title')
   @UseGuards(AuthGuard)

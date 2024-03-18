@@ -27,25 +27,30 @@ export class StudentController {
     console.log('find all executed');
     return this.studentService.findAll();
   }
+  // @Post('submit-registration')
+  // create(@Body() createStudentDto: CreateStudentDto) {
+  //   return this.studentService.createStudent(createStudentDto);
+  // }
+
   @Post('submit-registration')
-  create(@Body() createStudentDto: CreateStudentDto) {
-    return this.studentService.createStudent(createStudentDto);
+  create() {
+    this.studentService.createStudent();
   }
 
-  @Get(':uuid')
-  async getStudentByUuid(@Param('uuid') uuid: string) {
-    return this.studentService.getStudentByUuid(uuid);
-  }
+  // @Get(':uuid')
+  // async getStudentByUuid(@Param('uuid') uuid: string) {
+  //   return this.studentService.getStudentByUuid(uuid);
+  // }
 
-  @Get(':uuid/:eventId')
-  @UseGuards(AuthGuard)
-  async getStudentByUuidAndEventId(
-    @Param('uuid') uuid: string,
-    @Param('eventId') eventId: number,
-  ) {
-    return this.studentService.getStudentByUuidAndEventId(
-      uuid,
-      Number(eventId),
-    );
-  }
+  // @Get(':uuid/:eventId')
+  // @UseGuards(AuthGuard)
+  // async getStudentByUuidAndEventId(
+  //   @Param('uuid') uuid: string,
+  //   @Param('eventId') eventId: number,
+  // ) {
+  //   return this.studentService.getStudentByUuidAndEventId(
+  //     uuid,
+  //     Number(eventId),
+  //   );
+  // }
 }

@@ -10,7 +10,14 @@ export class EventService {
   async viewEvent(eventId: number) {
     const event = await this.prisma.event.findFirst({
       where: { id: eventId },
-      include: { students: true },
+      include: {
+        eventTierOnEvent: {
+          include: {
+            eventTier: true,
+            students: true,
+          },
+        },
+      },
     });
 
     return event;
@@ -40,80 +47,80 @@ export class EventService {
     return event;
   }
 
-  async getActiveEvents(
-    page = 1,
-    items = 10,
-  ): Promise<{ activeEvents: Event[]; maxPage: number }> {
-    const activeEvents = await this.prisma.event.findMany({
-      where: { is_active: true },
-      include: { students: true },
-      take: items,
-      skip: items * (page - 1),
-    });
+  // async getActiveEvents(
+  //   page = 1,
+  //   items = 10,
+  // ): Promise<{ activeEvents: Event[]; maxPage: number }> {
+  //   const activeEvents = await this.prisma.event.findMany({
+  //     where: { is_active: true },
+  //     include: { students: true },
+  //     take: items,
+  //     skip: items * (page - 1),
+  //   });
 
-    const totalCount = await this.prisma.event.count({
-      where: { is_active: true },
-    });
+  //   const totalCount = await this.prisma.event.count({
+  //     where: { is_active: true },
+  //   });
 
-    const maxPage = Math.ceil(totalCount / items);
+  //   const maxPage = Math.ceil(totalCount / items);
 
-    return { activeEvents, maxPage };
-  }
+  //   return { activeEvents, maxPage };
+  // }
 
-  async addEvent(addEventDto: AddEventDto) {
-    const formName = addEventDto.title.toLowerCase().split(' ').join('-');
-    const event = await this.prisma.event.create({
-      data: {
-        title: addEventDto.title,
-        requires_payment: addEventDto.requires_payment,
-        price: addEventDto.price,
-        max_participants: addEventDto.max_participants,
-        description: addEventDto.description,
-        date: new Date(),
-        form_name: formName,
-      },
-    });
+  // async addEvent(addEventDto: AddEventDto) {
+  //   const formName = addEventDto.title.toLowerCase().split(' ').join('-');
+  //   const event = await this.prisma.event.create({
+  //     data: {
+  //       title: addEventDto.title,
+  //       requires_payment: addEventDto.requires_payment,
+  //       price: addEventDto.price,
+  //       max_participants: addEventDto.max_participants,
+  //       description: addEventDto.description,
+  //       date: new Date(),
+  //       form_name: formName,
+  //     },
+  //   });
 
-    return event;
-  }
+  //   return event;
+  // }
 
-  async getInactiveEvents(
-    page = 1,
-    items = 10,
-  ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
-    const inactiveEvents = await this.prisma.event.findMany({
-      where: { is_active: false },
-      include: { students: true },
-      take: items,
-      skip: items * (page - 1),
-    });
+  // async getInactiveEvents(
+  //   page = 1,
+  //   items = 10,
+  // ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
+  //   const inactiveEvents = await this.prisma.event.findMany({
+  //     where: { is_active: false },
+  //     include: { students: true },
+  //     take: items,
+  //     skip: items * (page - 1),
+  //   });
 
-    const totalCount = await this.prisma.event.count({
-      where: { is_active: false },
-    });
+  //   const totalCount = await this.prisma.event.count({
+  //     where: { is_active: false },
+  //   });
 
-    const maxPage = Math.ceil(totalCount / items);
+  //   const maxPage = Math.ceil(totalCount / items);
 
-    return { inactiveEvents, maxPage };
-  }
+  //   return { inactiveEvents, maxPage };
+  // }
 
-  async editEvent(id: number, editEventDto: AddEventDto) {
-    const formName = editEventDto.title.toLowerCase().split(' ').join('-');
-    const updatedEvent = await this.prisma.event.update({
-      data: {
-        title: editEventDto.title,
-        requires_payment: editEventDto.requires_payment,
-        price: editEventDto.price,
-        max_participants: editEventDto.max_participants,
-        description: editEventDto.description,
-        date: editEventDto.date,
-        form_name: formName,
-      },
-      where: { id },
-    });
+  // async editEvent(id: number, editEventDto: AddEventDto) {
+  //   const formName = editEventDto.title.toLowerCase().split(' ').join('-');
+  //   const updatedEvent = await this.prisma.event.update({
+  //     data: {
+  //       title: editEventDto.title,
+  //       requires_payment: editEventDto.requires_payment,
+  //       price: editEventDto.price,
+  //       max_participants: editEventDto.max_participants,
+  //       description: editEventDto.description,
+  //       date: editEventDto.date,
+  //       form_name: formName,
+  //     },
+  //     where: { id },
+  //   });
 
-    return updatedEvent;
-  }
+  //   return updatedEvent;
+  // }
 
   async getAllActiveEvents() {
     const activeEvents = await this.prisma.event.findMany({
@@ -128,7 +135,6 @@ export class EventService {
     const event = await this.prisma.event.findFirst({
       where: { form_name: formName, is_active: true },
     });
-
     return event;
   }
 }

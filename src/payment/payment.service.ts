@@ -31,6 +31,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -47,6 +48,7 @@ export class PaymentService {
       const finalAcceptedPayment = {
         ...acceptedPayment,
         event: acceptedPayment.student.eventTierOnEvent.event,
+        eventTier: acceptedPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalAcceptedPayment.student.eventTierOnEvent;
@@ -75,6 +77,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -100,6 +103,7 @@ export class PaymentService {
       const finalAcceptedPayment = {
         ...acceptedPayment,
         event: acceptedPayment.student.eventTierOnEvent.event,
+        eventTier: acceptedPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalAcceptedPayment.student.eventTierOnEvent;
@@ -137,6 +141,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -153,6 +158,7 @@ export class PaymentService {
       const finalDeclinedPayment = {
         ...declinedPayment,
         event: declinedPayment.student.eventTierOnEvent.event,
+        eventTier: declinedPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalDeclinedPayment.student.eventTierOnEvent;
@@ -181,6 +187,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -206,6 +213,7 @@ export class PaymentService {
       const finalDeclinedPayment = {
         ...declinedPayment,
         event: declinedPayment.student.eventTierOnEvent.event,
+        eventTier: declinedPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalDeclinedPayment.student.eventTierOnEvent;
@@ -243,6 +251,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -259,6 +268,7 @@ export class PaymentService {
       const finalPendingPayment = {
         ...pendingPayment,
         event: pendingPayment.student.eventTierOnEvent.event,
+        eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalPendingPayment.student.eventTierOnEvent;
@@ -287,6 +297,7 @@ export class PaymentService {
             eventTierOnEvent: {
               include: {
                 event: true,
+                eventTier: true,
               },
             },
           },
@@ -312,6 +323,7 @@ export class PaymentService {
       const finalPendingPayment = {
         ...pendingPayment,
         event: pendingPayment.student.eventTierOnEvent.event,
+        eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
       };
 
       delete finalPendingPayment.student.eventTierOnEvent;

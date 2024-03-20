@@ -1,20 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-  UseInterceptors,
-  UploadedFile,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
-import { ReadStudentDto } from './dto/read-student.dto';
-import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('student')
@@ -27,30 +13,25 @@ export class StudentController {
     console.log('find all executed');
     return this.studentService.findAll();
   }
-  // @Post('submit-registration')
-  // create(@Body() createStudentDto: CreateStudentDto) {
-  //   return this.studentService.createStudent(createStudentDto);
-  // }
-
   @Post('submit-registration')
-  create() {
-    this.studentService.createStudent();
+  create(@Body() createStudentDto: CreateStudentDto) {
+    return this.studentService.createStudent(createStudentDto);
   }
 
-  // @Get(':uuid')
-  // async getStudentByUuid(@Param('uuid') uuid: string) {
-  //   return this.studentService.getStudentByUuid(uuid);
-  // }
+  @Get(':uuid')
+  async getStudentByUuid(@Param('uuid') uuid: string) {
+    return this.studentService.getStudentByUuid(uuid);
+  }
 
-  // @Get(':uuid/:eventId')
-  // @UseGuards(AuthGuard)
-  // async getStudentByUuidAndEventId(
-  //   @Param('uuid') uuid: string,
-  //   @Param('eventId') eventId: number,
-  // ) {
-  //   return this.studentService.getStudentByUuidAndEventId(
-  //     uuid,
-  //     Number(eventId),
-  //   );
-  // }
+  @Get(':uuid/:eventId')
+  @UseGuards(AuthGuard)
+  async getStudentByUuidAndEventId(
+    @Param('uuid') uuid: string,
+    @Param('eventId') eventId: number,
+  ) {
+    return this.studentService.getStudentByUuidAndEventId(
+      uuid,
+      Number(eventId),
+    );
+  }
 }

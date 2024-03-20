@@ -49,6 +49,7 @@ export class PaymentService {
         ...acceptedPayment,
         event: acceptedPayment.student.eventTierOnEvent.event,
         eventTier: acceptedPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: acceptedPayment.student.eventTierOnEvent.price,
       };
 
       delete finalAcceptedPayment.student.eventTierOnEvent;
@@ -104,6 +105,7 @@ export class PaymentService {
         ...acceptedPayment,
         event: acceptedPayment.student.eventTierOnEvent.event,
         eventTier: acceptedPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: acceptedPayment.student.eventTierOnEvent.price,
       };
 
       delete finalAcceptedPayment.student.eventTierOnEvent;
@@ -159,6 +161,7 @@ export class PaymentService {
         ...declinedPayment,
         event: declinedPayment.student.eventTierOnEvent.event,
         eventTier: declinedPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: declinedPayment.student.eventTierOnEvent.price,
       };
 
       delete finalDeclinedPayment.student.eventTierOnEvent;
@@ -214,6 +217,7 @@ export class PaymentService {
         ...declinedPayment,
         event: declinedPayment.student.eventTierOnEvent.event,
         eventTier: declinedPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: declinedPayment.student.eventTierOnEvent.price,
       };
 
       delete finalDeclinedPayment.student.eventTierOnEvent;
@@ -269,6 +273,7 @@ export class PaymentService {
         ...pendingPayment,
         event: pendingPayment.student.eventTierOnEvent.event,
         eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: pendingPayment.student.eventTierOnEvent.price,
       };
 
       delete finalPendingPayment.student.eventTierOnEvent;
@@ -324,6 +329,7 @@ export class PaymentService {
         ...pendingPayment,
         event: pendingPayment.student.eventTierOnEvent.event,
         eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
+        eventPrice: pendingPayment.student.eventTierOnEvent.price,
       };
 
       delete finalPendingPayment.student.eventTierOnEvent;

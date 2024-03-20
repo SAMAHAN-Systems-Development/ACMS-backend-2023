@@ -6,118 +6,60 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  // async acceptPayments(paymentIds: number[]) {
-  //   const pendingPayments = await this.prisma.student.findMany({
-  //     where: {
-  //       payment: {
-  //         id: {
-  //           in: paymentIds,
-  //         },
-  //         status: 'pending',
-  //       },
-  //     },
-  //     include: {
-  //       payment: {},
-  //       event: {},
-  //     },
-  //   });
+  async acceptPayments(paymentIds: number[]) {
+    await this.prisma.payment.updateMany({
+      data: {
+        status: 'accepted',
+      },
+      where: { id: { in: paymentIds } },
+    });
+  }
 
-  //   if (!pendingPayments || pendingPayments.length === 0) {
-  //     throw new NotFoundException('No pending payments found.');
-  //   }
+  async declinePayments(paymentIds: number[]) {
+    await this.prisma.payment.updateMany({
+      data: {
+        status: 'declined',
+      },
+      where: { id: { in: paymentIds } },
+    });
+  }
 
-  //   for (const pendingPayment of pendingPayments) {
-  //     await this.prisma.student.update({
-  //       where: {
-  //         id: pendingPayment.id,
-  //       },
-  //       data: {
-  //         payment: {
-  //           update: {
-  //             status: 'accepted',
-  //           },
-  //         },
-  //       },
-  //       include: {
-  //         payment: {},
-  //         event: {},
-  //       },
-  //     });
-  //   }
-  // }
+  async getAllAcceptedPayments(
+    page = 1,
+    items = 10,
+  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
+    const acceptedPayments = await this.prisma.student.findMany({
+      include: {
+        payment: true,
+        eventTierOnEvent: {
+          include: {
+            event: true,
+          },
+        },
+      },
+      where: {
+        payment: {
+          status: 'accepted',
+        },
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
 
-  // async declinePayments(paymentIds: number[]) {
-  //   const pendingPayments = await this.prisma.student.findMany({
-  //     where: {
-  //       payment: {
-  //         id: {
-  //           in: paymentIds,
-  //         },
-  //         status: 'pending',
-  //       },
-  //     },
-  //     include: {
-  //       payment: {},
-  //       event: {},
-  //     },
-  //   });
+    const totalCount = await this.prisma.student.count({
+      where: {
+        payment: {
+          status: 'accepted',
+        },
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
 
-  //   if (!pendingPayments || pendingPayments.length === 0) {
-  //     throw new NotFoundException('No pending payments found.');
-  //   }
-
-  //   for (const pendingPayment of pendingPayments) {
-  //     await this.prisma.student.update({
-  //       where: {
-  //         id: pendingPayment.id,
-  //       },
-  //       data: {
-  //         payment: {
-  //           update: {
-  //             status: 'declined',
-  //           },
-  //         },
-  //       },
-  //       include: {
-  //         payment: {},
-  //         event: {},
-  //       },
-  //     });
-  //   }
-  // }
-
-  // async getAllAcceptedPayments(
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
-  //   const acceptedPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       payment: {},
-  //       event: {},
-  //     },
-  //     where: {
-  //       payment: {
-  //         status: 'accepted',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: items * (page - 1),
-  //   });
-
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       payment: {
-  //         status: 'accepted',
-  //       },
-  //     },
-  //   });
-  //   const maxPage = Math.ceil(totalCount / items);
-
-  //   return {
-  //     acceptedPayments,
-  //     maxPage,
-  //   };
-  // }
+    return {
+      acceptedPayments,
+      maxPage,
+    };
+  }
 
   // async getEventAcceptedPayments(
   //   eventId: number,

@@ -23,63 +23,63 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  // @Post('accept')
-  // async acceptPayments(@Body() acceptPaymentDto: AcceptPaymentDto) {
-  //   try {
-  //     await this.paymentService.acceptPayments(acceptPaymentDto.paymentIds);
-  //   } catch (error) {
-  //     if (error instanceof NotFoundException) {
-  //       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
-  //     } else {
-  //       throw new HttpException(
-  //         'Something went wrong',
-  //         HttpStatus.BAD_REQUEST,
-  //         {
-  //           cause: error,
-  //         },
-  //       );
-  //     }
-  //   }
-  // }
+  @Post('accept')
+  async acceptPayments(@Body() acceptPaymentDto: AcceptPaymentDto) {
+    try {
+      await this.paymentService.acceptPayments(acceptPaymentDto.paymentIds);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      } else {
+        throw new HttpException(
+          'Something went wrong',
+          HttpStatus.BAD_REQUEST,
+          {
+            cause: error,
+          },
+        );
+      }
+    }
+  }
 
-  // @Post('decline')
-  // async declinePayments(@Body() declinePaymentDto: DeclinePaymentDto) {
-  //   try {
-  //     await this.paymentService.declinePayments(declinePaymentDto.paymentIds);
-  //   } catch (error) {
-  //     if (error instanceof NotFoundException) {
-  //       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
-  //     } else {
-  //       throw new HttpException(
-  //         'Something went wrong',
-  //         HttpStatus.BAD_REQUEST,
-  //         {
-  //           cause: error,
-  //         },
-  //       );
-  //     }
-  //   }
-  // }
+  @Post('decline')
+  async declinePayments(@Body() declinePaymentDto: DeclinePaymentDto) {
+    try {
+      await this.paymentService.declinePayments(declinePaymentDto.paymentIds);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      } else {
+        throw new HttpException(
+          'Something went wrong',
+          HttpStatus.BAD_REQUEST,
+          {
+            cause: error,
+          },
+        );
+      }
+    }
+  }
 
-  // @Get('accepted')
-  // async getAllAcceptedPayments(
-  //   @Query('page') page: number,
-  // ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
-  //   try {
-  //     return this.paymentService.getAllAcceptedPayments(page);
-  //   } catch (error) {
-  //     throw new HttpException(
-  //       {
-  //         status: HttpStatus.FORBIDDEN,
-  //         error: 'Something went wrong',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //       {
-  //         cause: error,
-  //       },
-  //     );
-  //   }
-  // }
+  @Get('accepted')
+  async getAllAcceptedPayments(
+    @Query('page') page: number,
+  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
+    try {
+      return this.paymentService.getAllAcceptedPayments(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
   // @Get('accepted/:id')
   // async getEventAcceptedPayments(

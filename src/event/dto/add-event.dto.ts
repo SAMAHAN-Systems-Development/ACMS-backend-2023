@@ -5,4 +5,5 @@ export class AddEventDto {
   max_participants: number;
   description: string;
   date: Date;
+  eventTierId: number;
 }

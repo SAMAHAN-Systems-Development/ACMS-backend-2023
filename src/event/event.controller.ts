@@ -21,47 +21,43 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  // @Get('active')
-  // @UseGuards(AuthGuard)
-  // async getActiveEvents(
-  //   @Query('page') page: number,
-  // ): Promise<{ activeEvents: Event[]; maxPage: number }> {
-  //   try {
-  //     return await this.eventService.getActiveEvents(page);
-  //   } catch (error) {
-  //     throw new HttpException(
-  //       {
-  //         status: HttpStatus.FORBIDDEN,
-  //         error: 'Something went wrong',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //       {
-  //         cause: error,
-  //       },
-  //     );
-  //   }
-  // }
+  @Get('active')
+  @UseGuards(AuthGuard)
+  async getActiveEvents(@Query('page') page: number) {
+    try {
+      return await this.eventService.getActiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
-  // @Get('inactive')
-  // @UseGuards(AuthGuard)
-  // async getInactiveEvents(
-  //   @Query('page') page: number,
-  // ): Promise<{ inactiveEvents: Event[]; maxPage: number }> {
-  //   try {
-  //     return await this.eventService.getInactiveEvents(page);
-  //   } catch (error) {
-  //     throw new HttpException(
-  //       {
-  //         status: HttpStatus.FORBIDDEN,
-  //         error: 'Something went wrong',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //       {
-  //         cause: error,
-  //       },
-  //     );
-  //   }
-  // }
+  @Get('inactive')
+  @UseGuards(AuthGuard)
+  async getInactiveEvents(@Query('page') page: number) {
+    try {
+      return await this.eventService.getInactiveEvents(page);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Something went wrong',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
   @Get(':id')
   @UseGuards(AuthGuard)

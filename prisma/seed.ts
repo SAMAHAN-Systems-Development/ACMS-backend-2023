@@ -13,9 +13,6 @@ async function seedEvents(n_events) {
     const tier = tiers[i];
     tierList.push({
       name: tier,
-      price: faker.number.int({ min: 100, max: 200 }),
-      max_participants: faker.number.int({ min: 20, max: 200 }),
-      is_active: true,
     });
   }
   await prisma.eventTier.createMany({ data: tierList });
@@ -43,6 +40,9 @@ async function seedEvents(n_events) {
         data: {
           eventId: i + 1,
           eventTierId: j + 1,
+          price: faker.number.int({ min: 100, max: 200 }),
+          max_participants: faker.number.int({ min: 20, max: 200 }),
+          is_active: true,
         },
       });
     }

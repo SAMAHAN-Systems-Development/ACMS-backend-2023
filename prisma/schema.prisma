@@ -47,25 +47,26 @@ model Event {
 }
 
 model EventTier {
-  id               Int                @id @default(autoincrement())
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  name             String
-  price            Float
-  max_participants Int
-  is_active        Boolean            @default(true)
-  events           EventTierOnEvent[]
+  id        Int                @id @default(autoincrement())
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  name      String
+  is_active Boolean            @default(true)
+  events    EventTierOnEvent[]
 }
 
 model EventTierOnEvent {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  eventId     Int
-  eventTierId Int
-  event       Event     @relation(fields: [eventId], references: [id])
-  eventTier   EventTier @relation(fields: [eventTierId], references: [id])
-  students    Student[]
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  eventId          Int
+  eventTierId      Int
+  event            Event     @relation(fields: [eventId], references: [id])
+  eventTier        EventTier @relation(fields: [eventTierId], references: [id])
+  price            Float
+  max_participants Int
+  students         Student[]
+  is_active        Boolean   @default(true)
 }
 
 model testModel {

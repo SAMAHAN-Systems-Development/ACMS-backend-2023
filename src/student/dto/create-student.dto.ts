@@ -8,4 +8,5 @@ export class CreateStudentDto {
   isSubmittedByStudent: boolean;
   event_requires_payment: boolean;
   eventTierId: number | null;
+  is_addu_student: boolean;
 }

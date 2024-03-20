@@ -13,7 +13,6 @@ export class EventTierController {
   }
 
   @Get(':eventId')
-  @UseGuards(AuthGuard)
   getEventTiersBasedOnEventId(eventId: number) {
     return this.eventTierService.getEventTiersBasedOnEventId(eventId);
   }

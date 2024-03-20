@@ -40,7 +40,8 @@ async function seedEvents(n_events) {
         data: {
           eventId: i + 1,
           eventTierId: j + 1,
-          price: faker.number.int({ min: 100, max: 200 }),
+          adduPrice: faker.number.int({ min: 100, max: 200 }),
+          nonAdduPrice: faker.number.int({ min: 200, max: 300 }),
           max_participants: faker.number.int({ min: 20, max: 200 }),
           is_active: true,
         },
@@ -88,6 +89,7 @@ async function seedStudents(n_students, n_events, n_tiers) {
       year_and_course: year_and_course,
       paymentId: paymentId,
       eventTierOnEventId: eventTierOnEventId,
+      is_addu_student: faker.datatype.boolean(),
     });
   }
 

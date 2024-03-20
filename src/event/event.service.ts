@@ -56,6 +56,7 @@ export class EventService {
           year_and_course: student.year_and_course,
           requires_payment: student.requires_payment,
           eventTier: student.eventTierOnEvent.eventTier.name,
+          is_addu_student: student.is_addu_student,
         };
       }),
       eventTiers: event.eventTierOnEvent.map((eventTierOnEvent) => {
@@ -66,7 +67,8 @@ export class EventService {
           numberOfTicketsLeft:
             eventTierOnEvent.max_participants -
             eventTierOnEvent.students.length,
-          price: eventTierOnEvent.price,
+          adduPrice: eventTierOnEvent.adduPrice,
+          nonAdduPrice: eventTierOnEvent.nonAdduPrice,
         };
       }),
     };
@@ -131,7 +133,8 @@ export class EventService {
         data: {
           eventId: event.id,
           eventTierId: eventTier.id,
-          price: eventTier.price,
+          adduPrice: eventTier.adduPrice,
+          nonAdduPrice: eventTier.nonAdduPrice,
           max_participants: eventTier.max_participants,
           is_active: true,
         },
@@ -170,7 +173,8 @@ export class EventService {
     editEventDto.eventTiers.forEach(async (eventTier) => {
       await this.prisma.eventTierOnEvent.updateMany({
         data: {
-          price: eventTier.price,
+          adduPrice: eventTier.adduPrice,
+          nonAdduPrice: eventTier.nonAdduPrice,
           max_participants: eventTier.max_participants,
         },
         where: { eventId: id, eventTierId: eventTier.id },

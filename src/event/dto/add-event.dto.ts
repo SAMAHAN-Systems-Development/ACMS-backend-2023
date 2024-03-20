@@ -9,5 +9,6 @@ export class AddEventDto {
 class eventTier {
   id: number;
   max_participants: number;
-  price: number;
+  adduPrice: number;
+  nonAdduPrice: number;
 }

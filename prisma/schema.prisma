@@ -22,6 +22,7 @@ model Student {
   eventTierOnEventId Int
   eventTierOnEvent   EventTierOnEvent @relation(fields: [eventTierOnEventId], references: [id])
   payment            Payment          @relation(fields: [paymentId], references: [id])
+  is_addu_student    Boolean          @default(true)
 }
 
 model Payment {
@@ -63,7 +64,8 @@ model EventTierOnEvent {
   eventTierId      Int
   event            Event     @relation(fields: [eventId], references: [id])
   eventTier        EventTier @relation(fields: [eventTierId], references: [id])
-  price            Float?
+  adduPrice        Float?
+  nonAdduPrice     Float?
   max_participants Int
   students         Student[]
   is_active        Boolean   @default(true)

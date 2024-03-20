@@ -76,6 +76,7 @@ export class StudentService {
         paymentId: payment.id,
         requires_payment: requires_payment,
         eventTierOnEventId: eventTierOnEvent.id,
+        is_addu_student: createStudentDto.is_addu_student,
       },
     });
 

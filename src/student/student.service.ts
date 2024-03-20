@@ -129,7 +129,7 @@ export class StudentService {
   async getStudentByUuidAndEventId(uuid: string, eventId: number) {
     try {
       const student = await this.prisma.student.findUnique({
-        where: { uuid },
+        where: { uuid, eventTierOnEvent: { eventId } },
         include: {
           payment: true,
           eventTierOnEvent: { include: { event: true, eventTier: true } },

@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Student } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -24,233 +23,335 @@ export class PaymentService {
     });
   }
 
-  async getAllAcceptedPayments(
-    page = 1,
-    items = 10,
-  ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
-    const acceptedPayments = await this.prisma.student.findMany({
+  async getAllAcceptedPayments(page = 1, items = 10) {
+    const acceptedPayments = await this.prisma.payment.findMany({
       include: {
-        payment: true,
-        eventTierOnEvent: {
+        student: {
           include: {
-            event: true,
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
           },
         },
       },
       where: {
-        payment: {
-          status: 'accepted',
+        status: 'accepted',
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
+
+    const toReturnAcceptedPayments = acceptedPayments.map((acceptedPayment) => {
+      const finalAcceptedPayment = {
+        ...acceptedPayment,
+        event: acceptedPayment.student.eventTierOnEvent.event,
+      };
+
+      delete finalAcceptedPayment.student.eventTierOnEvent;
+
+      return finalAcceptedPayment;
+    });
+
+    const totalCount = await this.prisma.payment.count({
+      where: {
+        status: 'accepted',
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
+
+    return {
+      acceptedPayments: toReturnAcceptedPayments,
+      maxPage,
+    };
+  }
+
+  async getEventAcceptedPayments(eventId: number, page = 1, items = 10) {
+    const acceptedPayments = await this.prisma.payment.findMany({
+      include: {
+        student: {
+          include: {
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        status: 'accepted',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
         },
       },
       take: items,
       skip: items * (page - 1),
     });
 
-    const totalCount = await this.prisma.student.count({
+    const toReturnAcceptedPayments = acceptedPayments.map((acceptedPayment) => {
+      const finalAcceptedPayment = {
+        ...acceptedPayment,
+        event: acceptedPayment.student.eventTierOnEvent.event,
+      };
+
+      delete finalAcceptedPayment.student.eventTierOnEvent;
+
+      return finalAcceptedPayment;
+    });
+
+    const totalCount = await this.prisma.payment.count({
       where: {
-        payment: {
-          status: 'accepted',
+        status: 'accepted',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
         },
       },
     });
     const maxPage = Math.ceil(totalCount / items);
 
     return {
-      acceptedPayments,
+      acceptedPayments: toReturnAcceptedPayments,
       maxPage,
     };
   }
 
-  // async getEventAcceptedPayments(
-  //   eventId: number,
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ acceptedPayments: Student[]; maxPage: number }> {
-  //   const skipItems = items * (page - 1);
+  async getAllDeclinedPayments(page = 1, items = 10) {
+    const declinedPayments = await this.prisma.payment.findMany({
+      include: {
+        student: {
+          include: {
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        status: 'declined',
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
 
-  //   const acceptedPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       event: true,
-  //       payment: true,
-  //     },
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'accepted',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: skipItems,
-  //   });
+    const toReturnDeclinedPayments = declinedPayments.map((declinedPayment) => {
+      const finalDeclinedPayment = {
+        ...declinedPayment,
+        event: declinedPayment.student.eventTierOnEvent.event,
+      };
 
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'accepted',
-  //       },
-  //     },
-  //   });
+      delete finalDeclinedPayment.student.eventTierOnEvent;
 
-  //   const maxPage = Math.ceil(totalCount / items);
+      return finalDeclinedPayment;
+    });
 
-  //   return { acceptedPayments, maxPage };
-  // }
+    const totalCount = await this.prisma.payment.count({
+      where: {
+        status: 'declined',
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
 
-  // async getAllDeclinedPayments(
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
-  //   const declinedPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       payment: {},
-  //       event: {},
-  //     },
-  //     where: {
-  //       payment: {
-  //         status: 'declined',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: items * (page - 1),
-  //   });
+    return {
+      declinedPayments: toReturnDeclinedPayments,
+      maxPage,
+    };
+  }
 
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       payment: {
-  //         status: 'declined',
-  //       },
-  //     },
-  //   });
-  //   const maxPage = Math.ceil(totalCount / items);
+  async getEventDeclinedPayments(eventId: number, page = 1, items = 10) {
+    const declinedPayments = await this.prisma.payment.findMany({
+      include: {
+        student: {
+          include: {
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        status: 'declined',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
+        },
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
 
-  //   return { declinedPayments, maxPage };
-  // }
+    const toReturnDeclinedPayments = declinedPayments.map((declinedPayment) => {
+      const finalDeclinedPayment = {
+        ...declinedPayment,
+        event: declinedPayment.student.eventTierOnEvent.event,
+      };
 
-  // async getEventDeclinedPayments(
-  //   eventId: number,
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ declinedPayments: Student[]; maxPage: number }> {
-  //   const skipItems = items * (page - 1);
+      delete finalDeclinedPayment.student.eventTierOnEvent;
 
-  //   const declinedPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       event: true,
-  //       payment: true,
-  //     },
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'declined',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: skipItems,
-  //   });
+      return finalDeclinedPayment;
+    });
 
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'declined',
-  //       },
-  //     },
-  //   });
+    const totalCount = await this.prisma.payment.count({
+      where: {
+        status: 'declined',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
+        },
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
 
-  //   const maxPage = Math.ceil(totalCount / items);
+    return {
+      declinedPayments: toReturnDeclinedPayments,
+      maxPage,
+    };
+  }
 
-  //   return { declinedPayments, maxPage };
-  // }
+  async getAllPendingPayments(page = 1, items = 10) {
+    const pendingPayments = await this.prisma.payment.findMany({
+      include: {
+        student: {
+          include: {
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        status: 'pending',
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
 
-  // async getAllPendingPayments(
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
-  //   const pendingPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       payment: {},
-  //       event: {},
-  //     },
-  //     where: {
-  //       payment: {
-  //         status: 'pending',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: items * (page - 1),
-  //   });
+    const toReturnPendingPayments = pendingPayments.map((pendingPayment) => {
+      const finalPendingPayment = {
+        ...pendingPayment,
+        event: pendingPayment.student.eventTierOnEvent.event,
+      };
 
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       payment: {
-  //         status: 'pending',
-  //       },
-  //     },
-  //   });
-  //   const maxPage = Math.ceil(totalCount / items);
+      delete finalPendingPayment.student.eventTierOnEvent;
 
-  //   return { pendingPayments, maxPage };
-  // }
+      return finalPendingPayment;
+    });
 
-  // async getEventPendingPayments(
-  //   eventId: number,
-  //   page = 1,
-  //   items = 10,
-  // ): Promise<{ pendingPayments: Student[]; maxPage: number }> {
-  //   const skipItems = items * (page - 1);
+    const totalCount = await this.prisma.payment.count({
+      where: {
+        status: 'pending',
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
 
-  //   const pendingPayments = await this.prisma.student.findMany({
-  //     include: {
-  //       event: true,
-  //       payment: true,
-  //     },
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'pending',
-  //       },
-  //     },
-  //     take: items,
-  //     skip: skipItems,
-  //   });
+    return {
+      pendingPayments: toReturnPendingPayments,
+      maxPage,
+    };
+  }
 
-  //   const totalCount = await this.prisma.student.count({
-  //     where: {
-  //       event: {
-  //         id: eventId,
-  //       },
-  //       payment: {
-  //         status: 'pending',
-  //       },
-  //     },
-  //   });
+  async getEventPendingPayments(eventId: number, page = 1, items = 10) {
+    const pendingPayments = await this.prisma.payment.findMany({
+      include: {
+        student: {
+          include: {
+            eventTierOnEvent: {
+              include: {
+                event: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        status: 'pending',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
+        },
+      },
+      take: items,
+      skip: items * (page - 1),
+    });
 
-  //   const maxPage = Math.ceil(totalCount / items);
+    const toReturnPendingPayments = pendingPayments.map((pendingPayment) => {
+      const finalPendingPayment = {
+        ...pendingPayment,
+        event: pendingPayment.student.eventTierOnEvent.event,
+      };
 
-  //   return { pendingPayments, maxPage };
-  // }
+      delete finalPendingPayment.student.eventTierOnEvent;
 
-  // async restorePayments(paymentIds: number[]) {
-  //   const pendingPayments = await this.prisma.payment.updateMany({
-  //     where: {
-  //       id: {
-  //         in: paymentIds,
-  //       },
-  //     },
-  //     data: {
-  //       status: 'pending',
-  //     },
-  //   });
-  // }
+      return finalPendingPayment;
+    });
+
+    const totalCount = await this.prisma.payment.count({
+      where: {
+        status: 'pending',
+        student: {
+          is: {
+            eventTierOnEvent: {
+              is: {
+                eventId: eventId,
+              },
+            },
+          },
+        },
+      },
+    });
+    const maxPage = Math.ceil(totalCount / items);
+
+    return {
+      pendingPayments: toReturnPendingPayments,
+      maxPage,
+    };
+  }
+
+  async restorePayments(paymentIds: number[]) {
+    const pendingPayments = await this.prisma.payment.updateMany({
+      where: {
+        id: {
+          in: paymentIds,
+        },
+      },
+      data: {
+        status: 'pending',
+      },
+    });
+    return pendingPayments;
+  }
 }

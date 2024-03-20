@@ -5,11 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SupabaseService } from 'supabase/supabase.service';
 import { EmailSender } from 'src/emailSender/EmailSender';
 import * as qrcode from 'qrcode';
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
 @Injectable()
@@ -45,54 +41,57 @@ export class StudentService {
     }
   }
 
-  // async createStudent(createStudentDto: CreateStudentDto) {
-  //   let eventRequiresPayment = createStudentDto.event_requires_payment;
-  //   if (eventRequiresPayment === null) {
-  //     const eventData = await this.prisma.event.findUnique({
-  //       where: { id: createStudentDto.eventId },
-  //       select: { requires_payment: true },
-  //     });
-  //     eventRequiresPayment = eventData.requires_payment;
-  //   }
+  async createStudent(createStudentDto: CreateStudentDto) {
+    let eventRequiresPayment = createStudentDto.event_requires_payment;
+    if (eventRequiresPayment === null) {
+      const eventData = await this.prisma.event.findUnique({
+        where: { id: createStudentDto.eventId },
+        select: { requires_payment: true },
+      });
+      eventRequiresPayment = eventData.requires_payment;
+    }
 
-  //   const payment = await this.createPayment(
-  //     createStudentDto.photo_src,
-  //     createStudentDto.isSubmittedByStudent,
-  //   );
-  //   const uuid = uuidv4();
-  //   const requires_payment =
-  //     createStudentDto.isSubmittedByStudent && eventRequiresPayment;
+    const payment = await this.createPayment(
+      createStudentDto.photo_src,
+      createStudentDto.isSubmittedByStudent,
+    );
+    const uuid = uuidv4();
+    const requires_payment =
+      createStudentDto.isSubmittedByStudent && eventRequiresPayment;
 
-  //   const newStudent = this.prisma.student.create({
-  //     data: {
-  //       uuid: uuid,
-  //       firstName: createStudentDto.firstName,
-  //       lastName: createStudentDto.lastName,
-  //       email: createStudentDto.email,
-  //       year_and_course: createStudentDto.year_and_course,
-  //       paymentId: payment.id,
-  //       eventId: createStudentDto.eventId,
-  //       requires_payment: requires_payment,
-  //     },
-  //   });
+    const eventTierOnEvent = await this.prisma.eventTierOnEvent.findFirst({
+      where: {
+        eventId: createStudentDto.eventId,
+        eventTierId: createStudentDto.eventTierId,
+      },
+    });
 
-  //   const qrCode = await qrcode.toDataURL(uuid, {
-  //     scale: 10,
-  //   });
-  //   this.emailSender.sendEmail(
-  //     createStudentDto.photo_src,
-  //     qrCode,
-  //     createStudentDto.email,
-  //     requires_payment,
-  //   );
+    const newStudent = this.prisma.student.create({
+      data: {
+        uuid: uuid,
+        firstName: createStudentDto.firstName,
+        lastName: createStudentDto.lastName,
+        email: createStudentDto.email,
+        year_and_course: createStudentDto.year_and_course,
+        paymentId: payment.id,
+        requires_payment: requires_payment,
+        eventTierOnEventId: eventTierOnEvent.id,
+      },
+    });
 
-  //   this.sendTicketLeftWebsocketData();
+    const qrCode = await qrcode.toDataURL(uuid, {
+      scale: 10,
+    });
+    this.emailSender.sendEmail(
+      createStudentDto.photo_src,
+      qrCode,
+      createStudentDto.email,
+      requires_payment,
+    );
 
-  //   return newStudent;
-  // }
-
-  async createStudent() {
     this.sendTicketLeftWebsocketData();
+
+    return newStudent;
   }
 
   async sendTicketLeftWebsocketData() {
@@ -104,33 +103,55 @@ export class StudentService {
     return users;
   }
 
-  // async getStudentByUuid(uuid: string) {
-  //   try {
-  //     return await this.prisma.student.findUnique({
-  //       where: { uuid },
-  //       include: { event: true, payment: true },
-  //     });
-  //   } catch (error) {
-  //     throw new NotFoundException('Student Not Found');
-  //   }
-  // }
+  async getStudentByUuid(uuid: string) {
+    try {
+      const student = await this.prisma.student.findUnique({
+        where: { uuid },
+        include: {
+          payment: true,
+          eventTierOnEvent: { include: { event: true, eventTier: true } },
+        },
+      });
+      const studentToReturn = {
+        ...student,
+        event: student.eventTierOnEvent.event,
+        eventTier: student.eventTierOnEvent.eventTier,
+      };
 
-  // async getStudentByUuidAndEventId(uuid: string, eventId: number) {
-  //   try {
-  //     const student = await this.prisma.student.findUnique({
-  //       where: { uuid, eventId },
-  //       include: { event: true, payment: true },
-  //     });
+      delete studentToReturn.eventTierOnEvent;
 
-  //     if (student.requires_payment) {
-  //       if (student.payment.status === 'accepted') {
-  //         return student;
-  //       }
-  //       throw new HttpException('Payment is still pending', 403);
-  //     }
-  //     return student;
-  //   } catch (error) {
-  //     throw new NotFoundException('Student Not Found');
-  //   }
-  // }
+      return studentToReturn;
+    } catch (error) {
+      throw new NotFoundException('Student Not Found');
+    }
+  }
+
+  async getStudentByUuidAndEventId(uuid: string, eventId: number) {
+    try {
+      const student = await this.prisma.student.findUnique({
+        where: { uuid },
+        include: {
+          payment: true,
+          eventTierOnEvent: { include: { event: true, eventTier: true } },
+        },
+      });
+      const studentToReturn = {
+        ...student,
+        event: student.eventTierOnEvent.event,
+        eventTier: student.eventTierOnEvent.eventTier,
+      };
+
+      delete studentToReturn.eventTierOnEvent;
+
+      if (student.requires_payment) {
+        if (student.payment.status === 'accepted') {
+          return student;
+        }
+        throw new HttpException('Payment is still pending', 403);
+      }
+      return studentToReturn;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

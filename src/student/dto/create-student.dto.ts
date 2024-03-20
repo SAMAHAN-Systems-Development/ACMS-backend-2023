@@ -7,4 +7,5 @@ export class CreateStudentDto {
   photo_src: string;
   isSubmittedByStudent: boolean;
   event_requires_payment: boolean;
+  eventTierId: number | null;
 }

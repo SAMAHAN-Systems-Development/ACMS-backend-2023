@@ -145,7 +145,7 @@ export class StudentService {
 
       if (student.requires_payment) {
         if (student.payment.status === 'accepted') {
-          return student;
+          return studentToReturn;
         }
         throw new HttpException('Payment is still pending', 403);
       }

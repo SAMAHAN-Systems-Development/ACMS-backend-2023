@@ -100,25 +100,21 @@ export class EventController {
     }
   }
 
-  // @Put(':id')
-  // @UseGuards(AuthGuard)
-  // async editEvent(
-  //   @Param('id') id: number,
-  //   @Body() UpdateEventDto: AddEventDto,
-  // ) {
-  //   const EditedEvent = await this.eventService.editEvent(
-  //     Number(id),
-  //     UpdateEventDto,
-  //   );
-  //   return { message: 'Event added successfully', data: EditedEvent };
-  // }
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  async editEvent(
+    @Param('id') id: number,
+    @Body() UpdateEventDto: AddEventDto,
+  ) {
+    await this.eventService.editEvent(Number(id), UpdateEventDto);
+  }
 
-  // @Post('')
-  // @UseGuards(AuthGuard)
-  // async addEvents(@Body() addEventDto: AddEventDto) {
-  //   const AddedEvent = await this.eventService.addEvent(addEventDto);
-  //   return { message: 'Event added successfully', data: AddedEvent };
-  // }
+  @Post()
+  @UseGuards(AuthGuard)
+  async addEvents(@Body() addEventDto: AddEventDto) {
+    const AddedEvent = await this.eventService.addEvent(addEventDto);
+    return { message: 'Event added successfully', data: AddedEvent };
+  }
 
   @Get('/active/all/title')
   @UseGuards(AuthGuard)

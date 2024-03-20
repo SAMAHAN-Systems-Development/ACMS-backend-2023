@@ -1,9 +1,13 @@
 export class AddEventDto {
   title: string;
   requires_payment: boolean;
-  price: number;
-  max_participants: number;
   description: string;
   date: Date;
-  eventTierId: number;
+  eventTiers: eventTier[];
+}
+
+class eventTier {
+  id: number;
+  max_participants: number;
+  price: number;
 }

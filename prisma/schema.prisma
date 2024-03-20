@@ -47,12 +47,12 @@ model Event {
 }
 
 model EventTier {
-  id        Int                @id @default(autoincrement())
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  name      String
-  is_active Boolean            @default(true)
-  events    EventTierOnEvent[]
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  name             String
+  is_active        Boolean            @default(true)
+  eventTierOnEvent EventTierOnEvent[]
 }
 
 model EventTierOnEvent {
@@ -63,7 +63,7 @@ model EventTierOnEvent {
   eventTierId      Int
   event            Event     @relation(fields: [eventId], references: [id])
   eventTier        EventTier @relation(fields: [eventTierId], references: [id])
-  price            Float
+  price            Float?
   max_participants Int
   students         Student[]
   is_active        Boolean   @default(true)

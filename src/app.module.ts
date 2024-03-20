@@ -7,6 +7,7 @@ import { SupabaseModule } from 'supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
 import { PaymentModule } from './payment/payment.module';
 import { EventModule } from './event/event.module';
+import { EventTierModule } from './event-tier/event-tier.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EventModule } from './event/event.module';
     EventModule,
     SupabaseModule,
     AuthModule,
+    EventTierModule,
   ],
   controllers: [AppController],
   providers: [AppService],

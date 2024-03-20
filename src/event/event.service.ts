@@ -14,6 +14,7 @@ export class EventService {
       include: {
         eventTierOnEvent: {
           include: {
+            students: true,
             eventTier: true,
           },
         },
@@ -57,9 +58,17 @@ export class EventService {
           eventTier: student.eventTierOnEvent.eventTier.name,
         };
       }),
-      eventTiers: event.eventTierOnEvent.map(
-        (eventTierOnEvent) => eventTierOnEvent.eventTier,
-      ),
+      eventTiers: event.eventTierOnEvent.map((eventTierOnEvent) => {
+        return {
+          ...eventTierOnEvent.eventTier,
+          numberOfPeopleRegistered: eventTierOnEvent.students.length,
+          crowdLimit: eventTierOnEvent.max_participants,
+          numberOfTicketsLeft:
+            eventTierOnEvent.max_participants -
+            eventTierOnEvent.students.length,
+          price: eventTierOnEvent.price,
+        };
+      }),
     };
     return eventToReturn;
   }
@@ -117,17 +126,17 @@ export class EventService {
       },
     });
 
-    const eventTierOnEvent = await this.prisma.eventTierOnEvent.create({
-      data: {
-        eventId: event.id,
-        eventTierId: addEventDto.eventTierId,
-        price: addEventDto.price,
-        max_participants: addEventDto.max_participants,
-        is_active: true,
-      },
+    addEventDto.eventTiers.forEach(async (eventTier) => {
+      await this.prisma.eventTierOnEvent.create({
+        data: {
+          eventId: event.id,
+          eventTierId: eventTier.id,
+          price: eventTier.price,
+          max_participants: eventTier.max_participants,
+          is_active: true,
+        },
+      });
     });
-
-    return eventTierOnEvent;
   }
 
   async getInactiveEvents(page = 1, items = 10) {
@@ -148,7 +157,7 @@ export class EventService {
 
   async editEvent(id: number, editEventDto: EditEventsDto) {
     const formName = editEventDto.title.toLowerCase().split(' ').join('-');
-    const updatedEvent = await this.prisma.event.update({
+    await this.prisma.event.update({
       data: {
         title: editEventDto.title,
         requires_payment: editEventDto.requires_payment,
@@ -158,19 +167,15 @@ export class EventService {
       },
       where: { id },
     });
-
-    const updatedEventTierOnEvent =
+    editEventDto.eventTiers.forEach(async (eventTier) => {
       await this.prisma.eventTierOnEvent.updateMany({
         data: {
-          price: editEventDto.price,
-          max_participants: editEventDto.max_participants,
+          price: eventTier.price,
+          max_participants: eventTier.max_participants,
         },
-        where: {
-          eventId: id,
-        },
+        where: { eventId: id, eventTierId: eventTier.id },
       });
-
-    return updatedEventTierOnEvent;
+    });
   }
 
   async getAllActiveEvents() {
@@ -187,5 +192,28 @@ export class EventService {
       where: { form_name: formName, is_active: true },
     });
     return event;
+  }
+
+  async getEventTiers(eventId: number) {
+    const eventTiers = await this.prisma.event.findFirst({
+      where: { id: eventId },
+      include: {
+        eventTierOnEvent: {
+          include: {
+            eventTier: true,
+          },
+        },
+      },
+    });
+
+    const eventTiersToReturn = eventTiers.eventTierOnEvent.map(
+      (eventTierOnEvent) => {
+        return {
+          ...eventTierOnEvent.eventTier,
+        };
+      },
+    );
+
+    return eventTiersToReturn;
   }
 }

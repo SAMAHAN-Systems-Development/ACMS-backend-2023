@@ -90,13 +90,13 @@ export class StudentService {
       requires_payment,
     );
 
-    this.sendTicketLeftWebsocketData();
+    this.sendTicketLeftWebsocketData(createStudentDto.eventId);
 
     return newStudent;
   }
 
-  async sendTicketLeftWebsocketData() {
-    this.server.emit('ticketsLeft', 'hello');
+  async sendTicketLeftWebsocketData(eventId: number) {
+    this.server.emit('eventId', eventId);
   }
 
   async findAll() {

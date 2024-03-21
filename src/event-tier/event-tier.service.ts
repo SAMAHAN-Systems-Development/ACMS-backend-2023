@@ -11,15 +11,33 @@ export class EventTierService {
     return this.prisma.eventTier.findMany();
   }
 
-  getEventTiersBasedOnEventId(eventId: number) {
-    return this.prisma.eventTier.findMany({
-      where: {
+  async getEventTiersBasedOnEventId(eventId: number) {
+    const event = await this.prisma.event.findFirst({
+      where: { id: eventId },
+      include: {
         eventTierOnEvent: {
-          every: {
-            eventId: eventId,
+          include: {
+            students: true,
+            eventTier: true,
           },
         },
       },
     });
+
+    const toReturnEventTiers = event.eventTierOnEvent.map(
+      (eventTierOnEvent) => {
+        return {
+          id: eventTierOnEvent.eventTier.id,
+          name: eventTierOnEvent.eventTier.name,
+          adduPrice: eventTierOnEvent.adduPrice,
+          nonAdduPrice: eventTierOnEvent.nonAdduPrice,
+          numberOfTicketsLeft:
+            eventTierOnEvent.max_participants -
+            eventTierOnEvent.students.length,
+        };
+      },
+    );
+
+    return toReturnEventTiers;
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { EventTierService } from './event-tier.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
@@ -13,7 +13,7 @@ export class EventTierController {
   }
 
   @Get(':eventId')
-  getEventTiersBasedOnEventId(eventId: number) {
-    return this.eventTierService.getEventTiersBasedOnEventId(eventId);
+  getEventTiersBasedOnEventId(@Param('eventId') eventId: number) {
+    return this.eventTierService.getEventTiersBasedOnEventId(Number(eventId));
   }
 }

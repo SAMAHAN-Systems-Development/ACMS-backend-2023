@@ -96,7 +96,7 @@ export class StudentService {
   }
 
   async sendTicketLeftWebsocketData(eventId: number) {
-    this.server.emit('eventId', eventId);
+    this.server.emit('sendStudentRegisteredSignal', eventId);
   }
 
   async findAll() {

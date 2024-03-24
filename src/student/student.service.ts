@@ -11,7 +11,7 @@ import { Server } from 'socket.io';
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3001'],
+    origin: [process.env.FRONTEND_URL],
   },
   transports: ['websocket', 'polling'],
 })

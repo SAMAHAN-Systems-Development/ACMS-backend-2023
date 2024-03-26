@@ -3,12 +3,13 @@ export class AddEventDto {
   requires_payment: boolean;
   description: string;
   date: Date;
+  earlyBirdAccessDate: Date;
   eventTiers: eventTier[];
 }
 
 class eventTier {
   id: number;
   max_participants: number;
-  adduPrice: number;
-  nonAdduPrice: number;
+  earlyBirdPrice: number;
+  originalPrice: number;
 }

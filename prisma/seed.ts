@@ -28,6 +28,8 @@ async function seedEvents(n_events) {
       date: faker.date.soon({ days: 90, refDate: new Date() }),
       is_active: faker.datatype.boolean(),
       form_name: formName,
+      hasEarlyBirdAccess: true,
+      earlyBirdAccessDate: faker.date.soon({ days: 5, refDate: new Date() }),
     };
 
     eventsList.push(event);
@@ -40,8 +42,8 @@ async function seedEvents(n_events) {
         data: {
           eventId: i + 1,
           eventTierId: j + 1,
-          adduPrice: faker.number.int({ min: 100, max: 200 }),
-          nonAdduPrice: faker.number.int({ min: 200, max: 300 }),
+          earlyBirdPrice: faker.number.int({ min: 100, max: 200 }),
+          originalPrice: faker.number.int({ min: 200, max: 300 }),
           max_participants: faker.number.int({ min: 20, max: 200 }),
           is_active: true,
         },
@@ -57,6 +59,7 @@ async function seedPayments(n_students) {
     paymentList.push({
       photo_src: '/placeholderImage.jpg',
       status: faker.helpers.arrayElement(statuses),
+      required_payment: faker.number.int({ min: 100, max: 300 }),
     });
   }
   await prisma.payment.createMany({ data: paymentList });

@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +7,7 @@ import { EmailSender } from 'src/emailSender/EmailSender';
 import * as qrcode from 'qrcode';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import dayjs from 'dayjs';
 
 @Injectable()
 @WebSocketGateway({
@@ -30,7 +26,11 @@ export class StudentService {
     private readonly emailSender: EmailSender,
   ) {}
 
-  async createPayment(payment_path: string, isRegisterByStudent: boolean) {
+  async createPayment(
+    payment_path: string,
+    isRegisterByStudent: boolean,
+    paymentPrice: number,
+  ) {
     try {
       return await this.prisma.payment.create({
         data: {
@@ -39,6 +39,7 @@ export class StudentService {
           // until cashier accepts payment
           // else submission is by cashier, accepted status
           status: isRegisterByStudent ? 'pending' : 'accepted',
+          required_payment: paymentPrice,
         },
       });
     } catch (ex) {
@@ -56,10 +57,6 @@ export class StudentService {
       eventRequiresPayment = eventData.requires_payment;
     }
 
-    const payment = await this.createPayment(
-      createStudentDto.photo_src,
-      createStudentDto.isSubmittedByStudent,
-    );
     const uuid = uuidv4();
     const requires_payment =
       createStudentDto.isSubmittedByStudent && eventRequiresPayment;
@@ -71,12 +68,25 @@ export class StudentService {
             students: true,
           },
         },
+        event: true,
       },
       where: {
         eventId: createStudentDto.eventId,
         eventTierId: createStudentDto.eventTierId,
       },
     });
+
+    let paymentPrice = eventTierOnEvent.earlyBirdPrice;
+    if (dayjs().isAfter(dayjs(eventTierOnEvent.event.earlyBirdAccessDate))) {
+      paymentPrice = eventTierOnEvent.originalPrice;
+    }
+
+    const payment = await this.createPayment(
+      createStudentDto.photo_src,
+      createStudentDto.isSubmittedByStudent,
+      paymentPrice,
+    );
+
     if (
       eventTierOnEvent.max_participants - eventTierOnEvent._count.students <=
       0
@@ -96,7 +106,6 @@ export class StudentService {
       },
     });
 
-    console.log(studentCount._count);
     if (studentCount._count >= 1) {
       return { message: 'emailIsExisting' };
     }

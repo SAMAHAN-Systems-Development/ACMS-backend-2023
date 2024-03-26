@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Event, Student } from '@prisma/client';
 import { AddEventDto } from './dto/add-event.dto';
 import { EditEventsDto } from './dto/edit-event.dto';
 
@@ -46,6 +45,8 @@ export class EventService {
       is_active: event.is_active,
       form_name: event.form_name,
       requires_payment: event.requires_payment,
+      earlyBirdAccessDate: event.earlyBirdAccessDate,
+      hasEarlyBirdAccess: event.hasEarlyBirdAccess,
       students: students.map((student) => {
         return {
           id: student.id,
@@ -67,8 +68,8 @@ export class EventService {
           numberOfTicketsLeft:
             eventTierOnEvent.max_participants -
             eventTierOnEvent.students.length,
-          adduPrice: eventTierOnEvent.adduPrice,
-          nonAdduPrice: eventTierOnEvent.nonAdduPrice,
+          earlyBirdPrice: eventTierOnEvent.earlyBirdPrice,
+          originalPrice: eventTierOnEvent.originalPrice,
         };
       }),
     };
@@ -125,6 +126,8 @@ export class EventService {
         description: addEventDto.description,
         date: addEventDto.date,
         form_name: formName,
+        earlyBirdAccessDate: addEventDto.earlyBirdAccessDate,
+        hasEarlyBirdAccess: true,
       },
     });
 
@@ -133,8 +136,8 @@ export class EventService {
         data: {
           eventId: event.id,
           eventTierId: eventTier.id,
-          adduPrice: eventTier.adduPrice,
-          nonAdduPrice: eventTier.nonAdduPrice,
+          earlyBirdPrice: eventTier.earlyBirdPrice,
+          originalPrice: eventTier.originalPrice,
           max_participants: eventTier.max_participants,
           is_active: true,
         },
@@ -167,14 +170,15 @@ export class EventService {
         description: editEventDto.description,
         date: editEventDto.date,
         form_name: formName,
+        earlyBirdAccessDate: editEventDto.earlyBirdAccessDate,
       },
       where: { id },
     });
     editEventDto.eventTiers.forEach(async (eventTier) => {
       await this.prisma.eventTierOnEvent.updateMany({
         data: {
-          adduPrice: eventTier.adduPrice,
-          nonAdduPrice: eventTier.nonAdduPrice,
+          earlyBirdPrice: eventTier.earlyBirdPrice,
+          originalPrice: eventTier.originalPrice,
           max_participants: eventTier.max_participants,
         },
         where: { eventId: id, eventTierId: eventTier.id },

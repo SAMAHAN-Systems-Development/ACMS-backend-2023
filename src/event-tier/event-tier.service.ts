@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEventTierDto } from './dto/create-event-tier.dto';
-import { UpdateEventTierDto } from './dto/update-event-tier.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class EventTierService {
@@ -26,11 +25,16 @@ export class EventTierService {
 
     const toReturnEventTiers = event.eventTierOnEvent.map(
       (eventTierOnEvent) => {
+        let paymentPrice = eventTierOnEvent.earlyBirdPrice;
+        if (dayjs().isAfter(dayjs(event.earlyBirdAccessDate))) {
+          paymentPrice = eventTierOnEvent.originalPrice;
+        }
         return {
           id: eventTierOnEvent.eventTier.id,
           name: eventTierOnEvent.eventTier.name,
-          adduPrice: eventTierOnEvent.adduPrice,
-          nonAdduPrice: eventTierOnEvent.nonAdduPrice,
+          paymentPrice: paymentPrice,
+          earlyBirdPrice: eventTierOnEvent.earlyBirdPrice,
+          originalPrice: eventTierOnEvent.originalPrice,
           numberOfTicketsLeft:
             eventTierOnEvent.max_participants -
             eventTierOnEvent.students.length,

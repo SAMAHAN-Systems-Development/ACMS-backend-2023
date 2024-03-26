@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,11 +65,24 @@ export class StudentService {
       createStudentDto.isSubmittedByStudent && eventRequiresPayment;
 
     const eventTierOnEvent = await this.prisma.eventTierOnEvent.findFirst({
+      include: {
+        _count: {
+          select: {
+            students: true,
+          },
+        },
+      },
       where: {
         eventId: createStudentDto.eventId,
         eventTierId: createStudentDto.eventTierId,
       },
     });
+    if (
+      eventTierOnEvent.max_participants - eventTierOnEvent._count.students <=
+      0
+    ) {
+      return { message: 'maxParticipantsReached' };
+    }
 
     const newStudent = this.prisma.student.create({
       data: {

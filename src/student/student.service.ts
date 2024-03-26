@@ -84,6 +84,23 @@ export class StudentService {
       return { message: 'maxParticipantsReached' };
     }
 
+    const studentCount = await this.prisma.student.aggregate({
+      _count: true,
+      where: {
+        email: createStudentDto.email,
+        eventTierOnEvent: {
+          is: {
+            eventId: createStudentDto.eventId,
+          },
+        },
+      },
+    });
+
+    console.log(studentCount._count);
+    if (studentCount._count >= 1) {
+      return { message: 'emailIsExisting' };
+    }
+
     const newStudent = this.prisma.student.create({
       data: {
         uuid: uuid,

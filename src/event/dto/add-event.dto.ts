@@ -2,8 +2,8 @@ export class AddEventDto {
   title: string;
   requires_payment: boolean;
   description: string;
-  date: Date;
-  earlyBirdAccessDate: Date;
+  date: string;
+  earlyBirdAccessDate: string;
   hasEarlyBirdAccess: boolean;
   eventTiers: eventTier[];
 }

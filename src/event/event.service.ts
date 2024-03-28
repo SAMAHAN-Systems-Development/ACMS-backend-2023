@@ -121,12 +121,10 @@ export class EventService {
     const formName = addEventDto.title.toLowerCase().split(' ').join('-');
 
     const earlyBirdAccessDate = dayjs(
-      `${addEventDto.earlyBirdAccessDate.toJSON().split('T')[0]}T00:00:00.000Z`,
+      `${addEventDto.earlyBirdAccessDate.split('T')[0]}T00:00:00.000Z`,
     );
 
-    const date = dayjs(
-      `${addEventDto.date.toJSON().split('T')[0]}T00:00:00.000Z`,
-    );
+    const date = dayjs(`${addEventDto.date.split('T')[0]}T00:00:00.000Z`);
 
     const event = await this.prisma.event.create({
       data: {
@@ -174,14 +172,10 @@ export class EventService {
     const formName = editEventDto.title.toLowerCase().split(' ').join('-');
 
     const earlyBirdAccessDate = dayjs(
-      `${
-        editEventDto.earlyBirdAccessDate.toJSON().split('T')[0]
-      }T00:00:00.000Z`,
+      `${editEventDto.earlyBirdAccessDate.split('T')[0]}T00:00:00.000Z`,
     );
 
-    const date = dayjs(
-      `${editEventDto.date.toJSON().split('T')[0]}T00:00:00.000Z`,
-    );
+    const date = dayjs(`${editEventDto.date.split('T')[0]}T00:00:00.000Z`);
 
     await this.prisma.event.update({
       data: {

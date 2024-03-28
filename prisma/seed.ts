@@ -120,6 +120,7 @@ async function seedUsers() {
 
   const userList = [];
 
+  // let idx = 0;
   for (const userData of users) {
     const { user, error } = await supabase.createSupabaseUser(
       userData.email,
@@ -136,6 +137,7 @@ async function seedUsers() {
       userType: userData.userType,
       supabaseUserId: user.id,
     });
+    // idx++;
   }
 
   await prisma.user.createMany({ data: userList });

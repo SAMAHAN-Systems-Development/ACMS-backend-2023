@@ -10,7 +10,6 @@ export class StudentController {
   @Get()
   @UseGuards(AuthGuard)
   findAll() {
-    console.log('find all executed');
     return this.studentService.findAll();
   }
   @Post('submit-registration')

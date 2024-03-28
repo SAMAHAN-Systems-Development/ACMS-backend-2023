@@ -40,7 +40,7 @@ export class StudentService {
         },
       });
     } catch (ex) {
-      console.log(ex);
+      console.error(ex);
     }
   }
 

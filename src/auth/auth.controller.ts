@@ -9,7 +9,6 @@ export class AuthController {
 
   @Post() // Use POST method for handling login
   async login(@Body() loginDto: LoginDto, @Response() res: Res) {
-    console.log(loginDto);
     const result = await this.authService.login(loginDto, res);
     return result;
   }

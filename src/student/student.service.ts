@@ -7,7 +7,7 @@ import { EmailSender } from 'src/emailSender/EmailSender';
 import * as qrcode from 'qrcode';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 @WebSocketGateway({
@@ -35,9 +35,6 @@ export class StudentService {
       return await this.prisma.payment.create({
         data: {
           photo_src: payment_path,
-          // if submission is by student, put in pending status
-          // until cashier accepts payment
-          // else submission is by cashier, accepted status
           status: isRegisterByStudent ? 'pending' : 'accepted',
           required_payment: paymentPrice,
         },
@@ -76,15 +73,10 @@ export class StudentService {
       },
     });
 
-    let paymentPrice = eventTierOnEvent.earlyBirdPrice;
-    if (dayjs().isAfter(dayjs(eventTierOnEvent.event.earlyBirdAccessDate))) {
-      paymentPrice = eventTierOnEvent.originalPrice;
-    }
-
     const payment = await this.createPayment(
       createStudentDto.photo_src,
       createStudentDto.isSubmittedByStudent,
-      paymentPrice,
+      createStudentDto.required_payment,
     );
 
     if (

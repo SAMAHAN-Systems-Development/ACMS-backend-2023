@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddEventDto } from './dto/add-event.dto';
 import { EditEventsDto } from './dto/edit-event.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class EventService {
@@ -119,15 +120,23 @@ export class EventService {
   async addEvent(addEventDto: AddEventDto) {
     const formName = addEventDto.title.toLowerCase().split(' ').join('-');
 
+    const earlyBirdAccessDate = dayjs(
+      `${addEventDto.earlyBirdAccessDate.toJSON().split('T')[0]}T00:00:00.000Z`,
+    );
+
+    const date = dayjs(
+      `${addEventDto.date.toJSON().split('T')[0]}T00:00:00.000Z`,
+    );
+
     const event = await this.prisma.event.create({
       data: {
         title: addEventDto.title,
         requires_payment: addEventDto.requires_payment,
         description: addEventDto.description,
-        date: addEventDto.date,
+        date: date.toDate(),
         form_name: formName,
-        earlyBirdAccessDate: addEventDto.earlyBirdAccessDate,
-        hasEarlyBirdAccess: true,
+        earlyBirdAccessDate: earlyBirdAccessDate.toDate(),
+        hasEarlyBirdAccess: addEventDto.hasEarlyBirdAccess,
       },
     });
 
@@ -163,14 +172,26 @@ export class EventService {
 
   async editEvent(id: number, editEventDto: EditEventsDto) {
     const formName = editEventDto.title.toLowerCase().split(' ').join('-');
+
+    const earlyBirdAccessDate = dayjs(
+      `${
+        editEventDto.earlyBirdAccessDate.toJSON().split('T')[0]
+      }T00:00:00.000Z`,
+    );
+
+    const date = dayjs(
+      `${editEventDto.date.toJSON().split('T')[0]}T00:00:00.000Z`,
+    );
+
     await this.prisma.event.update({
       data: {
         title: editEventDto.title,
         requires_payment: editEventDto.requires_payment,
         description: editEventDto.description,
-        date: editEventDto.date,
+        date: date.toDate(),
         form_name: formName,
-        earlyBirdAccessDate: editEventDto.earlyBirdAccessDate,
+        earlyBirdAccessDate: earlyBirdAccessDate.toDate(),
+        hasEarlyBirdAccess: editEventDto.hasEarlyBirdAccess,
       },
       where: { id },
     });

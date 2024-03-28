@@ -4,6 +4,7 @@ export class AddEventDto {
   description: string;
   date: Date;
   earlyBirdAccessDate: Date;
+  hasEarlyBirdAccess: boolean;
   eventTiers: eventTier[];
 }
 

@@ -9,4 +9,5 @@ export class CreateStudentDto {
   event_requires_payment: boolean;
   eventTierId: number | null;
   is_addu_student: boolean;
+  required_payment: number;
 }

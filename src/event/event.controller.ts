@@ -106,14 +106,19 @@ export class EventController {
     @Param('id') id: number,
     @Body() UpdateEventDto: AddEventDto,
   ) {
-    await this.eventService.editEvent(Number(id), UpdateEventDto);
+    const updatedEvent = await this.eventService.editEvent(
+      Number(id),
+      UpdateEventDto,
+    );
+
+    return { message: 'Event updated successfully', data: updatedEvent };
   }
 
   @Post()
   @UseGuards(AuthGuard)
   async addEvents(@Body() addEventDto: AddEventDto) {
-    const AddedEvent = await this.eventService.addEvent(addEventDto);
-    return { message: 'Event added successfully', data: AddedEvent };
+    const addedEvent = await this.eventService.addEvent(addEventDto);
+    return { message: 'Event added successfully', data: addedEvent };
   }
 
   @Get('/active/all/title')

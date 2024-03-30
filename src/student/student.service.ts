@@ -66,6 +66,7 @@ export class StudentService {
           },
         },
         event: true,
+        eventTier: true,
       },
       where: {
         eventId: createStudentDto.eventId,
@@ -131,6 +132,14 @@ export class StudentService {
       qrCode,
       createStudentDto.email,
       requires_payment,
+      controlNumber,
+      dayjs(eventTierOnEvent.event.date).format('MMM DD, YYYY'),
+      `${createStudentDto.firstName} ${createStudentDto.lastName}`,
+      createStudentDto.year_and_course,
+      createStudentDto.is_addu_student ? 'Atenean' : 'Non-Atenean',
+      eventTierOnEvent.eventTier.name,
+      this.moneyFormatter(createStudentDto.required_payment),
+      uuid,
     );
 
     this.sendTicketLeftWebsocketData(createStudentDto.eventId);
@@ -209,5 +218,12 @@ export class StudentService {
     const studentNumber = String(controlNumber).padStart(5, '0');
     const eventNumber = String(eventId).padStart(2, '0');
     return `MADAYAW${eventNumber}${studentNumber}`;
+  }
+
+  moneyFormatter(money: number) {
+    return `Php. ${money.toLocaleString('en-US', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    })}`;
   }
 }

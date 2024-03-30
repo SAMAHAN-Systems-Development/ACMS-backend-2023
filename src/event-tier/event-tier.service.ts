@@ -31,12 +31,15 @@ export class EventTierService {
         );
 
         let paymentPrice = eventTierOnEvent.originalPrice;
-        if (
-          now.isBefore(earlyBirdAccessDate) ||
-          now.isSame(earlyBirdAccessDate)
-        ) {
-          paymentPrice = eventTierOnEvent.earlyBirdPrice;
+        if (event.hasEarlyBirdAccess) {
+          if (
+            now.isBefore(earlyBirdAccessDate) ||
+            now.isSame(earlyBirdAccessDate)
+          ) {
+            paymentPrice = eventTierOnEvent.earlyBirdPrice;
+          }
         }
+
         return {
           id: eventTierOnEvent.eventTier.id,
           name: eventTierOnEvent.eventTier.name,

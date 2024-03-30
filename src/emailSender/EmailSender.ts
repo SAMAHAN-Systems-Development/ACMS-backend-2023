@@ -318,7 +318,7 @@ export class EmailSender {
     
                                   <div style="font-size: 14px; color: #000000; line-height: 160%; text-align: center; word-wrap: break-word;">
                                     <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Thank you for purchasing a Madayaw Ticket 🎉</span></p>
-                                    <p style="font-size: 14px; line-height: 160%;">Congratulations on making history as one of the attendees at Madayaw Nights, the first-ever Ateneo music fair! We're thrilled to have you join us on April 20, 2024, for what promises to be an unforgettable evening filled
+                                    <p style="font-size: 14px; line-height: 160%;">Congratulations on making history as one of the attendees at<strong> Madayaw Nights, the first-ever Ateneo music fair!</strong> We're thrilled to have you join us on<strong> April 20, 2024</strong>, for what promises to be an unforgettable evening filled
                                       with incredible music and memorable experiences.</p>
                                   </div>
     

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaService();
 const supabase = new SupabaseService();
 
-async function seedEvents(n_events) {
+async function seedEventTiers() {
   const tiers = ['VVIP', 'Gold', 'Silver', 'Bronze', 'Gen Ad'];
 
   const tierList = [];
@@ -16,6 +16,10 @@ async function seedEvents(n_events) {
     });
   }
   await prisma.eventTier.createMany({ data: tierList });
+}
+
+async function seedEvents(n_events) {
+  const n_tiers = 5;
 
   const eventsList = [];
   for (let i = 0; i < n_events; i++) {
@@ -37,7 +41,7 @@ async function seedEvents(n_events) {
   await prisma.event.createMany({ data: eventsList });
 
   for (let i = 0; i < n_events; i++) {
-    for (let j = 0; j < tiers.length; j++) {
+    for (let j = 0; j < n_tiers; j++) {
       await prisma.eventTierOnEvent.create({
         data: {
           eventId: i + 1,
@@ -103,41 +107,41 @@ async function seedUsers() {
   const users = [
     {
       email: 'viverbungag@gmail.com',
-      password: 'secretpassword',
+      password: 'secretPassword',
       userType: 'admin',
     },
     {
       email: 'viverbungag2@gmail.com',
-      password: 'secretpassword',
+      password: 'secretPassword',
       userType: 'facilitator',
     },
     {
       email: 'viverbungag3@gmail.com',
-      password: 'secretpassword',
+      password: 'secretPassword',
       userType: 'cashier',
     },
   ];
 
   const userList = [];
 
-  // let idx = 0;
+  let idx = 0;
   for (const userData of users) {
-    const { user, error } = await supabase.createSupabaseUser(
-      userData.email,
-      userData.password,
-    );
+    // const { user, error } = await supabase.createSupabaseUser(
+    //   userData.email,
+    //   userData.password,
+    // );
 
-    if (error) {
-      console.error('Supabase signup error:', error);
-      throw error;
-    }
+    // if (error) {
+    //   console.error('Supabase signup error:', error);
+    //   throw error;
+    // }
 
     userList.push({
       email: userData.email,
       userType: userData.userType,
-      supabaseUserId: user.id,
+      supabaseUserId: String(idx),
     });
-    // idx++;
+    idx++;
   }
 
   await prisma.user.createMany({ data: userList });
@@ -148,9 +152,10 @@ async function main() {
   const students = 80;
   const tiers = 5;
 
-  await seedEvents(events);
-  await seedPayments(students);
-  await seedStudents(students, events, tiers);
+  await seedEventTiers();
+  // await seedEvents(events);
+  // await seedPayments(students);
+  // await seedStudents(students, events, tiers);
   await seedUsers();
 }
 

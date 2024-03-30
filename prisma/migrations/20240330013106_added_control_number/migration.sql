@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Student" ADD COLUMN     "control_number" TEXT NOT NULL DEFAULT 'CONTROL000000000';

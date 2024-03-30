@@ -23,6 +23,7 @@ model Student {
   eventTierOnEvent   EventTierOnEvent @relation(fields: [eventTierOnEventId], references: [id])
   payment            Payment          @relation(fields: [paymentId], references: [id])
   is_addu_student    Boolean          @default(true)
+  control_number     String           @default("CONTROL000000000")
 }
 
 model Payment {

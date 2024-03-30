@@ -79,6 +79,12 @@ export class StudentService {
       createStudentDto.required_payment,
     );
 
+    const controlNumber = this.getControlNumber(
+      eventTierOnEvent._count.students,
+      createStudentDto.eventTierId,
+      createStudentDto.eventId,
+    );
+
     if (
       eventTierOnEvent.max_participants - eventTierOnEvent._count.students <=
       0
@@ -113,6 +119,7 @@ export class StudentService {
         requires_payment: requires_payment,
         eventTierOnEventId: eventTierOnEvent.id,
         is_addu_student: createStudentDto.is_addu_student,
+        control_number: controlNumber,
       },
     });
 
@@ -190,5 +197,17 @@ export class StudentService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  getControlNumber(
+    numberOfStudents: number,
+    eventTierId: number,
+    eventId: number,
+  ) {
+    const startingNumber = (eventTierId - 1) * 1000 + 1;
+    const controlNumber = startingNumber + numberOfStudents;
+    const studentNumber = String(controlNumber).padStart(5, '0');
+    const eventNumber = String(eventId).padStart(2, '0');
+    return `MADAYAW${eventNumber}${studentNumber}`;
   }
 }

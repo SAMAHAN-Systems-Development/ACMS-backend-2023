@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 export class EmailSender {
@@ -77,17 +76,17 @@ export class EmailSender {
   getTierUrl(tierName: string) {
     switch (tierName) {
       case 'VVIP':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/vvip.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/VVIP.png';
       case 'Gold':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/gold.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/GOLD.png';
       case 'Silver':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/silver.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/SILVER.png';
       case 'Bronze':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/bronze.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/BRONZE.png';
       case 'Gen Ad':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/genad.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/GEN%20AD.png';
       default:
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/genad.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/GEN%20AD.png';
     }
   }
 
@@ -105,9 +104,14 @@ export class EmailSender {
   ) {
     const tierUrl = this.getTierUrl(ticketType);
     const emailImageHeader =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Letterhead.png';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Letterhead%20Final.png?t=2024-04-01T16%3A19%3A49.023Z';
     const emailImageFooter =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Foot.png';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Foot%20Final.png';
+    const emailImageHeaderMobile =
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Letterhead%20Mobile.png?t=2024-04-01T15%3A41%3A07.362Z';
+    const emailImageFooterMobile =
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Foot%20Mobile.png';
+
     return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     
@@ -129,87 +133,110 @@ export class EmailSender {
       <title></title>
     
       <style type="text/css">
-        @media only screen and (min-width: 620px) {
-          .u-row {
-            width: 600px !important;
-          }
-          .u-row .u-col {
-            vertical-align: top;
-          }
-          .u-row .u-col-100 {
-            width: 600px !important;
-          }
+      @media only screen and (min-width: 620px) {
+        .u-row {
+          width: 600px !important;
         }
-        
-        @media (max-width: 620px) {
-          .u-row-container {
-            max-width: 100% !important;
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-          }
-          .u-row .u-col {
-            min-width: 320px !important;
-            max-width: 100% !important;
-            display: block !important;
-          }
-          .u-row {
-            width: 100% !important;
-          }
-          .u-col {
-            width: 100% !important;
-          }
-          .u-col>div {
-            margin: 0 auto;
-          }
-        }
-        
-        body {
-          margin: 0;
-          padding: 0;
-        }
-        
-        table,
-        tr,
-        td {
+        .u-row .u-col {
           vertical-align: top;
-          border-collapse: collapse;
         }
-        
-        p {
-          margin: 0;
+        .u-row .u-col-100 {
+          width: 600px !important;
         }
-        
-        .ie-container table,
-        .mso-container table {
-          table-layout: fixed;
+      }
+      
+      @media (max-width: 620px) {
+        .u-row-container {
+          max-width: 100% !important;
+          padding-left: 0px !important;
+          padding-right: 0px !important;
         }
-        
-        * {
-          line-height: inherit;
+        .u-row .u-col {
+          min-width: 320px !important;
+          max-width: 100% !important;
+          display: block !important;
         }
-        
-        a[x-apple-data-detectors='true'] {
-          color: inherit !important;
-          text-decoration: none !important;
+        .u-row {
+          width: 100% !important;
         }
-        
-        table,
-        td {
-          color: #000000;
+        .u-col {
+          width: 100% !important;
         }
-        
-        @media (max-width: 480px) {
-          #u_content_image_4 .v-container-padding-padding {
-            padding: 20px 10px 10px !important;
-          }
-          #u_content_image_4 .v-src-width {
-            width: auto !important;
-          }
-          #u_content_image_4 .v-src-max-width {
-            max-width: 50% !important;
-          }
+        .u-col>div {
+          margin: 0 auto;
         }
-      </style>
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      
+      table,
+      tr,
+      td {
+        vertical-align: top;
+        border-collapse: collapse;
+      }
+      
+      p {
+        margin: 0;
+      }
+      
+      .ie-container table,
+      .mso-container table {
+        table-layout: fixed;
+      }
+      
+      * {
+        line-height: inherit;
+      }
+      
+      a[x-apple-data-detectors='true'] {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+      
+      @media (min-width: 0px) {
+        .hide-default__display-table {
+          display: table !important;
+          mso-hide: unset !important;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .hide-mobile {
+          max-height: 0px;
+          overflow: hidden;
+          display: none !important;
+        }
+      }
+      
+      @media (min-width: 481px) {
+        .hide-desktop {
+          max-height: 0px;
+          overflow: hidden;
+          display: none !important;
+        }
+      }
+      
+      table,
+      td {
+        color: #000000;
+      }
+      
+      @media (max-width: 480px) {
+        #u_content_image_4 .v-container-padding-padding {
+          padding: 10px !important;
+        }
+        #u_content_image_4 .v-src-width {
+          width: auto !important;
+        }
+        #u_content_image_4 .v-src-max-width {
+          max-width: 100% !important;
+        }
+      }
+    </style>
     
     
     
@@ -242,26 +269,26 @@ export class EmailSender {
                         <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                           <!--<![endif]-->
     
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                      <td style="padding-right: 0px;padding-left: 0px;" align="center">
-    
-                                        <img align="center" border="0" src="${emailImageHeader}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
-                                          width="600" class="v-src-width v-src-max-width" />
-    
-                                      </td>
-                                    </tr>
-                                  </table>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                          <table class="hide-mobile" style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tbody>
+                          <tr>
+                            <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
+
+                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                  <td style="padding-right: 0px;padding-left: 0px;" align="center">
+
+                                    <img align="center" border="0" src="${emailImageHeader}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
+                                      width="600" class="v-src-width v-src-max-width" />
+
+                                  </td>
+                                </tr>
+                              </table>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
     
                           <!--[if (!mso)&(!IE)]><!-->
                         </div>
@@ -289,18 +316,18 @@ export class EmailSender {
                         <!--[if (!mso)&(!IE)]><!-->
                         <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                           <!--<![endif]-->
-    
-                          <table id="u_content_image_4" style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                          <!--[if !mso]><!-->
+                          <table class="hide-default__display-table hide-desktop" style="display: none;mso-hide: all;font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                             <tbody>
                               <tr>
-                                <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:30px 10px 10px;font-family:'Cabin',sans-serif;" align="left">
+                                <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
     
                                   <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                       <td style="padding-right: 0px;padding-left: 0px;" align="center">
     
-                                        <img align="center" border="0" src="${tierUrl}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 244px;"
-                                          width="244" class="v-src-width v-src-max-width" />
+                                        <img align="center" border="0" src="${emailImageHeaderMobile}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
+                                          width="600" class="v-src-width v-src-max-width" />
     
                                       </td>
                                     </tr>
@@ -310,6 +337,28 @@ export class EmailSender {
                               </tr>
                             </tbody>
                           </table>
+                          <!--<![endif]-->
+    
+                          <table id="u_content_image_4" style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tbody>
+                          <tr>
+                            <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
+
+                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                  <td style="padding-right: 0px;padding-left: 0px;" align="center">
+
+                                    <img align="center" border="0" src="${tierUrl}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 580px;"
+                                      width="580" class="v-src-width v-src-max-width" />
+
+                                  </td>
+                                </tr>
+                              </table>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
     
                           <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                             <tbody>
@@ -474,26 +523,26 @@ export class EmailSender {
                         <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                           <!--<![endif]-->
     
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                      <td style="padding-right: 0px;padding-left: 0px;" align="center">
-    
-                                        <img align="center" border="0" src="${emailImageFooter}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
-                                          width="600" class="v-src-width v-src-max-width" />
-    
-                                      </td>
-                                    </tr>
-                                  </table>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                          <table class="hide-mobile" style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tbody>
+                          <tr>
+                            <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
+
+                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                  <td style="padding-right: 0px;padding-left: 0px;" align="center">
+
+                                    <img align="center" border="0" src="${emailImageFooter}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
+                                      width="600" class="v-src-width v-src-max-width" />
+
+                                  </td>
+                                </tr>
+                              </table>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
     
                           <!--[if (!mso)&(!IE)]><!-->
                         </div>
@@ -506,6 +555,50 @@ export class EmailSender {
                 </div>
               </div>
     
+
+              <div class="u-row-container" style="padding: 0px;background-color: transparent">
+              <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e5eaf5;">
+                <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
+                  <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #e5eaf5;"><![endif]-->
+  
+                  <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
+                  <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
+                    <div style="height: 100%;width: 100% !important;">
+                      <!--[if (!mso)&(!IE)]><!-->
+                      <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
+                        <!--<![endif]-->
+                        <!--[if !mso]><!-->
+                        <table class="hide-default__display-table hide-desktop" style="display: none;mso-hide: all;font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+                          <tbody>
+                            <tr>
+                              <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Cabin',sans-serif;" align="left">
+  
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                  <tr>
+                                    <td style="padding-right: 0px;padding-left: 0px;" align="center">
+  
+                                      <img align="center" border="0" src="${emailImageFooterMobile}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
+                                        width="600" class="v-src-width v-src-max-width" />
+  
+                                    </td>
+                                  </tr>
+                                </table>
+  
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <!--<![endif]-->
+                        <!--[if (!mso)&(!IE)]><!-->
+                      </div>
+                      <!--<![endif]-->
+                    </div>
+                  </div>
+                  <!--[if (mso)|(IE)]></td><![endif]-->
+                  <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+                </div>
+              </div>
+            </div>
     
     
               <!--[if (mso)|(IE)]></td></tr></table><![endif]-->

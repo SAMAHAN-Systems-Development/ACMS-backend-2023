@@ -124,24 +124,24 @@ async function seedUsers() {
 
   const userList = [];
 
-  let idx = 0;
+  // let idx = 0;
   for (const userData of users) {
-    // const { user, error } = await supabase.createSupabaseUser(
-    //   userData.email,
-    //   userData.password,
-    // );
+    const { user, error } = await supabase.createSupabaseUser(
+      userData.email,
+      userData.password,
+    );
 
-    // if (error) {
-    //   console.error('Supabase signup error:', error);
-    //   throw error;
-    // }
+    if (error) {
+      console.error('Supabase signup error:', error);
+      throw error;
+    }
 
     userList.push({
       email: userData.email,
       userType: userData.userType,
-      supabaseUserId: String(idx),
+      supabaseUserId: user.id,
     });
-    idx++;
+    // idx++;
   }
 
   await prisma.user.createMany({ data: userList });
@@ -153,9 +153,9 @@ async function main() {
   const tiers = 5;
 
   await seedEventTiers();
-  // await seedEvents(events);
-  // await seedPayments(students);
-  // await seedStudents(students, events, tiers);
+  await seedEvents(events);
+  await seedPayments(students);
+  await seedStudents(students, events, tiers);
   await seedUsers();
 }
 

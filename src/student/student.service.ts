@@ -46,6 +46,7 @@ export class StudentService {
 
   async createStudent(createStudentDto: CreateStudentDto) {
     let eventRequiresPayment = createStudentDto.event_requires_payment;
+    const studentEmail = createStudentDto.email.toLowerCase();
     if (eventRequiresPayment === null) {
       const eventData = await this.prisma.event.findUnique({
         where: { id: createStudentDto.eventId },
@@ -96,7 +97,7 @@ export class StudentService {
     const studentCount = await this.prisma.student.aggregate({
       _count: true,
       where: {
-        email: createStudentDto.email,
+        email: studentEmail,
         eventTierOnEvent: {
           is: {
             eventId: createStudentDto.eventId,
@@ -114,7 +115,7 @@ export class StudentService {
         uuid: uuid,
         firstName: createStudentDto.firstName,
         lastName: createStudentDto.lastName,
-        email: createStudentDto.email,
+        email: studentEmail,
         year_and_course: createStudentDto.year_and_course,
         paymentId: payment.id,
         requires_payment: requires_payment,
@@ -130,7 +131,7 @@ export class StudentService {
     this.emailSender.sendEmail(
       createStudentDto.photo_src,
       qrCode,
-      createStudentDto.email,
+      studentEmail,
       requires_payment,
       controlNumber,
       dayjs(eventTierOnEvent.event.date).format('MMM DD, YYYY'),

@@ -10,12 +10,12 @@ import { Server } from 'socket.io';
 import * as dayjs from 'dayjs';
 
 @Injectable()
-@WebSocketGateway({
-  cors: {
-    origin: [process.env.FRONTEND_URL],
-  },
-  transports: ['websocket', 'polling'],
-})
+// @WebSocketGateway({
+//   cors: {
+//     origin: [process.env.FRONTEND_URL],
+//   },
+//   transports: ['websocket', 'polling'],
+// })
 export class StudentService {
   @WebSocketServer()
   server: Server;
@@ -143,14 +143,14 @@ export class StudentService {
       uuid,
     );
 
-    this.sendTicketLeftWebsocketData(createStudentDto.eventId);
+    // this.sendTicketLeftWebsocketData(createStudentDto.eventId);
 
     return newStudent;
   }
 
-  async sendTicketLeftWebsocketData(eventId: number) {
-    this.server.emit('sendStudentRegisteredSignal', eventId);
-  }
+  // async sendTicketLeftWebsocketData(eventId: number) {
+  //   this.server.emit('sendStudentRegisteredSignal', eventId);
+  // }
 
   async findAll() {
     const users = await this.prisma.student.findMany();

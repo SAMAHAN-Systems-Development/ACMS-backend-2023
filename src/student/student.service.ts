@@ -122,6 +122,7 @@ export class StudentService {
         eventTierOnEventId: eventTierOnEvent.id,
         is_addu_student: createStudentDto.is_addu_student,
         control_number: controlNumber,
+        id_src: createStudentDto.id_src,
       },
     });
 

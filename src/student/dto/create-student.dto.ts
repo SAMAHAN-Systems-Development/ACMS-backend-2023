@@ -11,4 +11,5 @@ export class CreateStudentDto {
   is_addu_student: boolean;
   required_payment: number;
   id_src: string;
+  payment_reference_number: string;
 }

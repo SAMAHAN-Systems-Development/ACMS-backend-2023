@@ -62,6 +62,9 @@ async function seedPayments(n_students) {
       photo_src: '/placeholderImage.jpg',
       status: faker.helpers.arrayElement(statuses),
       required_payment: faker.number.int({ min: 100, max: 300 }),
+      reference_number: faker.string.alphanumeric({
+        length: { min: 10, max: 10 },
+      }),
     });
   }
   await prisma.payment.createMany({ data: paymentList });

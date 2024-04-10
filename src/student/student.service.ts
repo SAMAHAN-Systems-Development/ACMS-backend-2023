@@ -77,13 +77,6 @@ export class StudentService {
       },
     });
 
-    const payment = await this.createPayment(
-      createStudentDto.photo_src,
-      createStudentDto.isSubmittedByStudent,
-      createStudentDto.required_payment,
-      createStudentDto.payment_reference_number,
-    );
-
     const controlNumber = this.getControlNumber(
       eventTierOnEvent._count.students,
       createStudentDto.eventTierId,
@@ -117,6 +110,7 @@ export class StudentService {
       createStudentDto.photo_src,
       createStudentDto.isSubmittedByStudent,
       createStudentDto.required_payment,
+      createStudentDto.payment_reference_number,
     );
 
     const newStudent = this.prisma.student.create({

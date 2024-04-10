@@ -264,7 +264,16 @@ export class PaymentService {
       let event = pendingPayment?.student?.eventTierOnEvent?.event;
       let eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
 
-      if (!event) {
+      if (!event || !eventTier) {
+        console.log('---- Inside no event or eventTier ----');
+        console.log(pendingPayment);
+        eventTier = {
+          id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          name: 'Sample',
+          is_active: true,
+        };
         event = {
           id: 1,
           createdAt: new Date(),
@@ -279,17 +288,6 @@ export class PaymentService {
           hasEarlyBirdAccess: true,
         };
       }
-
-      if (!eventTier) {
-        eventTier = {
-          id: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          name: 'Sample',
-          is_active: true,
-        };
-      }
-
       const finalPendingPayment = {
         ...pendingPayment,
         event: event,

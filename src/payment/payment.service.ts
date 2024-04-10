@@ -260,24 +260,32 @@ export class PaymentService {
       skip: items * (page - 1),
     });
 
-    const toReturnPendingPayments = pendingPayments.map((pendingPayment) => {
-      const event = pendingPayment?.student?.eventTierOnEvent?.event;
-      const eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
+    const filteredPendingPayments = pendingPayments.filter(
+      (pendingPayment) =>
+        pendingPayment?.student !== null ||
+        pendingPayment?.student !== undefined,
+    );
 
-      if (!event || !eventTier) {
-        console.log(pendingPayment);
-        return this.sampleData;
-      }
+    const toReturnPendingPayments = filteredPendingPayments.map(
+      (pendingPayment) => {
+        const event = pendingPayment?.student?.eventTierOnEvent?.event;
+        const eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
 
-      const finalPendingPayment = {
-        ...pendingPayment,
-        event: event,
-        eventTier: eventTier,
-        eventPrice: pendingPayment.required_payment,
-      };
+        if (!event || !eventTier) {
+          console.log(pendingPayment);
+          return this.sampleData;
+        }
 
-      return finalPendingPayment;
-    });
+        const finalPendingPayment = {
+          ...pendingPayment,
+          event: event,
+          eventTier: eventTier,
+          eventPrice: pendingPayment.required_payment,
+        };
+
+        return finalPendingPayment;
+      },
+    );
 
     const totalCount = await this.prisma.payment.count({
       where: {

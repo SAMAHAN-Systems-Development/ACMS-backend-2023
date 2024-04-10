@@ -269,14 +269,15 @@ export class PaymentService {
     });
 
     const toReturnPendingPayments = pendingPayments.map((pendingPayment) => {
+      const event = pendingPayment?.student?.eventTierOnEvent?.event;
+      const eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
+
       const finalPendingPayment = {
         ...pendingPayment,
-        event: pendingPayment.student.eventTierOnEvent.event,
-        eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
+        event: event,
+        eventTier: eventTier,
         eventPrice: pendingPayment.required_payment,
       };
-
-      delete finalPendingPayment.student.eventTierOnEvent;
 
       return finalPendingPayment;
     });

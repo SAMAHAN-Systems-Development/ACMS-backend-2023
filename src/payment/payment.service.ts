@@ -261,8 +261,34 @@ export class PaymentService {
     });
 
     const toReturnPendingPayments = pendingPayments.map((pendingPayment) => {
-      const event = pendingPayment?.student?.eventTierOnEvent?.event;
-      const eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
+      let event = pendingPayment?.student?.eventTierOnEvent?.event;
+      let eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
+
+      if (!event) {
+        event = {
+          id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          title: 'Sample',
+          description: 'Sample',
+          date: new Date(),
+          is_active: true,
+          form_name: 'Sample',
+          requires_payment: true,
+          earlyBirdAccessDate: new Date(),
+          hasEarlyBirdAccess: true,
+        };
+      }
+
+      if (!eventTier) {
+        eventTier = {
+          id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          name: 'Sample',
+          is_active: true,
+        };
+      }
 
       const finalPendingPayment = {
         ...pendingPayment,

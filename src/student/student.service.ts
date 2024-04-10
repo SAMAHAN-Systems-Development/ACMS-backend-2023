@@ -113,6 +113,12 @@ export class StudentService {
       return { message: 'emailIsExisting' };
     }
 
+    const payment = await this.createPayment(
+      createStudentDto.photo_src,
+      createStudentDto.isSubmittedByStudent,
+      createStudentDto.required_payment,
+    );
+
     const newStudent = this.prisma.student.create({
       data: {
         uuid: uuid,

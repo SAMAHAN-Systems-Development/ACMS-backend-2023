@@ -260,11 +260,15 @@ export class PaymentService {
       skip: items * (page - 1),
     });
 
-    const filteredPendingPayments = pendingPayments.filter(
-      (pendingPayment) =>
-        pendingPayment?.student !== null ||
-        pendingPayment?.student !== undefined,
-    );
+    const filteredPendingPayments = pendingPayments.filter((pendingPayment) => {
+      const event = pendingPayment?.student?.eventTierOnEvent?.event;
+      const eventTier = pendingPayment?.student?.eventTierOnEvent?.eventTier;
+
+      if (!event || !eventTier) {
+        return false;
+      }
+      return true;
+    });
 
     const toReturnPendingPayments = filteredPendingPayments.map(
       (pendingPayment) => {

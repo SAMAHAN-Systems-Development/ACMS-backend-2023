@@ -75,12 +75,6 @@ export class StudentService {
       },
     });
 
-    const payment = await this.createPayment(
-      createStudentDto.photo_src,
-      createStudentDto.isSubmittedByStudent,
-      createStudentDto.required_payment,
-    );
-
     const controlNumber = this.getControlNumber(
       eventTierOnEvent._count.students,
       createStudentDto.eventTierId,
@@ -109,6 +103,12 @@ export class StudentService {
     if (studentCount._count >= 1) {
       return { message: 'emailIsExisting' };
     }
+
+    const payment = await this.createPayment(
+      createStudentDto.photo_src,
+      createStudentDto.isSubmittedByStudent,
+      createStudentDto.required_payment,
+    );
 
     const newStudent = this.prisma.student.create({
       data: {

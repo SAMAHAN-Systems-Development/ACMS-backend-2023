@@ -52,8 +52,6 @@ export class PaymentService {
         eventPrice: acceptedPayment.required_payment,
       };
 
-      delete finalAcceptedPayment.student.eventTierOnEvent;
-
       return finalAcceptedPayment;
     });
 
@@ -107,8 +105,6 @@ export class PaymentService {
         eventTier: acceptedPayment.student.eventTierOnEvent.eventTier,
         eventPrice: acceptedPayment.required_payment,
       };
-
-      delete finalAcceptedPayment.student.eventTierOnEvent;
 
       return finalAcceptedPayment;
     });
@@ -164,8 +160,6 @@ export class PaymentService {
         eventPrice: declinedPayment.required_payment,
       };
 
-      delete finalDeclinedPayment.student.eventTierOnEvent;
-
       return finalDeclinedPayment;
     });
 
@@ -219,8 +213,6 @@ export class PaymentService {
         eventTier: declinedPayment.student.eventTierOnEvent.eventTier,
         eventPrice: declinedPayment.required_payment,
       };
-
-      delete finalDeclinedPayment.student.eventTierOnEvent;
 
       return finalDeclinedPayment;
     });
@@ -332,8 +324,6 @@ export class PaymentService {
         eventTier: pendingPayment.student.eventTierOnEvent.eventTier,
         eventPrice: pendingPayment.required_payment,
       };
-
-      delete finalPendingPayment.student.eventTierOnEvent;
 
       return finalPendingPayment;
     });

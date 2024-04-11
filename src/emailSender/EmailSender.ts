@@ -76,7 +76,7 @@ export class EmailSender {
   getTierUrl(tierName: string) {
     switch (tierName) {
       case 'MADAYAW TIER':
-        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/VVIP.png';
+        return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/MADAYAW%20TIER.png';
       case 'VVIP':
         return 'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/VVIP.png';
       case 'Gold':

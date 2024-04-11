@@ -30,6 +30,7 @@ export class StudentService {
     payment_path: string,
     isRegisterByStudent: boolean,
     paymentPrice: number,
+    payment_reference_number: string,
   ) {
     try {
       return await this.prisma.payment.create({
@@ -37,6 +38,7 @@ export class StudentService {
           photo_src: payment_path,
           status: isRegisterByStudent ? 'pending' : 'accepted',
           required_payment: paymentPrice,
+          reference_number: payment_reference_number,
         },
       });
     } catch (ex) {
@@ -108,6 +110,7 @@ export class StudentService {
       createStudentDto.photo_src,
       createStudentDto.isSubmittedByStudent,
       createStudentDto.required_payment,
+      createStudentDto.payment_reference_number,
     );
 
     const newStudent = this.prisma.student.create({
@@ -122,6 +125,7 @@ export class StudentService {
         eventTierOnEventId: eventTierOnEvent.id,
         is_addu_student: createStudentDto.is_addu_student,
         control_number: controlNumber,
+        id_src: createStudentDto.id_src,
       },
     });
 

@@ -6,7 +6,7 @@ const prisma = new PrismaService();
 const supabase = new SupabaseService();
 
 async function seedEventTiers() {
-  const tiers = ['VVIP', 'Gold', 'Silver', 'Bronze', 'Gen Ad'];
+  const tiers = ['MADAYAW TIER', 'VVIP', 'Gold', 'Silver', 'Bronze', 'Gen Ad'];
 
   const tierList = [];
   for (let i = 0; i < tiers.length; i++) {
@@ -18,9 +18,7 @@ async function seedEventTiers() {
   await prisma.eventTier.createMany({ data: tierList });
 }
 
-async function seedEvents(n_events) {
-  const n_tiers = 5;
-
+async function seedEvents(n_events, n_tiers) {
   const eventsList = [];
   for (let i = 0; i < n_events; i++) {
     const title = faker.lorem.words({ min: 3, max: 6 });
@@ -64,6 +62,9 @@ async function seedPayments(n_students) {
       photo_src: '/placeholderImage.jpg',
       status: faker.helpers.arrayElement(statuses),
       required_payment: faker.number.int({ min: 100, max: 300 }),
+      reference_number: faker.string.alphanumeric({
+        length: { min: 10, max: 10 },
+      }),
     });
   }
   await prisma.payment.createMany({ data: paymentList });
@@ -97,6 +98,7 @@ async function seedStudents(n_students, n_events, n_tiers) {
       paymentId: paymentId,
       eventTierOnEventId: eventTierOnEventId,
       is_addu_student: faker.datatype.boolean(),
+      id_src: '/sampleId.png',
     });
   }
 
@@ -150,10 +152,10 @@ async function seedUsers() {
 async function main() {
   const events = 10;
   const students = 80;
-  const tiers = 5;
+  const tiers = 6;
 
   await seedEventTiers();
-  await seedEvents(events);
+  await seedEvents(events, tiers);
   await seedPayments(students);
   await seedStudents(students, events, tiers);
   await seedUsers();

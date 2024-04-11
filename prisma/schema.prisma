@@ -24,6 +24,7 @@ model Student {
   payment            Payment          @relation(fields: [paymentId], references: [id])
   is_addu_student    Boolean          @default(true)
   control_number     String           @default("CONTROL000000000")
+  id_src             String?          @default("")
 }
 
 model Payment {
@@ -34,6 +35,7 @@ model Payment {
   status           String
   required_payment Float?
   student          Student?
+  reference_number String?
 }
 
 model Event {

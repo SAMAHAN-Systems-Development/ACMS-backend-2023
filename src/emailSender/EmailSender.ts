@@ -433,9 +433,6 @@ export class EmailSender {
                                         <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">Tumblers and Backpacks are strictly not allowed in the Concert Venue.</span></p>
                                       </li>
                                       <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">For non-ateneans, please bring two valid IDs upon entry</span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
                                         <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">For ateneans that are not in-college, please bring an Atenean ID or your current </span></p>
                                       </li>
                                     </ol>

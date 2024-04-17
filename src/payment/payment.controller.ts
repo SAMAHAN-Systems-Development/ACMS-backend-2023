@@ -61,9 +61,12 @@ export class PaymentController {
   }
 
   @Get('accepted')
-  async getAllAcceptedPayments(@Query('page') page: number) {
+  async getAllAcceptedPayments(
+    @Query('page') page: number,
+    @Query('studentName') studentName: string,
+  ) {
     try {
-      return this.paymentService.getAllAcceptedPayments(page);
+      return this.paymentService.getAllAcceptedPayments(page, studentName);
     } catch (error) {
       throw new HttpException(
         {
@@ -93,9 +96,12 @@ export class PaymentController {
   }
 
   @Get('declined')
-  async getAllDeclinedPayments(@Query('page') page: number) {
+  async getAllDeclinedPayments(
+    @Query('page') page: number,
+    @Query('studentName') studentName: string,
+  ) {
     try {
-      return this.paymentService.getAllDeclinedPayments(page);
+      return this.paymentService.getAllDeclinedPayments(page, studentName);
     } catch (error) {
       throw new HttpException(
         {
@@ -125,9 +131,12 @@ export class PaymentController {
   }
 
   @Get('pending')
-  async getAllPendingPayments(@Query('page') page: number) {
+  async getAllPendingPayments(
+    @Query('page') page: number,
+    @Query('studentName') studentName: string,
+  ) {
     try {
-      return this.paymentService.getAllPendingPayments(page);
+      return this.paymentService.getAllPendingPayments(page, studentName);
     } catch (error) {
       throw new HttpException(
         {

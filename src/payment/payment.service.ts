@@ -23,7 +23,7 @@ export class PaymentService {
     });
   }
 
-  async getAllAcceptedPayments(page = 1, items = 10) {
+  async getAllAcceptedPayments(page = 1, studentName = '', items = 10) {
     const acceptedPayments = await this.prisma.payment.findMany({
       include: {
         student: {
@@ -39,6 +39,12 @@ export class PaymentService {
       },
       where: {
         status: 'accepted',
+        student: {
+          firstName: {
+            startsWith: studentName,
+            mode: 'insensitive',
+          },
+        },
       },
       take: items,
       skip: items * (page - 1),
@@ -58,6 +64,12 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'accepted',
+        student: {
+          firstName: {
+            startsWith: studentName,
+            mode: 'insensitive',
+          },
+        },
       },
     });
     const maxPage = Math.ceil(totalCount / items);
@@ -131,7 +143,7 @@ export class PaymentService {
     };
   }
 
-  async getAllDeclinedPayments(page = 1, items = 10) {
+  async getAllDeclinedPayments(page = 1, studentName = '', items = 10) {
     const declinedPayments = await this.prisma.payment.findMany({
       include: {
         student: {
@@ -147,6 +159,12 @@ export class PaymentService {
       },
       where: {
         status: 'declined',
+        student: {
+          firstName: {
+            startsWith: studentName,
+            mode: 'insensitive',
+          },
+        },
       },
       take: items,
       skip: items * (page - 1),
@@ -166,6 +184,12 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'declined',
+        student: {
+          firstName: {
+            startsWith: studentName,
+            mode: 'insensitive',
+          },
+        },
       },
     });
     const maxPage = Math.ceil(totalCount / items);
@@ -239,7 +263,7 @@ export class PaymentService {
     };
   }
 
-  async getAllPendingPayments(page = 1, items = 10) {
+  async getAllPendingPayments(page = 1, studentName = '', items = 10) {
     const pendingPayments = await this.prisma.payment.findMany({
       include: {
         student: {
@@ -255,6 +279,12 @@ export class PaymentService {
       },
       where: {
         status: 'pending',
+        student: {
+          firstName: {
+            startsWith: studentName,
+            mode: 'insensitive',
+          },
+        },
       },
       take: items,
       skip: items * (page - 1),
@@ -294,6 +324,11 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'pending',
+        student: {
+          firstName: {
+            startsWith: studentName,
+          },
+        },
       },
     });
     const maxPage = Math.ceil(totalCount / items);

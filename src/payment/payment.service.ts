@@ -39,12 +39,32 @@ export class PaymentService {
       },
       where: {
         status: 'accepted',
-        student: {
-          firstName: {
-            startsWith: studentName,
-            mode: 'insensitive',
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
       take: items,
       skip: items * (page - 1),
@@ -64,12 +84,32 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'accepted',
-        student: {
-          firstName: {
-            startsWith: studentName,
-            mode: 'insensitive',
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
     });
     const maxPage = Math.ceil(totalCount / items);
@@ -159,12 +199,32 @@ export class PaymentService {
       },
       where: {
         status: 'declined',
-        student: {
-          firstName: {
-            startsWith: studentName,
-            mode: 'insensitive',
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
       take: items,
       skip: items * (page - 1),
@@ -184,12 +244,32 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'declined',
-        student: {
-          firstName: {
-            startsWith: studentName,
-            mode: 'insensitive',
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
     });
     const maxPage = Math.ceil(totalCount / items);
@@ -279,12 +359,32 @@ export class PaymentService {
       },
       where: {
         status: 'pending',
-        student: {
-          firstName: {
-            startsWith: studentName,
-            mode: 'insensitive',
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
       take: items,
       skip: items * (page - 1),
@@ -324,11 +424,32 @@ export class PaymentService {
     const totalCount = await this.prisma.payment.count({
       where: {
         status: 'pending',
-        student: {
-          firstName: {
-            startsWith: studentName,
+        OR: [
+          {
+            student: {
+              firstName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
           },
-        },
+          {
+            student: {
+              lastName: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            student: {
+              email: {
+                startsWith: studentName,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
       },
     });
     const maxPage = Math.ceil(totalCount / items);

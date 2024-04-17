@@ -21,22 +21,22 @@ export class EventService {
       },
     });
 
-    const students = await this.prisma.student.findMany({
-      include: {
-        eventTierOnEvent: {
-          include: {
-            eventTier: true,
-          },
-        },
-      },
-      where: {
-        eventTierOnEvent: {
-          is: {
-            eventId: eventId,
-          },
-        },
-      },
-    });
+    // const students = await this.prisma.student.findMany({
+    //   include: {
+    //     eventTierOnEvent: {
+    //       include: {
+    //         eventTier: true,
+    //       },
+    //     },
+    //   },
+    //   where: {
+    //     eventTierOnEvent: {
+    //       is: {
+    //         eventId: eventId,
+    //       },
+    //     },
+    //   },
+    // });
 
     const eventToReturn = {
       id: event.id,
@@ -48,19 +48,20 @@ export class EventService {
       requires_payment: event.requires_payment,
       earlyBirdAccessDate: event.earlyBirdAccessDate,
       hasEarlyBirdAccess: event.hasEarlyBirdAccess,
-      students: students.map((student) => {
-        return {
-          id: student.id,
-          uuid: student.uuid,
-          firstName: student.firstName,
-          lastName: student.lastName,
-          email: student.email,
-          year_and_course: student.year_and_course,
-          requires_payment: student.requires_payment,
-          eventTier: student.eventTierOnEvent.eventTier.name,
-          is_addu_student: student.is_addu_student,
-        };
-      }),
+      // students: students.map((student) => {
+      //   return {
+      //     id: student.id,
+      //     uuid: student.uuid,
+      //     firstName: student.firstName,
+      //     lastName: student.lastName,
+      //     email: student.email,
+      //     year_and_course: student.year_and_course,
+      //     requires_payment: student.requires_payment,
+      //     eventTier: student.eventTierOnEvent.eventTier.name,
+      //     is_addu_student: student.is_addu_student,
+      //   };
+      // }),
+      students: [],
       eventTiers: event.eventTierOnEvent.map((eventTierOnEvent) => {
         return {
           ...eventTierOnEvent.eventTier,

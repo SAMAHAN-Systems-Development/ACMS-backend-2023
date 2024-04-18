@@ -65,38 +65,46 @@ export class EventService {
       skip: Number(studentItems) * (studentPage - 1),
     });
 
-    // const totalCount = await this.prisma.student.findMany({
-    //   where: {
-    //     status: 'accepted',
-    //     OR: [
-    //       {
-    //         student: {
-    //           firstName: {
-    //             startsWith: studentName,
-    //             mode: 'insensitive',
-    //           },
-    //         },
-    //       },
-    //       {
-    //         student: {
-    //           lastName: {
-    //             startsWith: studentName,
-    //             mode: 'insensitive',
-    //           },
-    //         },
-    //       },
-    //       {
-    //         student: {
-    //           email: {
-    //             startsWith: studentName,
-    //             mode: 'insensitive',
-    //           },
-    //         },
-    //       },
-    //     ],
-    //   },
-    // });
-    // const maxPage = Math.ceil(totalCount / items);
+    const totalCountWithFilter = await this.prisma.student.count({
+      where: {
+        eventTierOnEvent: {
+          is: {
+            eventId: eventId,
+          },
+        },
+        OR: [
+          {
+            firstName: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
+    const maxPage = Math.ceil(totalCountWithFilter / studentItems);
+
+    const totalCount = await this.prisma.student.count({
+      where: {
+        eventTierOnEvent: {
+          is: {
+            eventId: eventId,
+          },
+        },
+      },
+    });
 
     const eventToReturn = {
       id: event.id,
@@ -108,6 +116,8 @@ export class EventService {
       requires_payment: event.requires_payment,
       earlyBirdAccessDate: event.earlyBirdAccessDate,
       hasEarlyBirdAccess: event.hasEarlyBirdAccess,
+      studentsMaxPage: maxPage,
+      registeredStudentsCount: totalCount,
       students: students.map((student) => {
         return {
           id: student.id,

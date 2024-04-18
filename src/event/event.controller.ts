@@ -61,9 +61,19 @@ export class EventController {
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  async viewEvent(@Param('id', ParseIntPipe) eventId: number) {
+  async viewEvent(
+    @Param('id', ParseIntPipe) eventId: number,
+    @Query('studentPage') studentPage: number,
+    @Query('studentItems') studentItems: number,
+    @Query('studentSearchValue') studentSearchValue: string,
+  ) {
     try {
-      return await this.eventService.viewEvent(eventId);
+      return await this.eventService.viewEvent(
+        eventId,
+        studentPage,
+        studentSearchValue,
+        studentItems,
+      );
     } catch (error) {
       throw new HttpException('Unable to view event.', HttpStatus.BAD_REQUEST, {
         cause: error,

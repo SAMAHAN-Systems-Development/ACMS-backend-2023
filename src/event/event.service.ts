@@ -8,7 +8,12 @@ import * as dayjs from 'dayjs';
 export class EventService {
   constructor(private prisma: PrismaService) {}
 
-  async viewEvent(eventId: number) {
+  async viewEvent(
+    eventId: number,
+    studentPage = 1,
+    studentSearchValue = '',
+    studentItems = 10,
+  ) {
     const event = await this.prisma.event.findFirst({
       where: { id: eventId },
       include: {
@@ -21,22 +26,77 @@ export class EventService {
       },
     });
 
-    // const students = await this.prisma.student.findMany({
-    //   include: {
-    //     eventTierOnEvent: {
-    //       include: {
-    //         eventTier: true,
-    //       },
-    //     },
-    //   },
+    const students = await this.prisma.student.findMany({
+      include: {
+        eventTierOnEvent: {
+          include: {
+            eventTier: true,
+          },
+        },
+      },
+      where: {
+        eventTierOnEvent: {
+          is: {
+            eventId: eventId,
+          },
+        },
+        OR: [
+          {
+            firstName: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              startsWith: studentSearchValue,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      take: Number(studentItems),
+      skip: Number(studentItems) * (studentPage - 1),
+    });
+
+    // const totalCount = await this.prisma.student.findMany({
     //   where: {
-    //     eventTierOnEvent: {
-    //       is: {
-    //         eventId: eventId,
+    //     status: 'accepted',
+    //     OR: [
+    //       {
+    //         student: {
+    //           firstName: {
+    //             startsWith: studentName,
+    //             mode: 'insensitive',
+    //           },
+    //         },
     //       },
-    //     },
+    //       {
+    //         student: {
+    //           lastName: {
+    //             startsWith: studentName,
+    //             mode: 'insensitive',
+    //           },
+    //         },
+    //       },
+    //       {
+    //         student: {
+    //           email: {
+    //             startsWith: studentName,
+    //             mode: 'insensitive',
+    //           },
+    //         },
+    //       },
+    //     ],
     //   },
     // });
+    // const maxPage = Math.ceil(totalCount / items);
 
     const eventToReturn = {
       id: event.id,
@@ -48,20 +108,19 @@ export class EventService {
       requires_payment: event.requires_payment,
       earlyBirdAccessDate: event.earlyBirdAccessDate,
       hasEarlyBirdAccess: event.hasEarlyBirdAccess,
-      // students: students.map((student) => {
-      //   return {
-      //     id: student.id,
-      //     uuid: student.uuid,
-      //     firstName: student.firstName,
-      //     lastName: student.lastName,
-      //     email: student.email,
-      //     year_and_course: student.year_and_course,
-      //     requires_payment: student.requires_payment,
-      //     eventTier: student.eventTierOnEvent.eventTier.name,
-      //     is_addu_student: student.is_addu_student,
-      //   };
-      // }),
-      students: [],
+      students: students.map((student) => {
+        return {
+          id: student.id,
+          uuid: student.uuid,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          email: student.email,
+          year_and_course: student.year_and_course,
+          requires_payment: student.requires_payment,
+          eventTier: student.eventTierOnEvent.eventTier.name,
+          is_addu_student: student.is_addu_student,
+        };
+      }),
       eventTiers: event.eventTierOnEvent.map((eventTierOnEvent) => {
         return {
           ...eventTierOnEvent.eventTier,
@@ -75,6 +134,7 @@ export class EventService {
         };
       }),
     };
+
     return eventToReturn;
   }
 

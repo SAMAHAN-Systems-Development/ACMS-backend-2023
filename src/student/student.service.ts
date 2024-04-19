@@ -184,10 +184,15 @@ export class StudentService {
     }
   }
 
-  async getStudentByUuidAndEventId(uuid: string, eventId: number) {
+  async getStudentByUuidAndEventId(
+    uuid: string,
+    eventId: number,
+    isForScanning: boolean,
+  ) {
     try {
       const student = await this.prisma.student.findUnique({
-        where: { uuid, eventTierOnEvent: { eventId } },
+        // where: { uuid, eventTierOnEvent: { eventId } },
+        where: { uuid },
         include: {
           payment: true,
           eventTierOnEvent: { include: { event: true, eventTier: true } },
@@ -197,16 +202,39 @@ export class StudentService {
         ...student,
         event: student.eventTierOnEvent.event,
         eventTier: student.eventTierOnEvent.eventTier,
+        accepted: true,
+        message: '',
       };
 
       delete studentToReturn.eventTierOnEvent;
+
+      console.log('before:' + student.hasScanned);
+      if (isForScanning && student.hasScanned) {
+        return {
+          accepted: false,
+          message: 'Student has scanned already',
+        };
+      }
+
+      if (isForScanning) {
+        await this.prisma.student.update({
+          where: { uuid },
+          data: {
+            hasScanned: true,
+          },
+        });
+      }
 
       if (student.requires_payment) {
         if (student.payment.status === 'accepted') {
           return studentToReturn;
         }
-        throw new HttpException('Payment is still pending', 403);
+        return {
+          accepted: false,
+          message: 'Payment is still pending',
+        };
       }
+
       return studentToReturn;
     } catch (error) {
       throw new Error(error);

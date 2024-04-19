@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -27,10 +35,13 @@ export class StudentController {
   async getStudentByUuidAndEventId(
     @Param('uuid') uuid: string,
     @Param('eventId') eventId: number,
+    @Query('isForScanning') isForScanning: boolean,
   ) {
+    isForScanning = isForScanning || false;
     return this.studentService.getStudentByUuidAndEventId(
       uuid,
       Number(eventId),
+      Boolean(isForScanning),
     );
   }
 }

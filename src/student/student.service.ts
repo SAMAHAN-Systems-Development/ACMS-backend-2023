@@ -198,17 +198,21 @@ export class StudentService {
           eventTierOnEvent: { include: { event: true, eventTier: true } },
         },
       });
-      const studentToReturn = {
-        ...student,
-        event: student.eventTierOnEvent.event,
-        eventTier: student.eventTierOnEvent.eventTier,
-        accepted: true,
-        message: '',
-      };
 
-      delete studentToReturn.eventTierOnEvent;
+      if (student.requires_payment && student.payment.status === 'pending') {
+        return {
+          accepted: false,
+          message: 'Payment is still pending',
+        };
+      }
 
-      console.log('before:' + student.hasScanned);
+      if (student.requires_payment && student.payment.status === 'declined') {
+        return {
+          accepted: false,
+          message: 'Payment was declined',
+        };
+      }
+
       if (isForScanning && student.hasScanned) {
         return {
           accepted: false,
@@ -225,15 +229,15 @@ export class StudentService {
         });
       }
 
-      if (student.requires_payment) {
-        if (student.payment.status === 'accepted') {
-          return studentToReturn;
-        }
-        return {
-          accepted: false,
-          message: 'Payment is still pending',
-        };
-      }
+      const studentToReturn = {
+        ...student,
+        event: student.eventTierOnEvent.event,
+        eventTier: student.eventTierOnEvent.eventTier,
+        accepted: true,
+        message: '',
+      };
+
+      delete studentToReturn.eventTierOnEvent;
 
       return studentToReturn;
     } catch (error) {

@@ -149,16 +149,28 @@ async function seedUsers() {
   await prisma.user.createMany({ data: userList });
 }
 
+async function createBuckets() {
+  const paymentsBucket = process.env.PAYMENTS_BUCKET ?? 'payment';
+  const validIdsBucket = process.env.VALID_ID_BUCKET ?? 'valid_id';
+
+  await supabase.createBucket(paymentsBucket, ['images/*']);
+  await supabase.createBucket(validIdsBucket, ['images/*']);
+}
+
 async function main() {
   const events = 10;
   const students = 80;
   const tiers = 6;
 
-  await seedEventTiers();
-  await seedEvents(events, tiers);
-  await seedPayments(students);
-  await seedStudents(students, events, tiers);
+  await createBuckets();
   await seedUsers();
+
+  if (process.env.NODE_ENV !== 'production') {
+    await seedEventTiers();
+    await seedEvents(events, tiers);
+    await seedPayments(students);
+    await seedStudents(students, events, tiers);
+  }
 }
 
 main()

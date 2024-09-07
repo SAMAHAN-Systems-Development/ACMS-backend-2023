@@ -1,8 +1,6 @@
-// supabase.service.ts
-
 import { Injectable } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { decode } from 'base64-arraybuffer';
+
 @Injectable()
 export class SupabaseService {
   private supabase: SupabaseClient;
@@ -23,11 +21,47 @@ export class SupabaseService {
     });
 
     if (error) {
-      // Handle Supabase signup error
       throw new Error(`Supabase signup failed: ${error.message}`);
     }
 
     return data;
+  }
+
+  async createBucket(
+    bucketName: string,
+    allowedMimeTypes: string[] | undefined,
+  ): Promise<any> {
+    try {
+      const { data: buckets, error: listError } =
+        await this.supabase.storage.listBuckets();
+
+      if (listError) {
+        throw new Error(`Failed to list buckets: ${listError.message}`);
+      }
+
+      const bucketExists = buckets.some((bucket) => bucket.name === bucketName);
+
+      if (bucketExists) {
+        console.log('Bucket already exists');
+        return false;
+      }
+
+      const { data, error } = await this.supabase.storage.createBucket(
+        bucketName,
+        {
+          public: false,
+          allowedMimeTypes: allowedMimeTypes ?? ['*'],
+        },
+      );
+
+      if (error) {
+        throw new Error(`Failed to create bucket: ${error.message}`);
+      }
+
+      console.log('Bucket created successfully:', data);
+    } catch (error) {
+      console.error('Error managing bucket:', error);
+    }
   }
 
   // FiletoBase64(file: Express.Multer.File) {

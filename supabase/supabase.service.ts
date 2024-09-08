@@ -49,7 +49,7 @@ export class SupabaseService {
       const { data, error } = await this.supabase.storage.createBucket(
         bucketName,
         {
-          public: false,
+          public: true,
           allowedMimeTypes: allowedMimeTypes ?? ['*'],
         },
       );

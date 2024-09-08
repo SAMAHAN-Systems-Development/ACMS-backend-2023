@@ -153,8 +153,8 @@ async function createBuckets() {
   const paymentsBucket = process.env.PAYMENTS_BUCKET ?? 'payment';
   const validIdsBucket = process.env.VALID_ID_BUCKET ?? 'valid_id';
 
-  await supabase.createBucket(paymentsBucket, ['images/*']);
-  await supabase.createBucket(validIdsBucket, ['images/*']);
+  await supabase.createBucket(paymentsBucket, ['image/*']);
+  await supabase.createBucket(validIdsBucket, ['image/*']);
 }
 
 async function main() {

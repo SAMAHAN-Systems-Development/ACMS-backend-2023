@@ -221,6 +221,8 @@ export class EventService {
         },
       });
     });
+
+    return event;
   }
 
   async getInactiveEvents(page = 1, items = 10) {

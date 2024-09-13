@@ -6,7 +6,7 @@ const prisma = new PrismaService();
 const supabase = new SupabaseService();
 
 async function seedEventTiers() {
-  const tiers = ['MADAYAW TIER', 'VVIP', 'Gold', 'Silver', 'Bronze', 'Gen Ad'];
+  const tiers = ['VVIP', 'Gold', 'Silver', 'Bronze', 'Gen Ad'];
 
   const tierList = [];
   for (let i = 0; i < tiers.length; i++) {

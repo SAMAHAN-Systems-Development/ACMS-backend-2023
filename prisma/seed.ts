@@ -160,7 +160,7 @@ async function createBuckets() {
 async function main() {
   const events = 10;
   const students = 80;
-  const tiers = 6;
+  const tiers = 5;
 
   await createBuckets();
   await seedUsers();

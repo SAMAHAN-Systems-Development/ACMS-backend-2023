@@ -254,7 +254,7 @@ export class StudentService {
     const controlNumber = startingNumber + numberOfStudents;
     const studentNumber = String(controlNumber).padStart(5, '0');
     const eventNumber = String(eventId).padStart(2, '0');
-    return `MADAYAW${eventNumber}${studentNumber}`;
+    return `ACMS${eventNumber}${studentNumber}`;
   }
 
   moneyFormatter(money: number) {

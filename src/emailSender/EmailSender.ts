@@ -15,8 +15,8 @@ export class EmailSender {
     ticketCost: string,
     uuid: string,
   ) {
-    const venue = '4F Martin Hall, Ateneo de Davao University';
-    const eventTitle = 'Madayaw Nights Music Fair';
+    const venue = 'Martin Hall, Ateneo de Davao University';
+    const eventTitle = "UFest Musikahan '24: Battle of the Bands";
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -104,15 +104,15 @@ export class EmailSender {
     eventTitle: string,
     uuid: string,
   ) {
-    const tierUrl = this.getTierUrl(ticketType);
+    // const tierUrl = this.getTierUrl(ticketType);
     const emailImageHeader =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Letterhead%20Final.png?t=2024-04-01T16%3A19%3A49.023Z';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Mobile%20Header(1).PNG';
     const emailImageFooter =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Foot%20Final.png';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Footer.PNG';
     const emailImageHeaderMobile =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Letterhead%20Mobile.png?t=2024-04-01T15%3A41%3A07.362Z';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Mobile%20Header(1).PNG';
     const emailImageFooterMobile =
-      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Email%20Foot%20Mobile.png';
+      'https://fjqloxpyknqccretzoyt.supabase.co/storage/v1/object/public/assets/Footer.PNG';
 
     return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -340,37 +340,15 @@ export class EmailSender {
                             </tbody>
                           </table>
                           <!--<![endif]-->
-    
-                          <table id="u_content_image_4" style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
-
-                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                  <td style="padding-right: 0px;padding-left: 0px;" align="center">
-
-                                    <img align="center" border="0" src="${tierUrl}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 580px;"
-                                      width="580" class="v-src-width v-src-max-width" />
-
-                                  </td>
-                                </tr>
-                              </table>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-    
+        
                           <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                             <tbody>
                               <tr>
                                 <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
     
                                   <div style="font-size: 14px; color: #000000; line-height: 160%; text-align: center; word-wrap: break-word;">
-                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Thank you for purchasing a Madayaw Ticket 🎉</span></p>
-                                    <p style="font-size: 14px; line-height: 160%;">Congratulations on making history as one of the attendees at<strong> Madayaw Nights, the first-ever Ateneo music fair!</strong> We're thrilled to have you join us on<strong> April 20, 2024</strong>, for what promises to be an unforgettable evening filled
-                                      with incredible music and memorable experiences.</p>
+                                    <p style="font-size: 14px; line-height: 160%;"><span style="font-size: 22px; line-height: 35.2px;">Thank you for purchasing a Ticket!</span></p>
+                                    <p style="font-size: 14px; line-height: 160%;">At the heart of <strong>UFest Musikahan 2024: Battle of the Bands</strong>, we invite the Ateneo community to unite through the power of music and storytelling. Under the theme <strong>"Himig ng mga Kwento"</strong>, this event is more than a competition—it's a chance for Ateneans to share their stories through songwriting and composition, creating melodies that reflect our collective experiences, dreams, and passions.</p>
                                   </div>
     
                                 </td>
@@ -409,35 +387,12 @@ export class EmailSender {
                                 <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:15px;font-family:'Cabin',sans-serif;" align="left">
     
                                   <div style="font-size: 14px; color: #78561a; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                    <p style="text-align: justify; line-height: 140%;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">📌 <strong>IMPORTANT REMINDERS: </strong></span></p>
                                     <p style="line-height: 140%;">&nbsp;</p>
-                                    <p style="text-align: justify; line-height: 140%;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">The event is initiated by OSA thus the following must be followed:</span></p>
+                                    <p style="text-align: justify; line-height: 140%;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">As we gather for this much-anticipated event, the <strong>Battle of the Bands</strong> offers a much-needed break from the hustle and bustle of university life. It's a space where students can mingle, unwind, and celebrate the talents of their peers.</span></p>
                                     <p style="line-height: 140%;">&nbsp;</p>
-                                    <ol style="margin-top: 0px; margin-bottom: 0px; padding-inline-start: 48px;">
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">The University has a strict policy on single-use plastic and does not allow any single-use plastic. </span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">The University has a CLAYGO or Clean asyou Go policy. Throw your garbages and trash at the designated Ecoteneo trash bins.</span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">Deadly weapons with the like Guns, knives, hard objects is </span><strong><span style="text-wrap: wrap; line-height: 19.6px;">STRICTLY FORBIDDEN.</span></strong></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">No smoking or Vaping inside the premises of the venue.</span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">Wear Dress or clothes appropriate to the Dress Code Guidelines of the Office of Student Affairs.</span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">Tumblers and Backpacks are strictly not allowed in the Concert Venue.</span></p>
-                                      </li>
-                                      <li style="color: #000000; line-height: 19.6px;">
-                                        <p style="text-align: justify; line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;">For ateneans that are not in-college, please bring an Atenean ID or your current </span></p>
-                                      </li>
-                                    </ol>
+                                    <p style="text-align: justify; line-height: 140%;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">But this event also carries a deeper purpose. Beyond the music and festivities, <strong>UFest Musikahan 2024</strong> serves as an income-generating event, with proceeds benefiting meaningful causes close to our hearts. A portion of the funds will support the <strong>Adopt-a-Riverbank</strong> project in partnership with <strong>Ateneo de Davao University - Ecoteneo</strong> and the <strong>SAMAHAN Ecoteneo Student Unit (ESU)</strong>, promoting environmental sustainability. Additionally, proceeds will contribute to the <strong>World Children's Day Celebration</strong> with <strong>SAMAHAN's Department of Campaigns & Advocacies (DCA)</strong>, ensuring that our efforts create a positive impact in both the environment and our communities. </span></p>
                                     <p style="line-height: 140%;">&nbsp;</p>
-                                    <p style="line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">The working committees, together with the city government of Davao will have the authority to reprimand any violators of the said guidelines.</span>                                  </span>
+                                    <p style="line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">Join us as we celebrate music, stories, and the spirit of giving back at UFest Musikahan 2024. Let your voice, your story, and your melody resonate throughout Ateneo, and be part of a musical journey that uplifts and inspires.</span>                                  </span>
                                     </p>
                                   </div>
     
@@ -487,7 +442,7 @@ export class EmailSender {
                                 <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:30px 60px;font-family:'Cabin',sans-serif;" align="left">
     
                                   <div style="font-size: 14px; line-height: 160%; text-align: center; word-wrap: break-word;">
-                                    <p style="line-height: 160%;"><span style="font-size: 14px; line-height: 22.4px; color: #000000;">Thank you once again for your support of local artists, and we look forward to seeing you at Madayaw Nights, where we’ll celebrate the vibrant talents and rediscover ourselves through arts and culture!</span></p>
+                                    <p style="line-height: 160%;"><span style="font-size: 14px; line-height: 22.4px; color: #000000;">Join us as we celebrate music, stories, and the spirit of giving back at UFest Musikahan 2024. Let your voice, your story, and your melody resonate throughout Ateneo, and be part of a musical journey that uplifts and inspires.</span></p>
                                   </div>
     
                                 </td>

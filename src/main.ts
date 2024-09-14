@@ -8,6 +8,8 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL || 'http://localhost:3001',
   });
 
+  console.log('Cors Enabled:', process.env.FRONTEND_URL);
+
   const config = new DocumentBuilder()
     .setTitle('ACMS')
     .setDescription('An API for the ACMS application')

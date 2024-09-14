@@ -49,7 +49,7 @@ export class EmailSender {
     const mailConfig = {
       from: process.env.CLIENT_EMAIL,
       to: studentEmail,
-      subject: '🌟 Get Ready to Rock: Madayaw Nights Ticket Confirmation',
+      subject: 'UFest Musikahan Battle of the Bands Ticket Confirmation',
       html: this.getHtmlBody(
         controlNumber,
         studentName,
@@ -392,7 +392,6 @@ export class EmailSender {
                                     <p style="line-height: 140%;">&nbsp;</p>
                                     <p style="text-align: justify; line-height: 140%;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">But this event also carries a deeper purpose. Beyond the music and festivities, <strong>UFest Musikahan 2024</strong> serves as an income-generating event, with proceeds benefiting meaningful causes close to our hearts. A portion of the funds will support the <strong>Adopt-a-Riverbank</strong> project in partnership with <strong>Ateneo de Davao University - Ecoteneo</strong> and the <strong>SAMAHAN Ecoteneo Student Unit (ESU)</strong>, promoting environmental sustainability. Additionally, proceeds will contribute to the <strong>World Children's Day Celebration</strong> with <strong>SAMAHAN's Department of Campaigns & Advocacies (DCA)</strong>, ensuring that our efforts create a positive impact in both the environment and our communities. </span></p>
                                     <p style="line-height: 140%;">&nbsp;</p>
-                                    <p style="line-height: 140%;"><span style="text-wrap: wrap; line-height: 19.6px;"><span style="color: #000000; white-space-collapse: preserve; line-height: 19.6px;">Join us as we celebrate music, stories, and the spirit of giving back at UFest Musikahan 2024. Let your voice, your story, and your melody resonate throughout Ateneo, and be part of a musical journey that uplifts and inspires.</span>                                  </span>
                                     </p>
                                   </div>
     

@@ -8,6 +8,7 @@ import * as qrcode from 'qrcode';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import * as dayjs from 'dayjs';
+import { StarSearchEmailSender } from 'src/emailSender/StarSearchEmailSender';
 
 @Injectable()
 // @WebSocketGateway({
@@ -24,6 +25,7 @@ export class StudentService {
     private readonly prisma: PrismaService,
     private readonly supabaseService: SupabaseService,
     private readonly emailSender: EmailSender,
+    private readonly starSearchEmailSender: StarSearchEmailSender,
   ) {}
 
   async createPayment(
@@ -132,20 +134,38 @@ export class StudentService {
     const qrCode = await qrcode.toDataURL(uuid, {
       scale: 10,
     });
-    this.emailSender.sendEmail(
-      createStudentDto.photo_src,
-      qrCode,
-      studentEmail,
-      requires_payment,
-      controlNumber,
-      dayjs(eventTierOnEvent.event.date).format('MMM DD, YYYY'),
-      `${createStudentDto.firstName} ${createStudentDto.lastName}`,
-      createStudentDto.year_and_course,
-      createStudentDto.is_addu_student ? 'Atenean' : 'Non-Atenean',
-      eventTierOnEvent.eventTier.name,
-      this.moneyFormatter(createStudentDto.required_payment),
-      uuid,
-    );
+
+    if (eventTierOnEvent.event.title === 'Star Search 2024') {
+      this.starSearchEmailSender.sendEmail(
+        createStudentDto.photo_src,
+        qrCode,
+        studentEmail,
+        requires_payment,
+        controlNumber,
+        dayjs(eventTierOnEvent.event.date).format('MMM DD, YYYY'),
+        `${createStudentDto.firstName} ${createStudentDto.lastName}`,
+        createStudentDto.year_and_course,
+        createStudentDto.is_addu_student ? 'Atenean' : 'Non-Atenean',
+        eventTierOnEvent.eventTier.name,
+        this.moneyFormatter(createStudentDto.required_payment),
+        uuid,
+      );
+    } else {
+      this.emailSender.sendEmail(
+        createStudentDto.photo_src,
+        qrCode,
+        studentEmail,
+        requires_payment,
+        controlNumber,
+        dayjs(eventTierOnEvent.event.date).format('MMM DD, YYYY'),
+        `${createStudentDto.firstName} ${createStudentDto.lastName}`,
+        createStudentDto.year_and_course,
+        createStudentDto.is_addu_student ? 'Atenean' : 'Non-Atenean',
+        eventTierOnEvent.eventTier.name,
+        this.moneyFormatter(createStudentDto.required_payment),
+        uuid,
+      );
+    }
 
     // this.sendTicketLeftWebsocketData(createStudentDto.eventId);
 
